@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (@media (prefers-color-scheme: dark));
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+
+  --font-serif: var(--font-literata), Georgia, serif;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* shadcn components resolve to the same achromatic tokens */
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--surface);
+  --color-muted-foreground: var(--ink-muted);
+  --color-accent: var(--surface);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: var(--ink);
+  --color-border: var(--rule);
+  --color-input: var(--rule);
+  --color-ring: var(--ink);
+
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+}
+
+:root {
+  --paper: #eef0f3;
+  --surface: #f7f8fa;
+  --ink: #1b2028;
+  --ink-muted: #5f6977;
+  --rule: #d6dae1;
+  --intensity-lo: #eadfc2;
+  --intensity-hi: #8f5d14;
+  --radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14181f;
+    --surface: #1b212a;
+    --ink: #e6e9ee;
+    --ink-muted: #8a94a3;
+    --rule: #2a313c;
+    --intensity-lo: #4a3f24;
+    --intensity-hi: #e8b04a;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-rule;
+  }
+  html {
+    color-scheme: light dark;
+    @apply font-sans;
+  }
+  body {
+    @apply bg-paper text-ink;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+}
+
+/* The only colour in the app: one hue, saturation and value tracking --v (0-100). */
+.intensity-fill {
+  background-color: color-mix(
+    in oklab,
+    var(--intensity-hi) calc(var(--v, 0) * 1%),
+    var(--intensity-lo)
+  );
+}
+
+/* The one moment of motion: a draft's fourth column arriving later. */
+@media (prefers-reduced-motion: no-preference) {
+  .settle-in {
+    animation: settle-in 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes settle-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
