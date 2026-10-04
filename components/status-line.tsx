@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link'
 
 /** Loading and error states: a quiet line of muted sans, never a spinner or alert box. */
 export function StatusLine({ children }: { children: React.ReactNode }) {
@@ -6,16 +6,13 @@ export function StatusLine({ children }: { children: React.ReactNode }) {
     <p role="status" className="py-10 text-sm text-ink-muted">
       {children}
     </p>
-  );
+  )
 }
 
 export function StorageError() {
   return (
-    <StatusLine>
-      catatan tidak bisa dibaca dari penyimpanan browser ini. coba muat ulang
-      halaman, atau buka di browser lain.
-    </StatusLine>
-  );
+    <StatusLine>catatan tidak bisa dibaca dari penyimpanan browser ini. coba muat ulang halaman, atau buka di browser lain.</StatusLine>
+  )
 }
 
 export function EntryNotFound() {
@@ -29,5 +26,5 @@ export function EntryNotFound() {
         ke semua catatan
       </Link>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (@media (prefers-color-scheme: dark));
 
@@ -11,8 +11,8 @@
   --color-ink-muted: var(--ink-muted);
   --color-rule: var(--rule);
 
-  --font-serif: var(--font-literata), Georgia, serif;
-  --font-sans: var(--font-source-sans), system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-geist), system-ui, sans-serif;
   --font-heading: var(--font-sans);
 
   /* shadcn components resolve to the same achromatic tokens */
@@ -83,11 +83,7 @@
 
 /* The only colour in the app: one hue, saturation and value tracking --v (0-100). */
 .intensity-fill {
-  background-color: color-mix(
-    in oklab,
-    var(--intensity-hi) calc(var(--v, 0) * 1%),
-    var(--intensity-lo)
-  );
+  background-color: color-mix(in oklab, var(--intensity-hi) calc(var(--v, 0) * 1%), var(--intensity-lo));
 }
 
 /* The one moment of motion: a draft's fourth column arriving later. */

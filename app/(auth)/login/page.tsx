@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 function LoginForm() {
-  const failed = useSearchParams().get("error") !== null;
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState(failed);
+  const failed = useSearchParams().get('error') !== null
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState(failed)
 
   async function signInWithGoogle() {
-    setPending(true);
-    setError(false);
+    setPending(true)
+    setError(false)
     const { error } = await createClient().auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${location.origin}/auth/callback` },
-    });
+      provider: 'google',
+      options: { redirectTo: `${location.origin}/auth/callback` }
+    })
     if (error) {
-      setError(true);
-      setPending(false);
+      setError(true)
+      setPending(false)
     }
   }
 
@@ -47,7 +47,7 @@ function LoginForm() {
         </Link>
       </div>
     </div>
-  );
+  )
 }
 
 export default function LoginPage() {
@@ -55,5 +55,5 @@ export default function LoginPage() {
     <Suspense>
       <LoginForm />
     </Suspense>
-  );
+  )
 }

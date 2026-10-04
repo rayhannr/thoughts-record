@@ -227,7 +227,7 @@ One warm point on an otherwise cold page is also what keeps the interface from r
 Two families, with the conventional roles inverted: **the user's writing is the display type and the app's own text recedes.**
 
 - **Entry body** — a screen serif (Literata or Newsreader), 18–19px on mobile, generous line-height, measure under 70 characters. This is 95% of what appears on screen and should read as a person's voice, not as database content.
-- **App chrome** — prompts, labels, dates, navigation: a humanist sans at 13–14px in `ink-muted`.
+- **App chrome** — prompts, labels, dates, navigation: Geist (a neutral sans) at 13–14px in `ink-muted`.
 
 Opening an old entry should fill the screen with the user's own voice, not with interface.
 

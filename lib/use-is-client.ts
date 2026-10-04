@@ -1,8 +1,12 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore } from 'react'
 
-const subscribe = () => () => {};
+const subscribe = () => () => {}
 
 /** False during SSR and hydration, true after. For UI built from localStorage. */
 export function useIsClient() {
-  return useSyncExternalStore(subscribe, () => true, () => false);
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  )
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useRef } from "react";
-import { cn } from "@/lib/utils";
+import { useRef } from 'react'
+import { cn } from '@/lib/utils'
 
-const STEP = 5;
+const STEP = 5
 
 function snap(n: number) {
-  return Math.min(100, Math.max(0, Math.round(n / STEP) * STEP));
+  return Math.min(100, Math.max(0, Math.round(n / STEP) * STEP))
 }
 
 /**
@@ -19,35 +19,35 @@ export function IntensitySlider({
   onChange,
   labelledBy,
   describedBy,
-  invalid,
+  invalid
 }: {
-  id?: string;
-  value: number | null;
-  onChange: (value: number) => void;
-  labelledBy: string;
-  describedBy?: string;
-  invalid?: boolean;
+  id?: string
+  value: number | null
+  onChange: (value: number) => void
+  labelledBy: string
+  describedBy?: string
+  invalid?: boolean
 }) {
-  const trackRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null)
 
   function valueAt(clientX: number) {
-    const rect = trackRef.current!.getBoundingClientRect();
-    return snap(((clientX - rect.left) / rect.width) * 100);
+    const rect = trackRef.current!.getBoundingClientRect()
+    return snap(((clientX - rect.left) / rect.width) * 100)
   }
 
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    e.currentTarget.focus();
-    onChange(valueAt(e.clientX));
+    e.currentTarget.setPointerCapture(e.pointerId)
+    e.currentTarget.focus()
+    onChange(valueAt(e.clientX))
   }
 
   function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
-    if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-    onChange(valueAt(e.clientX));
+    if (!e.currentTarget.hasPointerCapture(e.pointerId)) return
+    onChange(valueAt(e.clientX))
   }
 
   function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    const current = value ?? 0;
+    const current = value ?? 0
     const next: Record<string, number> = {
       ArrowRight: current + STEP,
       ArrowUp: current + STEP,
@@ -56,11 +56,11 @@ export function IntensitySlider({
       PageUp: current + 4 * STEP,
       PageDown: current - 4 * STEP,
       Home: 0,
-      End: 100,
-    };
-    if (!(e.key in next)) return;
-    e.preventDefault();
-    onChange(snap(next[e.key]));
+      End: 100
+    }
+    if (!(e.key in next)) return
+    e.preventDefault()
+    onChange(snap(next[e.key]))
   }
 
   return (
@@ -75,7 +75,7 @@ export function IntensitySlider({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={value ?? undefined}
-        aria-valuetext={value == null ? "belum dinilai" : String(value)}
+        aria-valuetext={value == null ? 'belum dinilai' : String(value)}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onKeyDown={onKeyDown}
@@ -86,7 +86,7 @@ export function IntensitySlider({
             <>
               <div
                 className="intensity-fill absolute inset-y-0 left-0 h-1 -translate-y-px"
-                style={{ width: `${value}%`, "--v": value } as React.CSSProperties}
+                style={{ width: `${value}%`, '--v': value } as React.CSSProperties}
               />
               <div
                 className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-paper bg-ink"
@@ -96,15 +96,9 @@ export function IntensitySlider({
           )}
         </div>
       </div>
-      <output
-        aria-hidden
-        className={cn(
-          "w-8 text-right font-sans text-lg tabular-nums",
-          value == null ? "text-ink-muted" : "text-ink",
-        )}
-      >
-        {value ?? "–"}
+      <output aria-hidden className={cn('w-8 text-right font-sans text-lg tabular-nums', value == null ? 'text-ink-muted' : 'text-ink')}>
+        {value ?? '–'}
       </output>
     </div>
-  );
+  )
 }

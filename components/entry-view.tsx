@@ -1,23 +1,19 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { IntensityBar } from "@/components/intensity-bar";
-import { DRAFT_LABEL, PROMPTS } from "@/components/prompts";
-import {
-  useDeleteEntry,
-  useRestoreEntry,
-  wasJustCompleted,
-} from "@/lib/entries/client";
-import type { Entry } from "@/lib/entries/schema";
-import { formatDayTime } from "@/lib/format";
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { IntensityBar } from '@/components/intensity-bar'
+import { DRAFT_LABEL, PROMPTS } from '@/components/prompts'
+import { useDeleteEntry, useRestoreEntry, wasJustCompleted } from '@/lib/entries/client'
+import type { Entry } from '@/lib/entries/schema'
+import { formatDayTime } from '@/lib/format'
 
-const chrome = "flex min-h-11 items-center rounded-sm px-2 text-sm";
+const chrome = 'flex min-h-11 items-center rounded-sm px-2 text-sm'
 
 export function EntryView({ entry }: { entry: Entry }) {
-  const [settle] = useState(() => wasJustCompleted(entry.id));
+  const [settle] = useState(() => wasJustCompleted(entry.id))
 
   return (
     <article>
@@ -41,7 +37,7 @@ export function EntryView({ entry }: { entry: Entry }) {
         </Section>
 
         {entry.evidence_for ? (
-          <div className={settle ? "settle-in" : undefined}>
+          <div className={settle ? 'settle-in' : undefined}>
             <Section question={PROMPTS.evidence}>{entry.evidence_for}</Section>
           </div>
         ) : (
@@ -63,50 +59,44 @@ export function EntryView({ entry }: { entry: Entry }) {
         <DeleteControl entry={entry} />
       </footer>
     </article>
-  );
+  )
 }
 
 function Section({ question, children }: { question: string; children: React.ReactNode }) {
   return (
     <section>
       <h2 className="text-sm text-ink-muted">{question}</h2>
-      <div className="mt-1.5 max-w-[65ch] whitespace-pre-wrap font-serif text-lg leading-relaxed text-ink">
-        {children}
-      </div>
+      <div className="mt-1.5 max-w-[65ch] whitespace-pre-wrap font-serif text-lg leading-relaxed text-ink">{children}</div>
     </section>
-  );
+  )
 }
 
 function DeleteControl({ entry }: { entry: Entry }) {
-  const router = useRouter();
-  const [confirming, setConfirming] = useState(false);
-  const remove = useDeleteEntry();
-  const restore = useRestoreEntry();
+  const router = useRouter()
+  const [confirming, setConfirming] = useState(false)
+  const remove = useDeleteEntry()
+  const restore = useRestoreEntry()
 
   async function onDelete() {
     // Leave first, so this view never re-renders as "not found".
-    router.push("/");
+    router.push('/')
     try {
-      await remove.mutateAsync(entry.id);
+      await remove.mutateAsync(entry.id)
     } catch {
-      toast.error("catatan belum terhapus. penyimpanan browser ini tidak bisa ditulis.");
-      return;
+      toast.error('catatan belum terhapus. penyimpanan browser ini tidak bisa ditulis.')
+      return
     }
-    toast("catatan dihapus", {
-      action: { label: "kembalikan", onClick: () => restore.mutate(entry) },
-    });
+    toast('catatan dihapus', {
+      action: { label: 'kembalikan', onClick: () => restore.mutate(entry) }
+    })
   }
 
   if (!confirming) {
     return (
-      <button
-        type="button"
-        onClick={() => setConfirming(true)}
-        className={`${chrome} -ml-2 mt-2 text-ink-muted`}
-      >
+      <button type="button" onClick={() => setConfirming(true)} className={`${chrome} -ml-2 mt-2 text-ink-muted`}>
         hapus catatan
       </button>
-    );
+    )
   }
 
   return (
@@ -121,13 +111,9 @@ function DeleteControl({ entry }: { entry: Entry }) {
       >
         ya, hapus
       </button>
-      <button
-        type="button"
-        onClick={() => setConfirming(false)}
-        className={`${chrome} text-ink-muted`}
-      >
+      <button type="button" onClick={() => setConfirming(false)} className={`${chrome} text-ink-muted`}>
         batal
       </button>
     </div>
-  );
+  )
 }
