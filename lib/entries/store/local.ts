@@ -8,7 +8,16 @@ function read(): Entry[] {
   if (!raw) return []
   const parsed: unknown = JSON.parse(raw)
   if (!Array.isArray(parsed)) throw new Error('entries in localStorage are not an array')
-  return parsed as Entry[]
+  return parsed.map(upgrade)
+}
+
+// Entries written before feelings carried their own intensity had a text
+// `feelings` and a top-level `intensity`.
+function upgrade(raw: unknown): Entry {
+  const e = raw as Entry & { intensity?: number }
+  if (Array.isArray(e.feelings)) return e
+  const { intensity, ...rest } = e
+  return { ...rest, feelings: [{ name: String(e.feelings), intensity: intensity ?? 0 }] }
 }
 
 function write(entries: Entry[]) {

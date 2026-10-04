@@ -1,4 +1,4 @@
-import type { Entry } from '@/lib/entries/schema'
+import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 
 const W = 600
@@ -30,7 +30,7 @@ function rng(seed: string) {
  */
 function wave(entry: Entry, baseline: number) {
   const rand = rng(entry.id)
-  const amp = (entry.intensity / 100) * MAX_AMP
+  const amp = (peakIntensity(entry.feelings) / 100) * MAX_AMP
   const left = 60
   const right = W - 60
   const step = 6
@@ -98,7 +98,7 @@ export function PulsePlot({ entries }: { entries: Entry[] }) {
               {/* Peak tip in the strip's ramp: orange means strong here too. */}
               <path
                 d={`M${peak.x} ${peak.y} L${peak.x} ${peak.y}`}
-                style={{ stroke: `color-mix(in oklab, var(--signal) ${Math.min(100, entry.intensity * 1.1)}%, var(--cell-low))` }}
+                style={{ stroke: `color-mix(in oklab, var(--signal) ${Math.min(100, peakIntensity(entry.feelings) * 1.1)}%, var(--cell-low))` }}
                 strokeWidth={isLast ? 9 : 6}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"

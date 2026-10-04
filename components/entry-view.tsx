@@ -36,8 +36,14 @@ export function EntryView({ entry }: { entry: Entry }) {
           {entry.thoughts}
         </Section>
         <Section question={PROMPTS.feelings}>
-          {entry.feelings}
-          <IntensityBar value={entry.intensity} large className="mt-4" />
+          <ul className="flex flex-col gap-6">
+            {entry.feelings.map((f, i) => (
+              <li key={i}>
+                {f.name}
+                <IntensityBar value={f.intensity} large className="mt-3" />
+              </li>
+            ))}
+          </ul>
         </Section>
 
         {entry.evidence_for ? (

@@ -7,7 +7,7 @@ import { AccountMenu } from '@/components/account-menu'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
 import { PulsePlot } from '@/components/pulse-plot'
-import type { Entry } from '@/lib/entries/schema'
+import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -82,13 +82,13 @@ function EntryRow({ entry }: { entry: Entry }) {
       <span className="line-clamp-3 block text-[19px] leading-snug text-ink">{entry.thoughts}</span>
       <span className="mt-3.5 flex items-center justify-between gap-4">
         <span className="min-w-0">
-          <span className="line-clamp-2 block text-base text-ink">{entry.feelings}</span>
+          <span className="line-clamp-2 block text-base text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
           <span className="label-caps mt-1.5 flex items-center gap-2 text-ink-muted">
             {formatDay(entry.occurred_at)}
             {entry.status === 'draft' && <span className="font-sans text-sm tracking-normal normal-case">· {DRAFT_LABEL}</span>}
           </span>
         </span>
-        <IntensityBar value={entry.intensity} />
+        <IntensityBar value={peakIntensity(entry.feelings)} />
       </span>
     </Link>
   )

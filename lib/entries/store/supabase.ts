@@ -4,7 +4,7 @@ import type { Entry, ListEntries } from '../schema'
 // Server-side and the only module that touches the database. Every query is
 // scoped by user_id on top of RLS, and entry bodies are never logged.
 const COLUMNS =
-  'id, occurred_at, created_at, updated_at, situation, thoughts, feelings, intensity, evidence_for, evidence_against, balanced_thought, feeling_after, intensity_after, status'
+  'id, occurred_at, created_at, updated_at, situation, thoughts, feelings, evidence_for, evidence_against, balanced_thought, feeling_after, intensity_after, status'
 
 export class NotFoundError extends Error {}
 

@@ -44,3 +44,6 @@ next-env.d.ts
 /.impeccable/*
 !/.impeccable/design.json
 !/.impeccable/surfaces/
+
+# Supabase CLI link state
+supabase/.temp/

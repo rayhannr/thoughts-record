@@ -28,7 +28,7 @@ The standard CBT thought record (Greenberger & Padesky) has seven columns. The u
 |---|---|---|---|
 | 1 | Situation | yes | `situation` |
 | 2 | Automatic thoughts | yes | `thoughts` |
-| 3 | Feelings (+ intensity) | yes | `feelings`, `intensity` |
+| 3 | Feelings (+ intensity each) | yes | `feelings` (`[{name, intensity}]`) |
 | 4 | Evidence for the thought | yes | `evidence_for` |
 | 5 | Evidence against the thought | no | `evidence_against` |
 | 6 | Balanced / alternative thought | no | `balanced_thought` |
@@ -42,7 +42,7 @@ Column 4 as assigned is "is the thought consistent with reality" — a merge of 
 
 - Four-column form: situation, thoughts, feelings, evidence.
 - **Free-text feelings.** No fixed emotion list and no normalisation column. Grouping "kesel" / "sebel" / "dongkol" is done at read time by Claude over the MCP path, not at write time by the user.
-- **Separate intensity rating, 0–100.** Stored as its own integer column, not embedded in the feelings text. 0–100 rather than 0–10 to match the scale used in the standard worksheet.
+- **One intensity rating per feeling, 0–100.** A situation can bring several feelings at different strengths, so `feelings` is a list of `{name, intensity}`, up to 5. The intensity is its own integer, not embedded in the name. 0–100 rather than 0–10 to match the scale used in the standard worksheet. The list and plot show the strongest feeling's intensity.
 - **Split timestamps.** `occurred_at` is when the situation happened; `created_at` is when the entry was written. Entries are frequently written hours later, and ordering by write time would misrepresent the record.
 - **Draft or done.** An entry saved without column 4 is a `draft`. Drafts are listed separately so they can be finished later.
 
@@ -147,8 +147,7 @@ create table entries (
   -- columns 1-4, shown in v1
   situation         text not null,
   thoughts          text not null,
-  feelings          text not null,
-  intensity         int  not null check (intensity between 0 and 100),
+  feelings          jsonb not null,        -- [{name, intensity 0-100}], 1 to 5
   evidence_for      text,
 
   -- columns 5-7, stored from day one, surfaced later

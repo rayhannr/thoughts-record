@@ -11,6 +11,20 @@ const OptionalText = z
   .nullish()
   .transform(v => (v ? v : null))
 
+// One situation can bring several feelings, each at its own strength.
+export const Feeling = z.object({
+  name: RequiredText,
+  intensity: Intensity
+})
+export type Feeling = z.infer<typeof Feeling>
+
+export const MAX_FEELINGS = 5
+
+/** The strongest feeling in an entry: what the list bar and the plot read. */
+export function peakIntensity(feelings: Feeling[]): number {
+  return feelings.reduce((max, f) => Math.max(max, f.intensity), 0)
+}
+
 export const EntryStatus = z.enum(['draft', 'done'])
 export type EntryStatus = z.infer<typeof EntryStatus>
 
@@ -19,8 +33,7 @@ export const CreateEntry = z.object({
 
   situation: RequiredText,
   thoughts: RequiredText,
-  feelings: RequiredText,
-  intensity: Intensity,
+  feelings: z.array(Feeling).min(1).max(MAX_FEELINGS),
   evidence_for: OptionalText,
 
   evidence_against: OptionalText,

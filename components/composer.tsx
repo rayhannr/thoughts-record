@@ -1,11 +1,10 @@
 'use client'
 
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Plus, X } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useId, useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { AccountMenu } from '@/components/account-menu'
 import { CatalogNumber } from '@/components/catalog-number'
 import { DateTimePicker } from '@/components/date-time-picker'
@@ -14,29 +13,31 @@ import { PROMPTS } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
 import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
-import { CreateEntry, type Entry } from '@/lib/entries/schema'
+import { CreateEntry, MAX_FEELINGS, type Entry } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
+
+type FeelingDraft = { name: string; intensity: number | null }
 
 type Draft = {
   occurred_at: string
   situation: string
   thoughts: string
-  feelings: string
-  intensity: number | null
+  feelings: FeelingDraft[]
   evidence_for: string
 }
 
-type Field = keyof Draft
+type Field = Exclude<keyof Draft, 'feelings'>
 
-const ERRORS: Partial<Record<Field, string>> = {
+// Keyed by field, or `feelings.<row>.name` / `feelings.<row>.intensity`.
+type Errors = Record<string, string | undefined>
+
+const ERRORS: Record<string, string> = {
   occurred_at: 'waktunya tidak terbaca',
   situation: 'belum diisi',
   thoughts: 'belum diisi',
-  feelings: 'belum diisi',
+  name: 'belum diisi',
   intensity: 'geser untuk menilai'
 }
-
-const FIELD_ORDER: Field[] = ['situation', 'thoughts', 'feelings', 'intensity']
 
 // An unsaved new entry survives a closed tab or an accidental back.
 const UNSENT_KEY = 'thought-record:unsent:v1'
@@ -59,8 +60,16 @@ function saveUnsent(draft: Draft | null) {
   }
 }
 
+function blankFeeling(): FeelingDraft {
+  return { name: '', intensity: null }
+}
+
+function isBlankFeeling(f: FeelingDraft) {
+  return !f.name.trim() && f.intensity == null
+}
+
 function isBlank(d: Draft) {
-  return !d.situation && !d.thoughts && !d.feelings && d.intensity == null && !d.evidence_for
+  return !d.situation && !d.thoughts && d.feelings.every(isBlankFeeling) && !d.evidence_for
 }
 
 function fromEntry(entry: Entry): Draft {
@@ -68,8 +77,7 @@ function fromEntry(entry: Entry): Draft {
     occurred_at: entry.occurred_at,
     situation: entry.situation,
     thoughts: entry.thoughts,
-    feelings: entry.feelings,
-    intensity: entry.intensity,
+    feelings: entry.feelings.map(f => ({ ...f })),
     evidence_for: entry.evidence_for ?? ''
   }
 }
@@ -79,8 +87,7 @@ function blankDraft(): Draft {
     occurred_at: new Date().toISOString(),
     situation: '',
     thoughts: '',
-    feelings: '',
-    intensity: null,
+    feelings: [blankFeeling()],
     evidence_for: ''
   }
 }
@@ -95,7 +102,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
   const isNew = !entry
 
   const [draft, setDraft] = useState<Draft>(() => (entry ? fromEntry(entry) : (loadUnsent() ?? blankDraft())))
-  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({})
+  const [errors, setErrors] = useState<Errors>({})
   const [editingTime, setEditingTime] = useState(false)
 
   const create = useCreateEntry()
@@ -111,18 +118,49 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
     if (errors[field]) setErrors(e => ({ ...e, [field]: undefined }))
   }
 
+  function setFeeling(row: number, key: keyof FeelingDraft, value: string | number) {
+    setDraft(d => ({ ...d, feelings: d.feelings.map((f, i) => (i === row ? { ...f, [key]: value } : f)) }))
+    const errorKey = `feelings.${row}.${key}`
+    if (errors[errorKey]) setErrors(e => ({ ...e, [errorKey]: undefined }))
+  }
+
+  function addFeeling() {
+    setDraft(d => ({ ...d, feelings: [...d.feelings, blankFeeling()] }))
+  }
+
+  function removeFeeling(row: number) {
+    setDraft(d => ({ ...d, feelings: d.feelings.filter((_, i) => i !== row) }))
+    setErrors({})
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    // A row left entirely empty is not an answer, so it is dropped. If nothing
+    // remains, one blank row goes through so the error has somewhere to land.
+    const rows = draft.feelings.flatMap((f, i) => (isBlankFeeling(f) ? [] : [i]))
+    if (rows.length === 0) rows.push(0)
+
     const parsed = CreateEntry.safeParse({
       ...draft,
-      intensity: draft.intensity ?? undefined
+      feelings: rows.map(i => ({ name: draft.feelings[i].name, intensity: draft.feelings[i].intensity ?? undefined }))
     })
 
     if (!parsed.success) {
-      const invalid = Object.keys(z.flattenError(parsed.error).fieldErrors) as Field[]
-      setErrors(Object.fromEntries(invalid.map(f => [f, ERRORS[f]])))
-      const first = FIELD_ORDER.find(f => invalid.includes(f))
-      if (first) document.getElementById(`${ids}-${first}`)?.focus()
+      const next: Errors = {}
+      for (const issue of parsed.error.issues) {
+        const [field, index, sub] = issue.path
+        // Map the filtered row back to the row the user sees.
+        const key = field === 'feelings' ? `feelings.${rows[index as number] ?? 0}.${String(sub ?? 'name')}` : String(field)
+        next[key] = ERRORS[String(sub ?? field)]
+      }
+      setErrors(next)
+      const keys = Object.keys(next)
+      const first = ['situation', 'thoughts'].find(k => keys.includes(k)) ?? keys.find(k => k.startsWith('feelings.'))
+      if (first) {
+        const [, row, sub] = first.split('.')
+        document.getElementById(first.startsWith('feelings.') ? `${ids}-feelings-${row}-${sub}` : `${ids}-${first}`)?.focus()
+      }
       return
     }
 
@@ -196,32 +234,61 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
         error={errors.thoughts}
       />
 
-      <div className="flex flex-col gap-5">
-        <RuledField
-          id={`${ids}-feelings`}
-          question={PROMPTS.feelings}
-          value={draft.feelings}
-          onChange={v => set('feelings', v)}
-          error={errors.feelings}
-        />
-        <div>
-          <span id={`${ids}-intensity-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
-            {PROMPTS.intensity}
-          </span>
-          <IntensitySlider
-            id={`${ids}-intensity`}
-            value={draft.intensity}
-            onChange={v => set('intensity', v)}
-            labelledBy={`${ids}-intensity-label`}
-            describedBy={errors.intensity ? `${ids}-intensity-error` : undefined}
-            invalid={!!errors.intensity}
-          />
-          {errors.intensity && (
-            <p id={`${ids}-intensity-error`} className="mt-1.5 text-sm text-signal">
-              {errors.intensity}
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col gap-8">
+        {draft.feelings.map((feeling, row) => {
+          const base = `${ids}-feelings-${row}`
+          const nameError = errors[`feelings.${row}.name`]
+          const intensityError = errors[`feelings.${row}.intensity`]
+          return (
+            <div key={row} className="flex flex-col gap-5">
+              <RuledField
+                id={`${base}-name`}
+                question={row === 0 ? PROMPTS.feelings : PROMPTS.anotherFeeling}
+                value={feeling.name}
+                onChange={v => setFeeling(row, 'name', v)}
+                error={nameError}
+              />
+              <div>
+                <span id={`${base}-intensity-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
+                  {PROMPTS.intensity}
+                </span>
+                <IntensitySlider
+                  id={`${base}-intensity`}
+                  value={feeling.intensity}
+                  onChange={v => setFeeling(row, 'intensity', v)}
+                  labelledBy={`${base}-intensity-label`}
+                  describedBy={intensityError ? `${base}-intensity-error` : undefined}
+                  invalid={!!intensityError}
+                />
+                {intensityError && (
+                  <p id={`${base}-intensity-error`} className="mt-1.5 text-sm text-signal">
+                    {intensityError}
+                  </p>
+                )}
+              </div>
+              {draft.feelings.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeFeeling(row)}
+                  className="-ml-2 flex min-h-11 items-center gap-1.5 self-start rounded-sm px-2 text-sm text-ink-muted hover:text-ink"
+                >
+                  <X aria-hidden className="size-4" />
+                  hapus perasaan ini
+                </button>
+              )}
+            </div>
+          )
+        })}
+        {draft.feelings.length < MAX_FEELINGS && (
+          <button
+            type="button"
+            onClick={addFeeling}
+            className="-ml-2 flex min-h-11 items-center gap-1.5 self-start rounded-sm px-2 text-sm text-ink hover:text-ink-muted"
+          >
+            <Plus aria-hidden className="size-4" />
+            ada perasaan lain
+          </button>
+        )}
       </div>
 
       <RuledField
