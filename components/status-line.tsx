@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-/** Loading and error states: a quiet line of muted sans, never a spinner or alert box. */
+/** Loading and error states: a quiet line of muted text, never a spinner or alert box. */
 export function StatusLine({ children }: { children: React.ReactNode }) {
   return (
     <p role="status" className="py-10 text-sm text-ink-muted">
@@ -21,7 +21,7 @@ export function EntryNotFound() {
       <p className="text-sm text-ink-muted">catatan ini tidak ada di browser ini.</p>
       <Link
         href="/"
-        className="-ml-2 mt-1 inline-flex min-h-11 items-center rounded-sm px-2 text-sm text-ink underline decoration-1 underline-offset-4"
+        className="mt-3 inline-flex h-11 items-center rounded-sm border border-edge px-4 text-sm text-ink hover:border-ink"
       >
         ke semua catatan
       </Link>

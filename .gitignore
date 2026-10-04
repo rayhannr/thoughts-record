@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# impeccable: working files stay local; the design sidecar and surface brief are kept
+/.impeccable/*
+!/.impeccable/design.json
+!/.impeccable/surfaces/

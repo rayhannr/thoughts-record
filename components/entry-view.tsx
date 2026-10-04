@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { CatalogNumber } from '@/components/catalog-number'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL, PROMPTS } from '@/components/prompts'
 import { useDeleteEntry, useRestoreEntry, wasJustCompleted } from '@/lib/entries/client'
@@ -17,23 +18,26 @@ export function EntryView({ entry }: { entry: Entry }) {
 
   return (
     <article>
-      <nav className="-mx-2 flex items-center justify-between">
-        <Link href="/" className={`${chrome} text-ink-muted`}>
+      <nav className="-mx-2 flex min-h-12 items-center justify-between">
+        <Link href="/" className={`${chrome} text-ink-muted hover:text-ink`}>
           semua catatan
         </Link>
-        <Link href={`/entries/${entry.id}/edit`} className={`${chrome} text-ink`}>
+        <Link href={`/entries/${entry.id}/edit`} className={`${chrome} border border-edge px-4 text-ink hover:border-ink`}>
           ubah
         </Link>
       </nav>
 
-      <p className="mt-4 text-sm text-ink-muted">{formatDayTime(entry.occurred_at)}</p>
+      <CatalogNumber id={entry.id} className="mt-4 block text-6xl leading-none" />
+      <p className="label-caps mt-3 text-ink-muted">{formatDayTime(entry.occurred_at)}</p>
 
       <div className="mt-8 flex flex-col gap-10">
         <Section question={PROMPTS.situation}>{entry.situation}</Section>
-        <Section question={PROMPTS.thoughts}>{entry.thoughts}</Section>
+        <Section question={PROMPTS.thoughts} emphasis>
+          {entry.thoughts}
+        </Section>
         <Section question={PROMPTS.feelings}>
           {entry.feelings}
-          <IntensityBar value={entry.intensity} className="mt-3" />
+          <IntensityBar value={entry.intensity} large className="mt-4" />
         </Section>
 
         {entry.evidence_for ? (
@@ -42,11 +46,11 @@ export function EntryView({ entry }: { entry: Entry }) {
           </div>
         ) : (
           <section>
-            <h2 className="text-sm text-ink-muted">{PROMPTS.evidence}</h2>
-            <p className="mt-1.5 text-sm text-ink-muted">{DRAFT_LABEL}</p>
+            <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{PROMPTS.evidence}</h2>
+            <p className="mt-2 text-base text-ink-muted">{DRAFT_LABEL}</p>
             <Link
               href={`/entries/${entry.id}/edit?isi=bukti`}
-              className="-ml-2 mt-1 inline-flex min-h-11 items-center rounded-sm px-2 text-sm text-ink underline decoration-1 underline-offset-4"
+              className="mt-3 inline-flex h-11 items-center rounded-sm bg-signal px-5 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
             >
               lanjutkan sekarang
             </Link>
@@ -54,7 +58,7 @@ export function EntryView({ entry }: { entry: Entry }) {
         )}
       </div>
 
-      <footer className="mt-14 border-t border-rule pt-4">
+      <footer className="mt-20 border-t border-rule pt-4">
         <p className="text-sm text-ink-muted">ditulis {formatDayTime(entry.created_at).toLowerCase()}</p>
         <DeleteControl entry={entry} />
       </footer>
@@ -62,11 +66,26 @@ export function EntryView({ entry }: { entry: Entry }) {
   )
 }
 
-function Section({ question, children }: { question: string; children: React.ReactNode }) {
+// The thought is the headline, but only a short one fits the condensed face; a long
+// one stays in the writing face so it reads as the user's own voice.
+const HEADLINE_MAX = 90
+
+function Section({ question, children, emphasis }: { question: string; children: React.ReactNode; emphasis?: boolean }) {
+  const headline = emphasis && typeof children === 'string' && children.length <= HEADLINE_MAX
   return (
     <section>
-      <h2 className="text-sm text-ink-muted">{question}</h2>
-      <div className="mt-1.5 max-w-[65ch] whitespace-pre-wrap font-serif text-lg leading-relaxed text-ink">{children}</div>
+      <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{question}</h2>
+      <div
+        className={
+          headline
+            ? 'mt-2 max-w-[65ch] font-catalog text-[2.25rem] leading-[1.1] font-semibold tracking-[0.01em] whitespace-pre-wrap text-ink'
+            : emphasis
+              ? 'mt-2 max-w-[65ch] text-2xl leading-snug font-medium whitespace-pre-wrap text-ink'
+              : 'mt-2 max-w-[65ch] text-lg leading-relaxed whitespace-pre-wrap text-ink'
+        }
+      >
+        {children}
+      </div>
     </section>
   )
 }
@@ -91,27 +110,28 @@ function DeleteControl({ entry }: { entry: Entry }) {
     })
   }
 
+  // Delete sits alone, well away from the other controls, and stays quiet until chosen.
   if (!confirming) {
     return (
-      <button type="button" onClick={() => setConfirming(true)} className={`${chrome} -ml-2 mt-2 text-ink-muted`}>
+      <button type="button" onClick={() => setConfirming(true)} className={`${chrome} -ml-2 mt-6 text-ink-muted hover:text-signal`}>
         hapus catatan
       </button>
     )
   }
 
   return (
-    <div role="group" aria-label="konfirmasi hapus" className="mt-2 flex flex-wrap items-center gap-x-1">
+    <div role="group" aria-label="konfirmasi hapus" className="mt-6 flex flex-wrap items-center gap-2">
       <span className="mr-2 text-sm text-ink">hapus catatan ini?</span>
       <button
         type="button"
         autoFocus
         onClick={onDelete}
         disabled={remove.isPending}
-        className={`${chrome} font-semibold text-ink underline decoration-1 underline-offset-4`}
+        className="flex min-h-11 items-center rounded-sm border border-signal px-4 text-sm font-semibold text-signal hover:bg-signal hover:text-signal-ink"
       >
         ya, hapus
       </button>
-      <button type="button" onClick={() => setConfirming(false)} className={`${chrome} text-ink-muted`}>
+      <button type="button" onClick={() => setConfirming(false)} className={`${chrome} text-ink-muted hover:text-ink`}>
         batal
       </button>
     </div>

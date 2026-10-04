@@ -11,7 +11,8 @@ function snap(n: number) {
 
 /**
  * Starts empty on purpose: a pre-filled number anchors the answer before the
- * user has considered it. Shows a dash until touched, snaps in steps of 5.
+ * user has considered it. Shows a dash until touched, snaps in steps of 5. The
+ * track is the same twenty-cell strip the list reads back.
  */
 export function IntensitySlider({
   id,
@@ -79,24 +80,23 @@ export function IntensitySlider({
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onKeyDown={onKeyDown}
-        className="group relative h-11 flex-1 cursor-pointer touch-none rounded-sm focus-visible:outline-offset-0"
+        className={cn(
+          'flex h-14 flex-1 cursor-pointer touch-none items-center rounded-sm border bg-surface px-3 focus-visible:outline-offset-2',
+          invalid ? 'border-signal' : value == null ? 'border-edge' : 'border-ink'
+        )}
       >
-        <div ref={trackRef} className="absolute inset-x-2.5 top-1/2 h-0.5 -translate-y-1/2 bg-rule">
-          {value != null && (
-            <>
-              <div
-                className="intensity-fill absolute inset-y-0 left-0 h-1 -translate-y-px"
-                style={{ width: `${value}%`, '--v': value } as React.CSSProperties}
-              />
-              <div
-                className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-paper bg-ink"
-                style={{ left: `${value}%` }}
-              />
-            </>
-          )}
+        <div ref={trackRef} className="flex w-full justify-between">
+          {Array.from({ length: 20 }, (_, i) => (
+            <span
+              key={i}
+              className="strip-cell h-7 w-[3.5%] min-w-1"
+              data-on={value != null && i < Math.round(value / 5)}
+              style={{ '--i': i + 1 } as React.CSSProperties}
+            />
+          ))}
         </div>
       </div>
-      <output aria-hidden className={cn('w-8 text-right font-sans text-lg tabular-nums', value == null ? 'text-ink-muted' : 'text-ink')}>
+      <output aria-hidden className={cn('w-14 text-right font-catalog text-5xl font-semibold tabular-nums', value == null ? 'text-ink-muted' : 'text-ink')}>
         {value ?? '–'}
       </output>
     </div>

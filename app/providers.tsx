@@ -20,8 +20,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         theme="system"
         toastOptions={{
           classNames: {
-            toast: '!bg-surface !text-ink !border-rule !font-sans !text-sm !rounded-md !shadow-none',
-            actionButton: '!bg-ink !text-paper !font-sans'
+            toast: '!bg-surface !text-ink !border-rule !font-sans !text-sm !rounded-sm !shadow-none',
+            actionButton: '!bg-signal !text-signal-ink !font-sans !cursor-pointer'
           }
         }}
       />

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useId, useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import { AccountMenu } from '@/components/account-menu'
+import { CatalogNumber } from '@/components/catalog-number'
 import { IntensitySlider } from '@/components/intensity-slider'
 import { PROMPTS } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
@@ -143,23 +145,27 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
   const timeId = `${ids}-occurred_at`
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-9">
-      <div className="flex min-h-11 items-center justify-between gap-4">
+    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
+      <div className="flex min-h-12 items-center justify-between gap-4">
         <button
           type="button"
           aria-expanded={editingTime}
           aria-controls={timeId}
           onClick={() => setEditingTime(v => !v)}
-          className="-ml-2 flex min-h-11 items-center gap-1 rounded-sm px-2 text-sm text-ink"
+          className="label-caps -ml-2 flex min-h-11 items-center gap-1.5 rounded-sm px-2 text-ink"
         >
           <span className="sr-only">kapan terjadinya: </span>
           {formatDayTime(draft.occurred_at)}
           <ChevronDown aria-hidden className={editingTime ? 'size-4 rotate-180 text-ink-muted' : 'size-4 text-ink-muted'} />
         </button>
-        {cancelHref && (
-          <Link href={cancelHref} className="-mr-2 flex min-h-11 items-center rounded-sm px-2 text-sm text-ink-muted">
+        {cancelHref ? (
+          <Link href={cancelHref} className="-mr-2 flex min-h-11 items-center rounded-sm px-2 text-sm text-ink-muted hover:text-ink">
             batal
           </Link>
+        ) : (
+          <div className="-mr-2">
+            <AccountMenu />
+          </div>
         )}
       </div>
 
@@ -177,10 +183,12 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
               const d = new Date(e.target.value)
               if (!Number.isNaN(d.getTime())) set('occurred_at', d.toISOString())
             }}
-            className="mt-1.5 block min-h-11 w-full border-0 border-b border-rule bg-transparent text-base text-ink outline-none focus:border-b-2 focus:border-ink"
+            className="mt-1.5 block min-h-11 w-full rounded-sm border border-edge bg-surface px-3 text-base text-ink outline-none focus:border-signal focus:ring-1 focus:ring-signal"
           />
         </div>
       )}
+
+      <CatalogNumber id={entry?.id} className="-mb-2 text-5xl" />
 
       <RuledField
         id={`${ids}-situation`}
@@ -208,7 +216,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
           error={errors.feelings}
         />
         <div>
-          <span id={`${ids}-intensity-label`} className="mb-1 block text-sm text-ink-muted">
+          <span id={`${ids}-intensity-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
             {PROMPTS.intensity}
           </span>
           <IntensitySlider
@@ -220,7 +228,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
             invalid={!!errors.intensity}
           />
           {errors.intensity && (
-            <p id={`${ids}-intensity-error`} className="text-sm text-ink">
+            <p id={`${ids}-intensity-error`} className="mt-1.5 text-sm text-signal">
               {errors.intensity}
             </p>
           )}
@@ -236,12 +244,12 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
         autoFocus={focusEvidence}
       />
 
-      <div className="flex flex-col items-end gap-3">
-        <Button type="submit" disabled={saving} className="h-11 px-6 text-base">
+      <div className="flex flex-col gap-3">
+        <Button type="submit" disabled={saving} className="h-12 w-full font-catalog text-xl font-semibold tracking-wide">
           {saving ? 'menyimpan…' : 'simpan'}
         </Button>
         {!draft.evidence_for.trim() && (
-          <p className="text-right text-sm text-ink-muted">tanpa bukti, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
+          <p className="text-sm text-ink-muted">tanpa bukti, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
         )}
       </div>
     </form>

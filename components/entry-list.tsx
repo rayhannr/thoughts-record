@@ -1,9 +1,12 @@
 'use client'
 
+import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { AccountMenu } from '@/components/account-menu'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
+import { PulsePlot } from '@/components/pulse-plot'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -17,21 +20,26 @@ export function EntryList({ entries }: { entries: Entry[] }) {
 
   return (
     <>
-      <header className="flex min-h-11 items-center justify-between border-b border-rule pb-2">
-        <h1 className="text-base font-semibold text-ink">Thought Record</h1>
-        <Link
-          href="/new"
-          aria-label="tulis catatan baru"
-          className="-mr-2 flex size-11 items-center justify-center rounded-sm text-2xl leading-none text-ink"
-        >
-          +
-        </Link>
+      <header className="flex min-h-12 items-center justify-between gap-3">
+        <h1 className="font-catalog text-lg font-semibold tracking-[0.12em] text-ink uppercase">Thought Record</h1>
+        <div className="-mr-1 flex items-center gap-1">
+          <AccountMenu />
+          <Link
+            href="/new"
+            className="flex h-11 items-center gap-1.5 rounded-sm bg-signal px-4 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
+          >
+            <Plus aria-hidden className="size-5" strokeWidth={2.5} />
+            tulis
+          </Link>
+        </div>
       </header>
 
+      <PulsePlot entries={entries} />
+
       {drafts.length > 0 && (
-        <div role="group" aria-label="saring catatan" className="-ml-2 flex gap-1 pt-2 text-sm">
+        <div role="group" aria-label="saring catatan" className="mt-6 flex gap-2">
           <FilterButton active={filter === 'all'} onClick={() => setFilter('all')}>
-            semua
+            semua ({entries.length})
           </FilterButton>
           <FilterButton active={filter === 'draft'} onClick={() => setFilter('draft')}>
             {DRAFT_LABEL} ({drafts.length})
@@ -39,7 +47,7 @@ export function EntryList({ entries }: { entries: Entry[] }) {
         </div>
       )}
 
-      <ul>
+      <ul className={cn('border-t border-rule', drafts.length > 0 ? 'mt-3' : 'mt-6')}>
         {shown.map(entry => (
           <li key={entry.id} className="border-b border-rule">
             <EntryRow entry={entry} />
@@ -56,7 +64,10 @@ function FilterButton({ active, onClick, children }: { active: boolean; onClick:
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={cn('min-h-11 rounded-sm px-2 underline-offset-4', active ? 'text-ink underline decoration-1' : 'text-ink-muted')}
+      className={cn(
+        'min-h-11 rounded-sm border px-3.5 text-sm',
+        active ? 'border-ink bg-ink text-paper' : 'border-edge text-ink-muted hover:border-ink hover:text-ink'
+      )}
     >
       {children}
     </button>
@@ -68,13 +79,17 @@ function FilterButton({ active, onClick, children }: { active: boolean; onClick:
 function EntryRow({ entry }: { entry: Entry }) {
   return (
     <Link href={`/entries/${entry.id}`} className="-mx-4 block px-4 py-5 hover:bg-surface focus-visible:-outline-offset-2 sm:-mx-6 sm:px-6">
-      <span className="block text-sm text-ink-muted">{formatDay(entry.occurred_at)}</span>
-      <span className="mt-1 line-clamp-3 font-serif text-[19px] leading-snug text-ink">{entry.thoughts}</span>
-      <span className="mt-3 flex items-center justify-between gap-4">
-        <span className="min-w-0 truncate font-serif text-base text-ink">{entry.feelings}</span>
+      <span className="line-clamp-3 block text-[19px] leading-snug text-ink">{entry.thoughts}</span>
+      <span className="mt-3.5 flex items-center justify-between gap-4">
+        <span className="min-w-0">
+          <span className="line-clamp-2 block text-base text-ink">{entry.feelings}</span>
+          <span className="label-caps mt-1.5 flex items-center gap-2 text-ink-muted">
+            {formatDay(entry.occurred_at)}
+            {entry.status === 'draft' && <span className="font-sans text-sm tracking-normal normal-case">· {DRAFT_LABEL}</span>}
+          </span>
+        </span>
         <IntensityBar value={entry.intensity} />
       </span>
-      {entry.status === 'draft' && <span className="mt-2 block text-sm text-ink-muted">{DRAFT_LABEL}</span>}
     </Link>
   )
 }

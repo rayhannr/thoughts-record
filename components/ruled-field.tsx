@@ -1,10 +1,11 @@
 'use client'
 
 import { useLayoutEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 
 /**
- * A question in the sans with the answer written beneath it on a single
- * baseline rule, like writing on ruled paper rather than filling in a form.
+ * A question in small sans with the answer written beneath it. The field is a
+ * visible block that grows with the writing, so the whole area reads as tappable.
  */
 export function RuledField({
   id,
@@ -35,23 +36,26 @@ export function RuledField({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm text-ink-muted">
+      <label htmlFor={id} className="block font-catalog text-xl font-semibold tracking-wide text-ink">
         {question}
       </label>
       <textarea
         ref={ref}
         id={id}
-        rows={1}
+        rows={2}
         value={value}
         autoFocus={autoFocus}
         placeholder={placeholder}
         onChange={e => onChange(e.target.value)}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className="mt-1.5 block w-full resize-none overflow-hidden border-0 border-b border-rule bg-transparent pb-2 font-serif text-lg leading-relaxed text-ink outline-none placeholder:text-ink-muted focus:border-b-2 focus:border-ink focus:pb-1.75"
+        className={cn(
+          'mt-2 block min-h-18 w-full resize-none overflow-hidden rounded-sm border bg-surface px-3.5 py-3 text-lg leading-relaxed text-ink outline-none placeholder:text-ink-muted focus:border-signal focus:ring-1 focus:ring-signal',
+          error ? 'border-signal' : value.trim() ? 'border-ink' : 'border-edge'
+        )}
       />
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-sm text-ink">
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-signal">
           {error}
         </p>
       )}
