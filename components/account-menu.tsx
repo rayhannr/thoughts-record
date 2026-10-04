@@ -3,21 +3,8 @@
 import type { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { useEffect, useId, useRef, useState } from 'react'
+import { useUser } from '@/components/auth-provider'
 import { createClient } from '@/lib/supabase/client'
-
-// undefined until the first session read, so the control never flashes "masuk" for a signed-in user.
-function useUser() {
-  const [user, setUser] = useState<User | null | undefined>(undefined)
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null))
-    return () => data.subscription.unsubscribe()
-  }, [])
-
-  return user
-}
 
 export function AccountMenu() {
   const user = useUser()

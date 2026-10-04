@@ -51,3 +51,11 @@ export type Entry = z.output<typeof CreateEntry> & {
 export function statusFor(evidenceFor: string | null): EntryStatus {
   return evidenceFor ? 'done' : 'draft'
 }
+
+/** A whole entry as it was, for undoing a delete. */
+export const RestoreEntry = CreateEntry.extend({
+  id: z.uuid(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
+  status: EntryStatus
+})
