@@ -8,13 +8,14 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { AccountMenu } from '@/components/account-menu'
 import { CatalogNumber } from '@/components/catalog-number'
+import { DateTimePicker } from '@/components/date-time-picker'
 import { IntensitySlider } from '@/components/intensity-slider'
 import { PROMPTS } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
 import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
 import { CreateEntry, type Entry } from '@/lib/entries/schema'
-import { formatDayTime, toLocalInput } from '@/lib/format'
+import { formatDayTime } from '@/lib/format'
 
 type Draft = {
   occurred_at: string
@@ -171,20 +172,8 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
 
       {editingTime && (
         <div className="-mt-6">
-          <label htmlFor={timeId} className="block text-sm text-ink-muted">
-            kapan terjadinya?
-          </label>
-          <input
-            id={timeId}
-            type="datetime-local"
-            value={toLocalInput(draft.occurred_at)}
-            max={toLocalInput(new Date().toISOString())}
-            onChange={e => {
-              const d = new Date(e.target.value)
-              if (!Number.isNaN(d.getTime())) set('occurred_at', d.toISOString())
-            }}
-            className="mt-1.5 block min-h-11 w-full rounded-sm border border-edge bg-surface px-3 text-base text-ink outline-none focus:border-signal focus:ring-1 focus:ring-signal"
-          />
+          <p className="mb-2 text-sm text-ink-muted">kapan terjadinya?</p>
+          <DateTimePicker id={timeId} value={draft.occurred_at} onChange={v => set('occurred_at', v)} />
         </div>
       )}
 

@@ -23,10 +23,3 @@ export function formatDay(iso: string, now = new Date()): string {
 export function formatDayTime(iso: string, now = new Date()): string {
   return `${formatDay(iso, now)}, ${time.format(new Date(iso))}`
 }
-
-/** ISO string to the value a datetime-local input expects, in local time. */
-export function toLocalInput(iso: string): string {
-  const d = new Date(iso)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-}
