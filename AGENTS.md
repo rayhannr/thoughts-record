@@ -71,7 +71,7 @@ Exposes the same actions the web app uses, as MCP tools:
 
 No model is configured on this path and no system prompt ships with it. The tools are the whole surface; the reasoning belongs to whichever Claude the user is talking to.
 
-**Authentication** uses per-user tokens rather than OAuth. The user generates a token in settings, pastes it into their MCP client config, and the route resolves it to a `user_id` before touching data. OAuth remains possible later without changing how data is scoped.
+**Authentication** is OAuth 2.1 with Supabase Auth as the authorization server, so the route works as a Claude custom connector (desktop and mobile). Claude registers itself dynamically, the user approves on `/oauth/consent`, and Claude sends the resulting Supabase access token as a bearer token. The route builds a Supabase client with that token, so RLS scopes every call to the user and no service-role key is involved. `/.well-known/oauth-protected-resource` points clients at Supabase; an unauthenticated request gets a 401 with `WWW-Authenticate` pointing there.
 
 ### 2.5 Psychologist Dashboard (v3)
 
@@ -183,12 +183,12 @@ app/(auth)/        login, register, password reset
 
 - `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL.
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key, used by the browser client under RLS.
-- `SUPABASE_SERVICE_ROLE_KEY` — server-only; used for MCP token lookup, never to read entry bodies outside a user's scope.
+- `CRON_SECRET` — Vercel sends it as a bearer token to `/api/cron/ping`, a daily no-op query that keeps the Supabase free-tier project from pausing.
 
 ## 8. Roadmap
 
 - [ ] **v1 — Web app**: auth, four-column form with intensity, draft/done, chronological list, edit, delete, anonymous localStorage mode.
-- [ ] **v2 — MCP server**: `mcp_tokens` table, settings page to generate and revoke tokens, tool wrappers over the action layer.
+- [ ] **v2 — MCP server**: OAuth via Supabase Auth, consent page, tool wrappers over the action layer.
 - [ ] **v3 — Psychologist dashboard**: read-only view, revocable share link, printable.
 - [ ] **v4 — Seven columns**: surface columns 5–7 in the UI when the psychologist raises the exercise.
 - [ ] **Import on sign-up**: migrate anonymous localStorage entries into a new account.

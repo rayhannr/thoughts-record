@@ -30,16 +30,18 @@ function GoogleMark() {
 }
 
 function LoginForm() {
-  const failed = useSearchParams().get('error') !== null
+  const params = useSearchParams()
+  const next = params.get('next')
   const [pending, setPending] = useState(false)
-  const [error, setError] = useState(failed)
+  const [error, setError] = useState(params.get('error') !== null)
 
   async function signInWithGoogle() {
     setPending(true)
     setError(false)
+    const callback = `${location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
     const { error } = await createClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${location.origin}/auth/callback` }
+      options: { redirectTo: callback }
     })
     if (error) {
       setError(true)

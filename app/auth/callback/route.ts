@@ -4,11 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  // Only same-site paths, so the callback cannot be used as an open redirect.
+  const next = searchParams.get('next')
+  const destination = next && next.startsWith('/') && !next.startsWith('//') ? next : '/'
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) return NextResponse.redirect(`${origin}/`)
+    if (!error) return NextResponse.redirect(`${origin}${destination}`)
   }
 
   return NextResponse.redirect(`${origin}/login?error=1`)
