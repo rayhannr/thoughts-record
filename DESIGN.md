@@ -138,7 +138,7 @@ components:
 
 **Creative North Star: "Sleeve Zero"**
 
-The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (`TR / 0007`). The record's shape is the cover: a pulse plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.
+The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (`TR / 0007`). The record's shape is the cover: a feelings plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.
 
 Two voices share the page. Condensed caps (Barlow Condensed) are the catalogue's printing: wordmark, question labels, catalogue numbers, numerals, short marks. Hanken Grotesk is the user's own writing and the app's quiet chrome. The writing is never set in the printing face when it runs long.
 
@@ -147,7 +147,7 @@ Orange is the only chroma. It marks primary action, focus, selection, error, and
 **Key Characteristics:**
 - One orange (#c73e08 day, #ff6b2c night) carries action, focus, selection, error and the hot cells of the strip.
 - Condensed caps for short marks and numerals; humanist sans for anything the user wrote.
-- The pulse plot is the signature: one hairline waveform per recent entry, tallest spike equals the intensity.
+- The feelings plot is the signature: one dot per feeling, across is when it happened, up is how strongly it was felt; shape carries the optional valence (filled nggak enak, ring enak, small dot unrated).
 - Intensity is a length (20 cells, one per 5 points) plus a numeral, never colour alone.
 - Hairlines and 2px corners; depth comes from overlap and tone, never shadow.
 - Single 38rem column, mobile first, with the plot allowed to break out edge to edge.
@@ -205,13 +205,13 @@ A warm, near-monochrome sleeve with one hot ink. Both themes are fully specified
 
 One column, `max-w-[38rem]`, centred, with 16px side padding and 24px from the `sm` breakpoint, 12px top padding (32px at `sm`) and 96px bottom. Vertical rhythm between composer fields is 32px; between entry-view sections 40px. Controls meet a 44px minimum touch height (the slider track is 56px, the composer submit 48px).
 
-The list is: header (wordmark left, account and orange `tulis` button right), pulse plot edge to edge, an optional filter row (only when drafts exist), then hairline-separated rows. A row is the thought at 19px, then feeling text with date label on the left and the strip plus numeral on the right. Row hover is a `surface` tint that bleeds past the column padding. There is no empty-state screen and no card.
+The list is: header (wordmark left, account and orange `tulis` button right), feelings plot edge to edge, an optional filter row (only when drafts exist), then hairline-separated rows. A row is the thought at 19px, then feeling text with date label on the left and the strip plus numeral on the right. Row hover is a `surface` tint that bleeds past the column padding. There is no empty-state screen and no card.
 
-The pulse plot breaks out of the column (`w-screen`, capped at `max-w-5xl`), 220px tall on mobile and 280px from `sm`, with `preserveAspectRatio="none"` and non-scaling strokes.
+The feelings plot breaks out of the column (`w-screen`, capped at `max-w-5xl`), 220px tall on mobile and 280px from `sm`. Dots are positioned in HTML so they stay round at any width.
 
 ## Elevation & Depth
 
-Flat. No box-shadow exists in the build. Depth is overlap and tone: pulse-plot waveforms are drawn oldest at the top with a `paper`-filled area beneath each, so lower lines occlude the ones behind them. The account menu panel is the only floating element and is a `surface` fill with a one-pixel hairline, no shadow.
+Flat. No box-shadow exists in the build. Depth is tone only. The account menu panel is the only floating element and is a `surface` fill with a one-pixel hairline, no shadow.
 
 ### Named Rules
 **The No Shadow Rule.** Nothing casts a shadow. Separation is a hairline, a tone step to `surface`, or occlusion.
@@ -238,8 +238,8 @@ A question in condensed caps above, the answer in a visible `surface` block bene
 ### Intensity slider and code strip
 A 56px track in a 1px outlined `surface` box containing 20 cells, with the large numeral to the right. It starts empty with an en dash and an `edge` border; touched, the border goes `ink`. Snaps by 5 (arrows, PageUp and PageDown by 20, Home and End). The same 20-cell strip is read back in lists (5x14px cells) and the entry view (8x20px). Cells light by `round(value / 5)`.
 
-### Pulse plot (signature)
-One hairline waveform per entry, oldest at top, up to 14 most recent. A waveform's single tallest spike has height equal to the entry's intensity (scale bar at the left edge is 100); everything else stays below 55% of that as seeded-stable texture. Strokes are `ink` at 1px, 80% opacity; the newest is 2.2px at full opacity. A round dot at each peak takes the strip's ramp colour. The caption is two label-caps lines: first and last dates, and the key `tinggi puncak = intensitas`. The plot is drawn only from entry data; it is never decorative, placeholder, or sample.
+### Feelings plot (signature)
+One dot per feeling for the 30 most recent entries. Across is real `occurred_at` time, up is intensity (0, 50 and 100 gridlines). An entry's feelings stack in one column with a hairline between the lowest and highest; entries are never joined. Shape carries the optional valence: filled dot is nggak enak, ring is enak, small dot is unrated. Dot tone follows the strip's intensity ramp. Each dot links to its entry and carries an aria-label with name, intensity, valence and date.
 
 ### Navigation and status
 No tab bar. The list header carries wordmark and actions; sub-pages carry a plain muted back link and an outlined `ubah`. Loading and error are a single muted line (`StatusLine`), never a spinner or alert box. Toasts (Sonner) use an orange action button.
@@ -253,7 +253,7 @@ One moment: when a draft's evidence is filled later, that section settles in (60
 - **Do** keep orange to action, focus, selection, error, and the hot end of intensity, one orange per theme.
 - **Do** set the thought as the condensed headline only at 90 characters or fewer; use Hanken for anything longer.
 - **Do** show the intensity numeral next to every strip or plot; the length and number carry the reading.
-- **Do** draw the pulse plot only from real entry data, with the tallest spike equal to the intensity.
+- **Do** draw the feelings plot only from real entry data, with a dot's height equal to its intensity and its shape equal to the valence the user gave, never one inferred.
 - **Do** use `--edge` for control outlines and `--rule` for hairlines only.
 - **Do** give every clickable element a pointer cursor (a global base rule restores it after Tailwind's reset) and a not-allowed cursor when disabled.
 - **Do** keep touch targets at 44px or more and field text at 16px or more.

@@ -96,11 +96,11 @@
   ],
   "narrative": {
     "northStar": "Sleeve Zero",
-    "overview": "The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (TR / 0007). The record's shape is the cover: a pulse plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.\n\nTwo voices share the page. Condensed caps (Barlow Condensed) are the catalogue's printing: wordmark, question labels, catalogue numbers, numerals, short marks. Hanken Grotesk is the user's own writing and the app's quiet chrome. The writing is never set in the printing face when it runs long.\n\nOrange is the only chroma. It marks primary action, focus, selection, error, and the hot end of intensity. Everything else is bone, black, and warm grey. The dark theme is the primary sleeve; the light theme is the same sleeve inverted, with a deeper orange to hold contrast.",
+    "overview": "The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (TR / 0007). The record's shape is the cover: a feelings plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.\n\nTwo voices share the page. Condensed caps (Barlow Condensed) are the catalogue's printing: wordmark, question labels, catalogue numbers, numerals, short marks. Hanken Grotesk is the user's own writing and the app's quiet chrome. The writing is never set in the printing face when it runs long.\n\nOrange is the only chroma. It marks primary action, focus, selection, error, and the hot end of intensity. Everything else is bone, black, and warm grey. The dark theme is the primary sleeve; the light theme is the same sleeve inverted, with a deeper orange to hold contrast.",
     "keyCharacteristics": [
       "One orange (#c73e08 day, #ff6b2c night) carries action, focus, selection, error and the hot cells of the strip.",
       "Condensed caps for short marks and numerals; humanist sans for anything the user wrote.",
-      "The pulse plot is the signature: one hairline waveform per recent entry, tallest spike equals the intensity.",
+      "The feelings plot is the signature: one dot per feeling, height equals intensity, shape carries the optional valence.",
       "Intensity is a length (20 cells, one per 5 points) plus a numeral, never colour alone.",
       "Hairlines and 2px corners; depth comes from overlap and tone, never shadow.",
       "Single 38rem column, mobile first, with the plot allowed to break out edge to edge."
@@ -118,7 +118,7 @@
       "Do keep orange to action, focus, selection, error, and the hot end of intensity, one orange per theme.",
       "Do set the thought as the condensed headline only at 90 characters or fewer; use Hanken for anything longer.",
       "Do show the intensity numeral next to every strip or plot; the length and number carry the reading.",
-      "Do draw the pulse plot only from real entry data, with the tallest spike equal to the intensity.",
+      "Do draw the feelings plot only from real entry data, with a dot's height equal to its intensity.",
       "Do use --edge for control outlines and --rule for hairlines only.",
       "Do give every clickable element a pointer cursor (a global base rule restores it after Tailwind's reset) and a not-allowed cursor when disabled.",
       "Do keep touch targets at 44px or more and field text at 16px or more.",

@@ -17,7 +17,7 @@ function upgrade(raw: unknown): Entry {
   const e = raw as Entry & { intensity?: number }
   if (Array.isArray(e.feelings)) return e
   const { intensity, ...rest } = e
-  return { ...rest, feelings: [{ name: String(e.feelings), intensity: intensity ?? 0 }] }
+  return { ...rest, feelings: [{ name: String(e.feelings), intensity: intensity ?? 0, valence: null }] }
 }
 
 function write(entries: Entry[]) {

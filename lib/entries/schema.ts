@@ -11,10 +11,16 @@ const OptionalText = z
   .nullish()
   .transform(v => (v ? v : null))
 
+// How the feeling sat with the person, in their own judgement. Never inferred
+// from the name; absent means they did not say.
+export const Valence = z.enum(['good', 'bad'])
+export type Valence = z.infer<typeof Valence>
+
 // One situation can bring several feelings, each at its own strength.
 export const Feeling = z.object({
   name: RequiredText,
-  intensity: Intensity
+  intensity: Intensity,
+  valence: Valence.nullish().transform(v => v ?? null)
 })
 export type Feeling = z.infer<typeof Feeling>
 

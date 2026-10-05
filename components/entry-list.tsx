@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
-import { PulsePlot } from '@/components/pulse-plot'
+import { FeelingsPlot } from '@/components/feelings-plot'
 import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -34,7 +34,7 @@ export function EntryList({ entries }: { entries: Entry[] }) {
         </div>
       </header>
 
-      <PulsePlot entries={entries} />
+      <FeelingsPlot entries={entries} />
 
       {drafts.length > 0 && (
         <div role="group" aria-label="saring catatan" className="mt-6 flex gap-2">

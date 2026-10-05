@@ -9,14 +9,15 @@ import { AccountMenu } from '@/components/account-menu'
 import { CatalogNumber } from '@/components/catalog-number'
 import { DateTimePicker } from '@/components/date-time-picker'
 import { IntensitySlider } from '@/components/intensity-slider'
-import { PROMPTS } from '@/components/prompts'
+import { PROMPTS, VALENCE_LABEL } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
 import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
-import { CreateEntry, MAX_FEELINGS, type Entry } from '@/lib/entries/schema'
+import { CreateEntry, MAX_FEELINGS, type Entry, type Valence } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
+import { cn } from '@/lib/utils'
 
-type FeelingDraft = { name: string; intensity: number | null }
+type FeelingDraft = { name: string; intensity: number | null; valence: Valence | null }
 
 type Draft = {
   occurred_at: string
@@ -61,11 +62,11 @@ function saveUnsent(draft: Draft | null) {
 }
 
 function blankFeeling(): FeelingDraft {
-  return { name: '', intensity: null }
+  return { name: '', intensity: null, valence: null }
 }
 
 function isBlankFeeling(f: FeelingDraft) {
-  return !f.name.trim() && f.intensity == null
+  return !f.name.trim() && f.intensity == null && !f.valence
 }
 
 function isBlank(d: Draft) {
@@ -77,7 +78,7 @@ function fromEntry(entry: Entry): Draft {
     occurred_at: entry.occurred_at,
     situation: entry.situation,
     thoughts: entry.thoughts,
-    feelings: entry.feelings.map(f => ({ ...f })),
+    feelings: entry.feelings.map(f => ({ ...f, valence: f.valence ?? null })),
     evidence_for: entry.evidence_for ?? ''
   }
 }
@@ -118,7 +119,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
     if (errors[field]) setErrors(e => ({ ...e, [field]: undefined }))
   }
 
-  function setFeeling(row: number, key: keyof FeelingDraft, value: string | number) {
+  function setFeeling(row: number, key: keyof FeelingDraft, value: string | number | null) {
     setDraft(d => ({ ...d, feelings: d.feelings.map((f, i) => (i === row ? { ...f, [key]: value } : f)) }))
     const errorKey = `feelings.${row}.${key}`
     if (errors[errorKey]) setErrors(e => ({ ...e, [errorKey]: undefined }))
@@ -143,7 +144,9 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
 
     const parsed = CreateEntry.safeParse({
       ...draft,
-      feelings: rows.map(i => ({ name: draft.feelings[i].name, intensity: draft.feelings[i].intensity ?? undefined }))
+      feelings: rows.map(i => ({ name: draft.feelings[i].name, intensity: draft.feelings[i].intensity ?? undefined,
+        valence: draft.feelings[i].valence
+      }))
     })
 
     if (!parsed.success) {
@@ -265,6 +268,27 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
                     {intensityError}
                   </p>
                 )}
+              </div>
+              <div role="group" aria-labelledby={`${base}-valence-label`}>
+                <span id={`${base}-valence-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
+                  {PROMPTS.valence}
+                </span>
+                <div className="flex gap-2">
+                  {(Object.keys(VALENCE_LABEL) as Valence[]).map(v => (
+                    <button
+                      key={v}
+                      type="button"
+                      aria-pressed={feeling.valence === v}
+                      onClick={() => setFeeling(row, 'valence', feeling.valence === v ? null : v)}
+                      className={cn(
+                        'flex min-h-11 items-center rounded-sm border px-4 text-base',
+                        feeling.valence === v ? 'border-ink bg-ink text-paper' : 'border-edge text-ink hover:border-ink'
+                      )}
+                    >
+                      {VALENCE_LABEL[v]}
+                    </button>
+                  ))}
+                </div>
               </div>
               {draft.feelings.length > 1 && (
                 <button

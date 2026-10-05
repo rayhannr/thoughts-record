@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { CatalogNumber } from '@/components/catalog-number'
 import { IntensityBar } from '@/components/intensity-bar'
-import { DRAFT_LABEL, PROMPTS } from '@/components/prompts'
+import { DRAFT_LABEL, PROMPTS, VALENCE_LABEL } from '@/components/prompts'
 import { useDeleteEntry, useRestoreEntry, wasJustCompleted } from '@/lib/entries/client'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
@@ -40,6 +40,7 @@ export function EntryView({ entry }: { entry: Entry }) {
             {entry.feelings.map((f, i) => (
               <li key={i}>
                 {f.name}
+                {f.valence && <span className="ml-2 font-sans text-sm text-ink-muted">· {VALENCE_LABEL[f.valence]}</span>}
                 <IntensityBar value={f.intensity} large className="mt-3" />
               </li>
             ))}

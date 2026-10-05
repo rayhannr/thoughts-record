@@ -35,6 +35,7 @@ export function createMcpServer(db: SupabaseClient, userId: string) {
       description:
         'Create a thought-record entry. Columns: situation, thoughts, feelings, and evidence_for. ' +
         'feelings is a list of {name, intensity}: one entry per feeling, name in free text, intensity 0-100. A situation can have several. ' +
+        'Each feeling may carry valence "good" or "bad", but only when the user said how it felt; never infer it from the name, omit it otherwise. ' +
         'Omit evidence_for to save a draft. occurred_at is when the situation happened (ISO 8601), not now.',
       inputSchema: CreateEntry.shape
     },
