@@ -185,7 +185,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
 
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
-      <div className="flex min-h-12 items-center justify-between gap-4">
+      <div className="sticky top-0 py-2 z-10 -mx-5 flex min-h-12 items-center justify-between gap-4 bg-paper px-5 sm:-mx-6 sm:px-6">
         <button
           type="button"
           aria-expanded={editingTime}
@@ -300,7 +300,7 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
         autoFocus={focusEvidence}
       />
 
-      <div className="flex flex-col gap-3">
+      <div className="sticky bottom-0 z-10 -mx-5 flex flex-col gap-3 border-t border-rule bg-paper px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6">
         <Button type="submit" disabled={saving} className="h-12 w-full font-catalog text-xl font-semibold tracking-wide">
           {saving ? 'menyimpan…' : 'simpan'}
         </Button>

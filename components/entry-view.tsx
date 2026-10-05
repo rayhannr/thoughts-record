@@ -18,7 +18,7 @@ export function EntryView({ entry }: { entry: Entry }) {
 
   return (
     <article>
-      <nav className="-mx-2 flex min-h-12 items-center justify-between">
+      <nav className="sticky top-0 py-2 z-10 -mx-5 flex min-h-12 items-center justify-between bg-paper px-3 sm:-mx-6 sm:px-4">
         <Link href="/" className={`${chrome} text-ink-muted hover:text-ink`}>
           semua catatan
         </Link>
