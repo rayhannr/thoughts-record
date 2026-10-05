@@ -79,7 +79,7 @@ function FilterButton({ active, onClick, children }: { active: boolean; onClick:
 function EntryRow({ entry }: { entry: Entry }) {
   return (
     <Link href={`/entries/${entry.id}`} className="-mx-4 block px-4 py-5 hover:bg-surface focus-visible:-outline-offset-2 sm:-mx-6 sm:px-6">
-      <span className="line-clamp-3 block text-[19px] leading-snug text-ink">{entry.thoughts}</span>
+      <span className="line-clamp-3 block text-[19px] leading-snug whitespace-pre-line text-ink">{entry.thoughts}</span>
       <span className="mt-3.5 flex items-center justify-between gap-4">
         <span className="min-w-0">
           <span className="line-clamp-2 block text-base text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
