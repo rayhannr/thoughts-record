@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
@@ -13,10 +13,21 @@ import { cn } from '@/lib/utils'
 
 type Filter = 'all' | 'draft'
 
+const PAGE_SIZE = 5
+
 export function EntryList({ entries }: { entries: Entry[] }) {
   const [filter, setFilter] = useState<Filter>('all')
+  const [page, setPage] = useState(1)
   const drafts = entries.filter(e => e.status === 'draft')
   const shown = filter === 'draft' && drafts.length > 0 ? drafts : entries
+  const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE))
+  const currentPage = Math.min(page, pageCount)
+  const visible = shown.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  function changeFilter(next: Filter) {
+    setFilter(next)
+    setPage(1)
+  }
 
   return (
     <>
@@ -38,23 +49,52 @@ export function EntryList({ entries }: { entries: Entry[] }) {
 
       {drafts.length > 0 && (
         <div role="group" aria-label="saring catatan" className="mt-6 flex gap-2">
-          <FilterButton active={filter === 'all'} onClick={() => setFilter('all')}>
+          <FilterButton active={filter === 'all'} onClick={() => changeFilter('all')}>
             semua ({entries.length})
           </FilterButton>
-          <FilterButton active={filter === 'draft'} onClick={() => setFilter('draft')}>
+          <FilterButton active={filter === 'draft'} onClick={() => changeFilter('draft')}>
             {DRAFT_LABEL} ({drafts.length})
           </FilterButton>
         </div>
       )}
 
       <ul className={cn('border-t border-rule', drafts.length > 0 ? 'mt-3' : 'mt-6')}>
-        {shown.map(entry => (
+        {visible.map(entry => (
           <li key={entry.id} className="border-b border-rule">
             <EntryRow entry={entry} />
           </li>
         ))}
       </ul>
+
+      {pageCount > 1 && (
+        <nav aria-label="halaman" className="mt-4 flex items-center justify-between gap-3">
+          <PageButton disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
+            <ChevronLeft aria-hidden className="size-4" />
+            baru
+          </PageButton>
+          <span className="text-sm text-ink-muted" aria-live="polite">
+            {currentPage} / {pageCount}
+          </span>
+          <PageButton disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
+            lama
+            <ChevronRight aria-hidden className="size-4" />
+          </PageButton>
+        </nav>
+      )}
     </>
+  )
+}
+
+function PageButton({ disabled, onClick, children }: { disabled: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      className="flex min-h-11 items-center gap-1.5 rounded-sm border border-edge px-3.5 text-sm text-ink-muted hover:border-ink hover:text-ink disabled:pointer-events-none disabled:opacity-40"
+    >
+      {children}
+    </button>
   )
 }
 
