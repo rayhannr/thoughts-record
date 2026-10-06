@@ -21,7 +21,7 @@ function LegendItem({ label, children }: { label: string; children: React.ReactN
  * up is how strongly it was felt. An entry's feelings stack in one column and
  * are never joined to the next entry, since mixed feelings are not one series.
  * Shape carries the person's own valence: filled is nggak enak, a ring is enak,
- * a small dot is not rated. Nothing is inferred from the feeling's name.
+ * a diamond is not rated. Nothing is inferred from the feeling's name.
  */
 export function FeelingsPlot({ entries }: { entries: Entry[] }) {
   const recent = [...entries]
@@ -36,6 +36,17 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
   const span = new Date(last.occurred_at).getTime() - start
   const xOf = (iso: string) => (span === 0 ? 50 : 4 + 92 * ((new Date(iso).getTime() - start) / span))
 
+  // Evenly spaced date labels so a cluster can be placed in time; a label that
+  // repeats its neighbour's day is dropped.
+  const ticks: { at: number; label: string; minor: boolean }[] = []
+  for (const f of span === 0 ? [0.5] : [0, 0.25, 0.5, 0.75, 1]) {
+    const at = start + span * f
+    const label = formatDay(new Date(at).toISOString())
+    if (ticks.length === 0 || ticks[ticks.length - 1].label !== label) {
+      ticks.push({ at, label, minor: f === 0.25 || f === 0.75 })
+    }
+  }
+
   const rated = recent.some(e => e.feelings.some(f => f.valence))
   const count = recent.reduce((n, e) => n + e.feelings.length, 0)
 
@@ -43,7 +54,7 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
     <figure
       role="group"
       aria-label={`grafik ${count} perasaan dari ${recent.length} catatan terakhir, dari ${formatDay(first.occurred_at)} sampai ${formatDay(last.occurred_at)}. tinggi titik sama dengan seberapa kuat.`}
-      className="relative left-1/2 mt-5 w-screen max-w-5xl -translate-x-1/2 px-4"
+      className="mt-5"
     >
       <div className="relative ml-8 h-[220px] sm:h-[280px]">
         <div aria-hidden className="absolute inset-y-3 inset-x-0">
@@ -75,8 +86,12 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
                       aria-label={label}
                       title={label}
                       className={cn(
-                        'absolute -translate-x-1/2 translate-y-1/2 rounded-full after:absolute after:-inset-3 after:content-[""]',
-                        f.valence === 'good' ? 'size-3 border-2 bg-paper' : f.valence === 'bad' ? 'size-3' : 'size-2'
+                        'absolute -translate-x-1/2 translate-y-1/2 after:absolute after:-inset-3 after:content-[""]',
+                        f.valence === 'good'
+                          ? 'size-3 rounded-full border-2 bg-paper'
+                          : f.valence === 'bad'
+                            ? 'size-3 rounded-full'
+                            : 'size-2.5 rotate-45 rounded-[1px]'
                       )}
                       style={{
                         bottom: `${f.intensity}%`,
@@ -92,10 +107,17 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
       </div>
 
       <figcaption className="label-caps ml-8 mt-3 text-ink-muted">
-        <span className="flex justify-between whitespace-nowrap">
-          <span>{formatDay(first.occurred_at)}</span>
-          <span>{formatDay(last.occurred_at)}</span>
-        </span>
+        <div aria-hidden className="relative h-4 whitespace-nowrap">
+          {ticks.map(t => (
+            <span
+              key={t.at}
+              className={cn('absolute -translate-x-1/2', t.minor && 'hidden sm:block')}
+              style={{ left: `${xOf(new Date(t.at).toISOString())}%` }}
+            >
+              {t.label}
+            </span>
+          ))}
+        </div>
         <span className="mt-2 block text-center">tinggi titik = seberapa kuat</span>
         {rated && (
           <ul className="mt-2 flex flex-wrap justify-center gap-x-5 gap-y-1">
@@ -106,7 +128,7 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
               <span aria-hidden className="size-3 rounded-full border-2 border-ink-muted" />
             </LegendItem>
             <LegendItem label="belum dinilai">
-              <span aria-hidden className="size-2 rounded-full bg-ink-muted" />
+              <span aria-hidden className="size-2 rotate-45 rounded-[1px] bg-ink-muted" />
             </LegendItem>
           </ul>
         )}

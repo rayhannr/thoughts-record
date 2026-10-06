@@ -4,9 +4,9 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
+import { FeelingsPlot } from '@/components/feelings-plot'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
-import { FeelingsPlot } from '@/components/feelings-plot'
 import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 import { cn } from '@/lib/utils'
@@ -114,22 +114,19 @@ function FilterButton({ active, onClick, children }: { active: boolean; onClick:
   )
 }
 
-// Leads with the thought: re-reading is a search for recurring thoughts, and
-// the situation differs every time.
+// Leads with how strongly the user felt, then the thought behind it.
 function EntryRow({ entry }: { entry: Entry }) {
   return (
     <Link href={`/entries/${entry.id}`} className="-mx-4 block px-4 py-5 hover:bg-surface focus-visible:-outline-offset-2 sm:-mx-6 sm:px-6">
-      <span className="line-clamp-3 block text-[19px] leading-snug whitespace-pre-line text-ink">{entry.thoughts}</span>
-      <span className="mt-3.5 flex items-center justify-between gap-4">
-        <span className="min-w-0">
-          <span className="line-clamp-2 block text-base text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
-          <span className="label-caps mt-1.5 flex items-center gap-2 text-ink-muted">
-            {formatDay(entry.occurred_at)}
-            {entry.status === 'draft' && <span className="font-sans text-sm tracking-normal normal-case">· {DRAFT_LABEL}</span>}
-          </span>
-        </span>
+      <span className="label-caps flex items-center gap-2 text-ink-muted">
+        {formatDay(entry.occurred_at)}
+        {entry.status === 'draft' && <span className="font-sans text-sm tracking-normal normal-case">· {DRAFT_LABEL}</span>}
+      </span>
+      <span className="flex items-center justify-between gap-4">
+        <span className="line-clamp-2 min-w-0 text-base text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
         <IntensityBar value={peakIntensity(entry.feelings)} />
       </span>
+      <span className="mt-3.5 line-clamp-3 block text-[19px] leading-snug whitespace-pre-line text-ink">{entry.thoughts}</span>
     </Link>
   )
 }

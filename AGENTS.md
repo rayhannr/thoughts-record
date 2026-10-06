@@ -274,7 +274,7 @@ COMPOSER                          LIST
 
 ### 9.5 Component Rules
 
-- **List rows lead with the thought, not the situation.** Re-reading is a search for recurring thoughts; the situation is the wrapper and differs every time.
+- **List rows lead with the feelings and intensity, then the thought, not the situation.** How strongly the user felt is what the eye should read first; the thought follows, and the situation is the wrapper that differs every time.
 - **The intensity slider starts empty.** No default value — a pre-filled number anchors the answer before the user has considered it. It shows a dash until touched, and snaps in steps of 5; single-unit precision on a felt sense is false precision.
 - **Drafts are marked with muted sans text** (`belum diuji`), never a coloured badge or a warning icon. A draft is the normal path through the app, not an error state.
 - **There is no empty state screen.** With no entries, the app opens directly into the composer. A blank page ready to be written on invites more than an illustration with a button under it.
