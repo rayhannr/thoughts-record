@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
 import { CreateEntry, MAX_FEELINGS, type Entry, type Valence } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 type FeelingDraft = { name: string; intensity: number | null; valence: Valence | null }
 

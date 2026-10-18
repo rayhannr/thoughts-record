@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 const monthTitle = new Intl.DateTimeFormat('id-ID', { month: 'long', year: 'numeric' })
 const dayLabel = new Intl.DateTimeFormat('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })

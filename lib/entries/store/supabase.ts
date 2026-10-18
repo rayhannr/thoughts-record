@@ -9,7 +9,7 @@ const COLUMNS =
 export class NotFoundError extends Error {}
 
 // Postgres returns "+00:00" offsets; the client sorts and compares these as strings.
-function toEntry(row: unknown): Entry {
+export function toEntry(row: unknown): Entry {
   const r = row as Entry
   return {
     ...r,

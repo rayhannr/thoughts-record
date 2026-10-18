@@ -1,7 +1,7 @@
 'use client'
 
 import { useEntries } from '@/lib/entries/client'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 /**
  * Every entry is a catalogue item, numbered in the order it was written.

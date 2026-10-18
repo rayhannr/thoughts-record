@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { CatalogNumber } from '@/components/catalog-number'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL, PROMPTS, VALENCE_LABEL } from '@/components/prompts'
+import { Section } from '@/components/section'
 import { useDeleteEntry, useRestoreEntry, wasJustCompleted } from '@/lib/entries/client'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
@@ -32,7 +33,7 @@ export function EntryView({ entry }: { entry: Entry }) {
 
       <div className="mt-8 flex flex-col gap-10">
         <Section question={PROMPTS.situation}>{entry.situation}</Section>
-        <Section question={PROMPTS.thoughts} emphasis>
+        <Section question={PROMPTS.thoughts}>
           {entry.thoughts}
         </Section>
         <Section question={PROMPTS.feelings}>
@@ -70,30 +71,6 @@ export function EntryView({ entry }: { entry: Entry }) {
         <DeleteControl entry={entry} />
       </footer>
     </article>
-  )
-}
-
-// The thought is the headline, but only a short one fits the condensed face; a long
-// one stays in the writing face so it reads as the user's own voice.
-const HEADLINE_MAX = 90
-
-function Section({ question, children, emphasis }: { question: string; children: React.ReactNode; emphasis?: boolean }) {
-  const headline = emphasis && typeof children === 'string' && children.length <= HEADLINE_MAX
-  return (
-    <section>
-      <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{question}</h2>
-      <div
-        className={
-          headline
-            ? 'mt-2 max-w-[65ch] font-catalog text-[2.25rem] leading-[1.1] font-semibold tracking-[0.01em] whitespace-pre-wrap text-ink'
-            : emphasis
-              ? 'mt-2 max-w-[65ch] text-2xl leading-snug font-medium whitespace-pre-wrap text-ink'
-              : 'mt-2 max-w-[65ch] text-lg leading-relaxed whitespace-pre-wrap text-ink'
-        }
-      >
-        {children}
-      </div>
-    </section>
   )
 }
 

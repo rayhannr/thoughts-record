@@ -78,7 +78,14 @@ No model is configured on this path and no system prompt ships with it. The tool
 
 A clean, self-contained read view built for showing to the psychologist at a session — not the raw database, and not the writing UI.
 
-Likely served over a revocable read-only share link so it can be opened without an account. This needs a share-token table, deliberately deferred but noted so the schema can absorb it without rework.
+Served over a revocable read-only share link at `/s/[token]`, opened without an account.
+
+- **A link shares a date range** (`range_from`, optional `range_to`) and is **live**: entries written later inside the range appear too. Every entry in the range is shared, including ones without column 4; the viewer simply sees no evidence section for those.
+- **Links expire** (1, 7 or 30 days from the UI) and can be **revoked**, which deletes the row so the link stops opening at once. An unknown, expired and revoked link look identical to the viewer.
+- **Only a sha256 hash of the token is stored**, so the token is shown once at creation and cannot be recovered. A lost link is revoked and replaced.
+- **No service-role key.** The viewer has no `auth.uid()`, so the one read path is the `security definer` function `get_shared_entries(token_hash)`. It validates the token and returns that owner's entries in range, with `user_id` stripped. `share_links` itself is owner-only under RLS.
+- The page sends `noindex`, `Referrer-Policy: no-referrer` and `no-store`, reads no session, and logs nothing about what was read. There is no view analytics.
+- Owners manage links at `/share`, reached from the account menu. Signed-in only: anonymous entries live in the browser and cannot be shared.
 
 ### 2.6 Explicitly Out of Scope
 
@@ -161,7 +168,23 @@ create table entries (
 );
 ```
 
-RLS: every policy on `entries` is scoped to `auth.uid() = user_id`. There is no shared read path and no service-role read of entry bodies.
+RLS: every policy on `entries` is scoped to `auth.uid() = user_id`. There is no service-role read of entry bodies, and no policy that lets anyone else read them directly.
+
+The sole exception is `get_shared_entries(token_hash)` (v3), a `security definer` function that returns entries only to a holder of a valid, unexpired share token:
+
+```sql
+create table share_links (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null references auth.users on delete cascade,
+  token_hash  text not null unique,   -- sha256 of the token; the token is never stored
+  range_from  timestamptz not null,
+  range_to    timestamptz,            -- null = open-ended
+  expires_at  timestamptz not null,
+  created_at  timestamptz not null default now()
+);
+```
+
+Owner-only RLS (select, insert, delete). Revoking is deleting the row.
 
 ## 6. Directory Structure
 
@@ -172,8 +195,11 @@ lib/entries/
   store/
     supabase.ts    server-side; the only module that touches the database
     local.ts       client-side localStorage, anonymous mode
-lib/supabase/      client and server Supabase factories
+lib/share/         share links (v3): schema.ts, actions.ts, store/supabase.ts, client.ts
+lib/supabase/      client and server Supabase factories, plus a session-less anon client for shared pages
 app/api/entries/   thin route handlers over actions
+app/api/share/     create, list and revoke share links
+app/s/[token]/     the public read-only view
 app/api/mcp/       MCP tool wrappers over the same actions (v2)
 app/(app)/         the writing and review UI
 app/(auth)/        login, register, password reset

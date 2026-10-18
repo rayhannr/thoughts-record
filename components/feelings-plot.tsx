@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { VALENCE_LABEL } from '@/components/prompts'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 const MAX_ENTRIES = 30
 const GRID = [100, 50, 0]

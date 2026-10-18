@@ -1,21 +1,23 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
+import { useUser } from '@/components/auth-provider'
 import { FeelingsPlot } from '@/components/feelings-plot'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
 import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 type Filter = 'all' | 'draft'
 
 const PAGE_SIZE = 5
 
 export function EntryList({ entries }: { entries: Entry[] }) {
+  const user = useUser()
   const [filter, setFilter] = useState<Filter>('all')
   const [page, setPage] = useState(1)
   const drafts = entries.filter(e => e.status === 'draft')
@@ -31,10 +33,19 @@ export function EntryList({ entries }: { entries: Entry[] }) {
 
   return (
     <>
-      <header className="flex min-h-12 items-center justify-between gap-3">
+      <header className="flex min-h-12 flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <h1 className="font-catalog text-lg font-semibold tracking-[0.12em] text-ink uppercase">Thought Record</h1>
         <div className="-mr-1 flex items-center gap-1">
           <AccountMenu />
+          {user && (
+            <Link
+              href="/share"
+              className="flex h-11 items-center gap-1.5 rounded-sm border border-edge px-3.5 text-sm text-ink hover:border-ink"
+            >
+              <Share2 aria-hidden className="size-4" />
+              bagikan
+            </Link>
+          )}
           <Link
             href="/new"
             className="flex h-11 items-center gap-1.5 rounded-sm bg-signal px-4 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
