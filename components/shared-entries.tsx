@@ -1,5 +1,6 @@
 'use client'
 
+import { FeelingsAfter } from '@/components/feelings-after'
 import { IntensityBar } from '@/components/intensity-bar'
 import { PROMPTS, VALENCE_LABEL } from '@/components/prompts'
 import { Section } from '@/components/section'
@@ -64,7 +65,8 @@ function SharedEntry({ entry }: { entry: Entry }) {
             ))}
           </ul>
         </Section>
-        {entry.evidence_for && <Section question={PROMPTS.evidence}>{entry.evidence_for}</Section>}
+        {entry.balanced_thought && <Section question={PROMPTS.balanced}>{entry.balanced_thought}</Section>}
+        <FeelingsAfter feelings={entry.feelings} />
       </div>
     </article>
   )

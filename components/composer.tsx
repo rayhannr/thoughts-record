@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from 'cn'
 import { ChevronDown, Plus, X } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -15,16 +16,15 @@ import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
 import { CreateEntry, MAX_FEELINGS, type Entry, type Valence } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
-import { cn } from 'cn'
 
-type FeelingDraft = { name: string; intensity: number | null; valence: Valence | null }
+type FeelingDraft = { name: string; intensity: number | null; valence: Valence | null; intensity_after: number | null }
 
 type Draft = {
   occurred_at: string
   situation: string
   thoughts: string
   feelings: FeelingDraft[]
-  evidence_for: string
+  balanced_thought: string
 }
 
 type Field = Exclude<keyof Draft, 'feelings'>
@@ -62,15 +62,15 @@ function saveUnsent(draft: Draft | null) {
 }
 
 function blankFeeling(): FeelingDraft {
-  return { name: '', intensity: null, valence: null }
+  return { name: '', intensity: null, valence: null, intensity_after: null }
 }
 
 function isBlankFeeling(f: FeelingDraft) {
-  return !f.name.trim() && f.intensity == null && !f.valence
+  return !f.name.trim() && f.intensity == null && !f.valence && f.intensity_after == null
 }
 
 function isBlank(d: Draft) {
-  return !d.situation && !d.thoughts && d.feelings.every(isBlankFeeling) && !d.evidence_for
+  return !d.situation && !d.thoughts && d.feelings.every(isBlankFeeling) && !d.balanced_thought
 }
 
 function fromEntry(entry: Entry): Draft {
@@ -78,8 +78,8 @@ function fromEntry(entry: Entry): Draft {
     occurred_at: entry.occurred_at,
     situation: entry.situation,
     thoughts: entry.thoughts,
-    feelings: entry.feelings.map(f => ({ ...f, valence: f.valence ?? null })),
-    evidence_for: entry.evidence_for ?? ''
+    feelings: entry.feelings.map(f => ({ ...f, valence: f.valence ?? null, intensity_after: f.intensity_after ?? null })),
+    balanced_thought: entry.balanced_thought ?? ''
   }
 }
 
@@ -89,7 +89,7 @@ function blankDraft(): Draft {
     situation: '',
     thoughts: '',
     feelings: [blankFeeling()],
-    evidence_for: ''
+    balanced_thought: ''
   }
 }
 
@@ -97,7 +97,7 @@ function blankDraft(): Draft {
  * Writes a new entry, or edits an existing one when `entry` is given.
  * Must render client-side only: it reads localStorage on first render.
  */
-export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; cancelHref?: string; focusEvidence?: boolean }) {
+export function Composer({ entry, cancelHref, focusBalanced }: { entry?: Entry; cancelHref?: string; focusBalanced?: boolean }) {
   const router = useRouter()
   const ids = useId()
   const isNew = !entry
@@ -143,9 +143,13 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
     if (rows.length === 0) rows.push(0)
 
     const parsed = CreateEntry.safeParse({
+      ...entry,
       ...draft,
-      feelings: rows.map(i => ({ name: draft.feelings[i].name, intensity: draft.feelings[i].intensity ?? undefined,
-        valence: draft.feelings[i].valence
+      feelings: rows.map(i => ({
+        name: draft.feelings[i].name,
+        intensity: draft.feelings[i].intensity ?? undefined,
+        valence: draft.feelings[i].valence,
+        intensity_after: draft.feelings[i].intensity_after
       }))
     })
 
@@ -316,20 +320,44 @@ export function Composer({ entry, cancelHref, focusEvidence }: { entry?: Entry; 
       </div>
 
       <RuledField
-        id={`${ids}-evidence_for`}
-        question={PROMPTS.evidence}
-        value={draft.evidence_for}
-        onChange={v => set('evidence_for', v)}
+        id={`${ids}-balanced_thought`}
+        question={PROMPTS.balanced}
+        value={draft.balanced_thought}
+        onChange={v => set('balanced_thought', v)}
         placeholder="boleh diisi nanti"
-        autoFocus={focusEvidence}
+        autoFocus={focusBalanced}
       />
+
+      {draft.feelings.some(f => f.name.trim()) && (
+        <div className="flex flex-col gap-6">
+          <span id={`${ids}-after-label`} className="font-catalog text-xl font-semibold tracking-wide text-ink">
+            {PROMPTS.after}
+          </span>
+          {draft.feelings.map((feeling, row) =>
+            feeling.name.trim() ? (
+              <div key={row}>
+                <span id={`${ids}-feelings-${row}-after-label`} className="mb-2 block text-base text-ink-muted">
+                  {feeling.name}
+                  {feeling.intensity != null && ` · tadinya ${feeling.intensity}`}
+                </span>
+                <IntensitySlider
+                  id={`${ids}-feelings-${row}-intensity_after`}
+                  value={feeling.intensity_after}
+                  onChange={v => setFeeling(row, 'intensity_after', v)}
+                  labelledBy={`${ids}-feelings-${row}-after-label`}
+                />
+              </div>
+            ) : null
+          )}
+        </div>
+      )}
 
       <div className="sticky bottom-0 z-10 -mx-5 flex flex-col gap-3 border-t border-rule bg-paper px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6">
         <Button type="submit" disabled={saving} className="h-12 w-full font-catalog text-xl font-semibold tracking-wide">
           {saving ? 'menyimpan…' : 'simpan'}
         </Button>
-        {!draft.evidence_for.trim() && (
-          <p className="text-sm text-ink-muted">tanpa bukti, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
+        {!draft.balanced_thought.trim() && (
+          <p className="text-sm text-ink-muted">tanpa pikiran alternatif, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
         )}
       </div>
     </form>

@@ -1,6 +1,6 @@
 # Thought Record
 
-A personal CBT thought-record journal: situation, automatic thoughts, feelings with an intensity rating, and evidence. Entries can be saved as drafts and finished later.
+A personal CBT thought-record journal: situation, automatic thoughts, feelings with an intensity rating, an alternative thought, and how strong each feeling is afterwards. Entries can be saved as drafts and finished later.
 
 There are two front ends over one shared action layer:
 

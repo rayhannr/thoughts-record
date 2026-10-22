@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { CatalogNumber } from '@/components/catalog-number'
+import { FeelingsAfter } from '@/components/feelings-after'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL, PROMPTS, VALENCE_LABEL } from '@/components/prompts'
 import { Section } from '@/components/section'
@@ -48,22 +49,24 @@ export function EntryView({ entry }: { entry: Entry }) {
           </ul>
         </Section>
 
-        {entry.evidence_for ? (
+        {entry.balanced_thought ? (
           <div className={settle ? 'settle-in' : undefined}>
-            <Section question={PROMPTS.evidence}>{entry.evidence_for}</Section>
+            <Section question={PROMPTS.balanced}>{entry.balanced_thought}</Section>
           </div>
         ) : (
           <section>
-            <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{PROMPTS.evidence}</h2>
+            <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{PROMPTS.balanced}</h2>
             <p className="mt-2 text-base text-ink-muted">{DRAFT_LABEL}</p>
             <Link
-              href={`/entries/${entry.id}/edit?isi=bukti`}
+              href={`/entries/${entry.id}/edit?isi=alternatif`}
               className="mt-3 inline-flex h-11 items-center rounded-sm bg-signal px-5 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
             >
               lanjutkan sekarang
             </Link>
           </section>
         )}
+
+        <FeelingsAfter feelings={entry.feelings} />
       </div>
 
       <footer className="mt-20 border-t border-rule pt-4">

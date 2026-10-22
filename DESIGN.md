@@ -192,7 +192,7 @@ A warm, near-monochrome sleeve with one hot ink. Both themes are fully specified
 - **Numeral** (Barlow 600, tabular): intensity value at 2.25rem in list rows, 3.75rem on the entry view, 3rem beside the slider (muted en dash until touched).
 - **Question** (Barlow 600, 1.25rem, tracking 0.025em): the four prompts above each field and section, and the submit button label.
 - **Label** (Barlow 500, 0.8125rem, tracking 0.1em, caps; the `label-caps` class): dates, plot captions, composer time toggle. Never running prose.
-- **Writing** (Hanken 400, 1.125rem, 1.625, max 65ch): situation, feelings, evidence text and field input.
+- **Writing** (Hanken 400, 1.125rem, 1.625, max 65ch): situation, feelings, alternative thought and field input.
 - **Thought, list** (Hanken 400, 19px, snug, clamped to 3 lines): leads every list row.
 - **Chrome** (Hanken 400, 0.875rem): navigation links, helper text, errors.
 
@@ -245,7 +245,7 @@ One dot per feeling for the 30 most recent entries. Across is real `occurred_at`
 No tab bar. The list header carries wordmark and actions; sub-pages carry a plain muted back link and an outlined `ubah`. Loading and error are a single muted line (`StatusLine`), never a spinner or alert box. Toasts (Sonner) use an orange action button.
 
 ### Motion
-One moment: when a draft's evidence is filled later, that section settles in (600ms, translateY 8px to 0 with fade, `cubic-bezier(0.16, 1, 0.3, 1)`), only under `prefers-reduced-motion: no-preference`. Colour and border changes on hover are instant. Nothing else moves.
+One moment: when a draft's alternative thought is filled later, that section settles in (600ms, translateY 8px to 0 with fade, `cubic-bezier(0.16, 1, 0.3, 1)`), only under `prefers-reduced-motion: no-preference`. Colour and border changes on hover are instant. Nothing else moves.
 
 ## Do's and Don'ts
 

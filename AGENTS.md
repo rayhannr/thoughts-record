@@ -29,23 +29,23 @@ The standard CBT thought record (Greenberger & Padesky) has seven columns. The u
 | 1 | Situation | yes | `situation` |
 | 2 | Automatic thoughts | yes | `thoughts` |
 | 3 | Feelings (+ intensity each) | yes | `feelings` (`[{name, intensity, valence?}]`) |
-| 4 | Evidence for the thought | yes | `evidence_for` |
+| 4 | Evidence for the thought | no, retired | `evidence_for` |
 | 5 | Evidence against the thought | no | `evidence_against` |
-| 6 | Balanced / alternative thought | no | `balanced_thought` |
-| 7 | Feelings re-rated | no | `feeling_after`, `intensity_after` |
+| 6 | Balanced / alternative thought | yes | `balanced_thought` |
+| 7 | Feelings re-rated | yes | `feelings[].intensity_after` |
 
-Column 4 as assigned is "is the thought consistent with reality" — a merge of the standard columns 4 and 5. v1 collects it as a single `evidence_for` field and leaves `evidence_against` free for when the split is introduced.
+Column 4 was first assigned as "is the thought consistent with reality", a merge of the standard columns 4 and 5, collected as a single `evidence_for` field. After the second session the psychologist replaced it with the alternative thought (column 6) and a re-rating of each feeling (column 7). `evidence_for` is no longer shown or asked for; the column and old values stay, and an edit leaves them untouched. Column 7 is stored per feeling as an optional `intensity_after` inside the `feelings` jsonb, not in the single-feeling `feeling_after` / `intensity_after` columns, which go unused.
 
 ## 2. Core Features
 
 ### 2.1 Entry Capture (v1)
 
-- Four-column form: situation, thoughts, feelings, evidence.
+- Four-column form: situation, thoughts, feelings, alternative thought, then each feeling re-rated.
 - **Free-text feelings.** No fixed emotion list and no normalisation column. Grouping "kesel" / "sebel" / "dongkol" is done at read time by Claude over the MCP path, not at write time by the user.
 - **One intensity rating per feeling, 0–100.** A situation can bring several feelings at different strengths, so `feelings` is a list of `{name, intensity}`, up to 5. The intensity is its own integer, not embedded in the name. 0–100 rather than 0–10 to match the scale used in the standard worksheet. The list shows the strongest feeling's intensity; the plot shows every feeling as its own dot.
 - **Optional valence per feeling.** `good` or `bad`, set only by the user (never inferred from the name), absent when not said. It lives inside the `feelings` jsonb, so it needs no migration, and the plot encodes it by shape, not colour.
 - **Split timestamps.** `occurred_at` is when the situation happened; `created_at` is when the entry was written. Entries are frequently written hours later, and ordering by write time would misrepresent the record.
-- **Draft or done.** An entry saved without column 4 is a `draft`. Drafts are listed separately so they can be finished later.
+- **Draft or done.** An entry saved without an alternative thought (`balanced_thought`) is a `draft`. Re-rating the feelings is optional and does not affect status. Drafts are listed separately so they can be finished later.
 
 ### 2.2 Review (v1)
 
@@ -80,7 +80,7 @@ A clean, self-contained read view built for showing to the psychologist at a ses
 
 Served over a revocable read-only share link at `/s/[token]`, opened without an account.
 
-- **A link shares a date range** (`range_from`, optional `range_to`) and is **live**: entries written later inside the range appear too. Every entry in the range is shared, including ones without column 4; the viewer simply sees no evidence section for those.
+- **A link shares a date range** (`range_from`, optional `range_to`) and is **live**: entries written later inside the range appear too. Every entry in the range is shared, including drafts; the viewer simply sees no alternative-thought section for those.
 - **Links expire** (1, 7 or 30 days from the UI) and can be **revoked**, which deletes the row so the link stops opening at once. An unknown, expired and revoked link look identical to the viewer.
 - **Only a sha256 hash of the token is stored**, so the token is shown once at creation and cannot be recovered. A lost link is revoked and replaced.
 - **No service-role key.** The viewer has no `auth.uid()`, so the one read path is the `security definer` function `get_shared_entries(token_hash)`. It validates the token and returns that owner's entries in range, with `user_id` stripped. `share_links` itself is owner-only under RLS.
@@ -156,7 +156,7 @@ create table entries (
   situation         text not null,
   thoughts          text not null,
   feelings          jsonb not null,        -- [{name, intensity 0-100}], 1 to 5
-  evidence_for      text,
+  evidence_for      text,                  -- retired from the UI
 
   -- columns 5-7, stored from day one, surfaced later
   evidence_against  text,

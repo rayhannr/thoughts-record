@@ -13,11 +13,13 @@ function read(): Entry[] {
 
 // Entries written before feelings carried their own intensity had a text
 // `feelings` and a top-level `intensity`.
+// Status followed `evidence_for` until the alternative thought replaced it.
 function upgrade(raw: unknown): Entry {
   const e = raw as Entry & { intensity?: number }
-  if (Array.isArray(e.feelings)) return e
+  const status = statusFor(e.balanced_thought)
+  if (Array.isArray(e.feelings)) return { ...e, status }
   const { intensity, ...rest } = e
-  return { ...rest, feelings: [{ name: String(e.feelings), intensity: intensity ?? 0, valence: null }] }
+  return { ...rest, status, feelings: [{ name: String(e.feelings), intensity: intensity ?? 0, valence: null, intensity_after: null }] }
 }
 
 function write(entries: Entry[]) {
@@ -49,7 +51,7 @@ export async function createEntry(input: CreateEntry): Promise<Entry> {
     id: crypto.randomUUID(),
     created_at: now,
     updated_at: now,
-    status: statusFor(data.evidence_for)
+    status: statusFor(data.balanced_thought)
   }
   write([...read(), entry])
   return entry
@@ -65,7 +67,7 @@ export async function updateEntry(id: string, input: UpdateEntry): Promise<Entry
   const entry: Entry = {
     ...merged,
     updated_at: new Date().toISOString(),
-    status: statusFor(merged.evidence_for)
+    status: statusFor(merged.balanced_thought)
   }
   entries[index] = entry
   write(entries)

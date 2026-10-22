@@ -7,12 +7,12 @@ import { useEntry } from '@/lib/entries/client'
 
 export default function EditEntryPage() {
   const { id } = useParams<{ id: string }>()
-  const focusEvidence = useSearchParams().get('isi') === 'bukti'
+  const focusBalanced = useSearchParams().get('isi') === 'alternatif'
   const entry = useEntry(id)
 
   if (entry.isPending) return <StatusLine>memuat catatan…</StatusLine>
   if (entry.isError) return <StorageError />
   if (!entry.data) return <EntryNotFound />
 
-  return <Composer entry={entry.data} cancelHref={`/entries/${id}`} focusEvidence={focusEvidence} />
+  return <Composer entry={entry.data} cancelHref={`/entries/${id}`} focusBalanced={focusBalanced} />
 }

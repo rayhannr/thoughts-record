@@ -8,7 +8,7 @@ web
 
 ## Users
 
-One primary user: the author, who keeps a CBT thought record assigned by their psychologist. They open the app when they feel bad, often late at night, on a phone, and write in Indonesian. The job is to capture a situation, the thought it triggered, the feeling and how strong it was, and later to test the thought against evidence. Anyone may sign up on the public instance, but the product is built for one person's needs and carries no support promise. A psychologist is a secondary, read-only audience planned for v3.
+One primary user: the author, who keeps a CBT thought record assigned by their psychologist. They open the app when they feel bad, often late at night, on a phone, and write in Indonesian. The job is to capture a situation, the thought it triggered, the feeling and how strong it was, and later to write a more balanced thought and re-rate the feeling. Anyone may sign up on the public instance, but the product is built for one person's needs and carries no support promise. A psychologist is a secondary, read-only audience planned for v3.
 
 ## Product Purpose
 
@@ -28,7 +28,7 @@ An MCP server over the same entry actions lets the user write and review entries
 ## Capabilities and Constraints
 
 - Stack: Next.js 16 App Router, Tailwind CSS 4, Shadcn UI, Sonner, TanStack Query, Supabase (Postgres, Auth, RLS), Zod 4, Vercel. Read `node_modules/next/dist/docs/` before writing Next code.
-- Four columns shown: situation, automatic thoughts, feelings with intensity, evidence for. The database stores all seven columns from day one; columns 5-7 are surfaced later (v4).
+- Four columns shown: situation, automatic thoughts, feelings with intensity, alternative thought, plus each feeling re-rated. The database stores all seven columns from day one; columns 5-7 are surfaced later (v4).
 - Feelings are free text. Intensity is a separate integer 0-100 that starts empty with no default and snaps in steps of 5.
 - Status is `draft` or `done`; drafts are listed separately and can be finished later.
 - Entry list is chronological, newest first, with edit and delete. With no entries, the app opens directly into the composer.
@@ -36,7 +36,7 @@ An MCP server over the same entry actions lets the user write and review entries
 
 ## Brand Commitments
 
-- UI copy is Indonesian, lower case, conversational, no exclamation marks. The four prompts sound like a psychologist speaking: `apa yang terjadi?`, `apa yang muncul di pikiran?`, `rasanya gimana?`, `apa buktinya?`. Drafts are marked `belum diuji`.
+- UI copy is Indonesian, lower case, conversational, no exclamation marks. The four prompts sound like a psychologist speaking: `apa yang terjadi?`, `apa yang muncul di pikiran?`, `rasanya gimana?`, `apa pikiran alternatifnya?`. Drafts are marked `belum diuji`.
 - Nothing congratulates the user for writing an entry, and nothing remarks on how long it has been since the last one.
 - The visual identity in AGENTS.md section 9 is NOT binding. The owner finds it bland, cold and clinical, hard to use, and says intensity does not stand out. Both light and dark themes must be fully designed.
 

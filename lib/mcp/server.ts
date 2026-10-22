@@ -33,10 +33,12 @@ export function createMcpServer(db: SupabaseClient, userId: string) {
     'add_entry',
     {
       description:
-        'Create a thought-record entry. Columns: situation, thoughts, feelings, and evidence_for. ' +
+        'Create a thought-record entry. Columns: situation, thoughts, feelings, and balanced_thought (the alternative thought). ' +
         'feelings is a list of {name, intensity}: one entry per feeling, name in free text, intensity 0-100. A situation can have several. ' +
         'Each feeling may carry valence "good" or "bad", but only when the user said how it felt; never infer it from the name, omit it otherwise. ' +
-        'Omit evidence_for to save a draft. occurred_at is when the situation happened (ISO 8601), not now.',
+        'Each feeling may carry intensity_after (0-100), the same feeling re-rated after the alternative thought, only when the user gave that number. ' +
+        'balanced_thought and intensity_after come from the user: ask for them, never write or estimate them yourself. ' +
+        'Omit balanced_thought to save a draft. occurred_at is when the situation happened (ISO 8601), not now.',
       inputSchema: CreateEntry.shape
     },
     input => run(() => createEntry(db, userId, input))
@@ -53,14 +55,14 @@ export function createMcpServer(db: SupabaseClient, userId: string) {
 
   server.registerTool(
     'get_drafts',
-    { description: 'List draft entries, the ones still missing evidence_for, so they can be finished.' },
+    { description: 'List draft entries, the ones still missing balanced_thought, so they can be finished.' },
     () => run(() => listEntries(db, userId, { status: 'draft' }))
   )
 
   server.registerTool(
     'update_entry',
     {
-      description: 'Fill in or correct fields on an existing entry. Setting evidence_for turns a draft into done.',
+      description: 'Fill in or correct fields on an existing entry. Setting balanced_thought turns a draft into done. To re-rate feelings, send the whole feelings list with intensity_after set.',
       inputSchema: { id: z.uuid(), ...UpdateEntry.shape }
     },
     ({ id, ...fields }) => run(() => updateEntry(db, userId, id, fields))

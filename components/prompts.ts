@@ -6,7 +6,8 @@ export const PROMPTS = {
   anotherFeeling: 'perasaan lainnya?',
   intensity: 'seberapa kuat?',
   valence: 'terasa gimana?',
-  evidence: 'apa buktinya?'
+  balanced: 'apa pikiran alternatifnya?',
+  after: 'setelah itu, seberapa kuat?'
 } as const
 
 export const DRAFT_LABEL = 'belum diuji'

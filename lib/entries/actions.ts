@@ -17,12 +17,12 @@ export async function getEntry(db: SupabaseClient, userId: string, id: string): 
 
 export async function createEntry(db: SupabaseClient, userId: string, input: unknown): Promise<Entry> {
   const data = CreateEntry.parse(input)
-  return store.insert(db, userId, { ...data, status: statusFor(data.evidence_for) })
+  return store.insert(db, userId, { ...data, status: statusFor(data.balanced_thought) })
 }
 
 export async function updateEntry(db: SupabaseClient, userId: string, id: string, input: unknown): Promise<Entry> {
   const data = Object.fromEntries(Object.entries(UpdateEntry.parse(input)).filter(([, v]) => v !== undefined))
-  const status = 'evidence_for' in data ? { status: statusFor(data.evidence_for as string | null) } : {}
+  const status = 'balanced_thought' in data ? { status: statusFor(data.balanced_thought as string | null) } : {}
   return store.update(db, userId, Id.parse(id), { ...data, ...status })
 }
 

@@ -17,10 +17,13 @@ export const Valence = z.enum(['good', 'bad'])
 export type Valence = z.infer<typeof Valence>
 
 // One situation can bring several feelings, each at its own strength.
+// `intensity_after` is the same feeling re-rated once the alternative thought
+// is written; null until the person does it.
 export const Feeling = z.object({
   name: RequiredText,
   intensity: Intensity,
-  valence: Valence.nullish().transform(v => v ?? null)
+  valence: Valence.nullish().transform(v => v ?? null),
+  intensity_after: Intensity.nullish().transform(v => v ?? null)
 })
 export type Feeling = z.infer<typeof Feeling>
 
@@ -40,10 +43,11 @@ export const CreateEntry = z.object({
   situation: RequiredText,
   thoughts: RequiredText,
   feelings: z.array(Feeling).min(1).max(MAX_FEELINGS),
-  evidence_for: OptionalText,
-
-  evidence_against: OptionalText,
   balanced_thought: OptionalText,
+
+  // Retired from the UI. Kept so old entries survive an edit or an undo-delete.
+  evidence_for: OptionalText,
+  evidence_against: OptionalText,
   feeling_after: OptionalText,
   intensity_after: Intensity.nullish().transform(v => v ?? null)
 })
@@ -66,9 +70,9 @@ export type Entry = z.output<typeof CreateEntry> & {
   status: EntryStatus
 }
 
-/** An entry without column 4 is a draft. */
-export function statusFor(evidenceFor: string | null): EntryStatus {
-  return evidenceFor ? 'done' : 'draft'
+/** An entry without an alternative thought is a draft. */
+export function statusFor(balancedThought: string | null | undefined): EntryStatus {
+  return balancedThought ? 'done' : 'draft'
 }
 
 /** A whole entry as it was, for undoing a delete. */
