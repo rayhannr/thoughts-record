@@ -1,8 +1,11 @@
-export function Section({ question, children }: { question: string; children: React.ReactNode }) {
+import { cn } from 'cn'
+
+/** A question in the marker hand with the answer in the writer's own hand beneath, on rules. */
+export function Section({ question, children, plain, className }: { question: string; children: React.ReactNode; plain?: boolean; className?: string }) {
   return (
-    <section>
-      <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{question}</h2>
-      <div className="mt-2 max-w-[65ch] text-lg leading-relaxed whitespace-pre-wrap text-ink">{children}</div>
+    <section className={className}>
+      <h2 className="prompt">{question}</h2>
+      <div className={cn(plain ? 'font-write text-[28px] leading-9' : 'ruled whitespace-pre-wrap', 'text-ink')}>{children}</div>
     </section>
   )
 }

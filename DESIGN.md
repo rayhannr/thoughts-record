@@ -1,127 +1,134 @@
 ---
 name: Thought Record
-description: A CBT thought-record journal set as a Factory Records catalogue sleeve, matte black by night and matte white by day, with one factory orange.
+description: A CBT thought-record journal set as a handwritten Indonesian exercise book on a charcoal desk, strictly neutral grey with one orange signal, light and dark both fully designed.
 colors:
   signal: "#c73e08"
   signal-night: "#ff6b2c"
   signal-ink: "#ffffff"
-  signal-ink-night: "#0d0c0b"
-  paper: "#f1efea"
-  surface: "#faf9f6"
-  ink: "#0f0e0d"
-  ink-muted: "#5e5a52"
-  rule: "#cfcac0"
-  edge: "#857f73"
-  cell-off: "#ddd8cd"
-  cell-low: "#6d675c"
-  paper-night: "#0d0c0b"
-  surface-night: "#161513"
-  ink-night: "#ece7dc"
-  ink-muted-night: "#a39d90"
-  rule-night: "#2c2a26"
-  edge-night: "#6f695e"
-  cell-off-night: "#262420"
-  cell-low-night: "#8f8a7e"
+  signal-ink-night: "#141414"
+  desk: "#262626"
+  desk-night: "#080808"
+  paper: "#f1f1ef"
+  paper-night: "#1c1c1c"
+  paper-back: "#dcdcda"
+  paper-back-night: "#141414"
+  surface: "#fafaf8"
+  surface-night: "#262626"
+  ink: "#151515"
+  ink-night: "#ececec"
+  ink-muted: "#595959"
+  ink-muted-night: "#a4a4a4"
+  rule: "#c9c9c6"
+  rule-night: "#343434"
+  edge: "#7a7a77"
+  edge-night: "#787878"
+  margin: "#a2a29f"
+  margin-night: "#565656"
+  chrome: "#ececea"
+  chrome-night: "#e6e6e4"
+  chrome-muted: "#b6b6b3"
+  chrome-muted-night: "#a8a8a6"
   google-fill: "#ffffff"
   google-border: "#747775"
   google-text: "#1f1f1f"
 typography:
   wordmark:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "4.25rem"
-    fontWeight: 700
-    lineHeight: 0.9
-    letterSpacing: "0.02em"
-  catalogue-number:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "3rem to 3.75rem"
-    fontWeight: 600
+    fontFamily: "Nanum Pen Script, Segoe Script, cursive"
+    fontSize: "34px"
+    fontWeight: 400
     lineHeight: 1
-    letterSpacing: "0.06em"
-    fontFeature: "tabular-nums"
-  headline:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "2.25rem"
-    fontWeight: 600
-    lineHeight: 1.1
-    letterSpacing: "0.01em"
-  numeral:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "2.25rem (list), 3.75rem (entry view), 3rem (slider)"
-    fontWeight: 600
-    lineHeight: 1
-    fontFeature: "tabular-nums"
-  question:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "1.25rem"
-    fontWeight: 600
-    lineHeight: 1.4
-    letterSpacing: "0.025em"
-  label:
-    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "0.8125rem"
-    fontWeight: 500
-    lineHeight: 1
-    letterSpacing: "0.1em"
   writing:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
+    fontFamily: "Nanum Pen Script, Segoe Script, cursive"
+    fontSize: "28px"
+    fontWeight: 400
+    lineHeight: "36px"
+  writing-list:
+    fontFamily: "Nanum Pen Script, Segoe Script, cursive"
+    fontSize: "28px to 30px"
+    fontWeight: 400
+    lineHeight: "32px"
+  date-heading:
+    fontFamily: "Nanum Pen Script, Segoe Script, cursive"
+    fontSize: "32px"
+    fontWeight: 400
+    lineHeight: "36px"
+  numeral:
+    fontFamily: "Nanum Pen Script, Segoe Script, cursive"
+    fontSize: "32px (list), 40px (entry view, slider)"
+    fontWeight: 400
+    lineHeight: 1
+    fontFeature: "tabular-nums"
+  prompt:
+    fontFamily: "Patrick Hand, Segoe Print, system-ui, sans-serif"
     fontSize: "1.125rem"
     fontWeight: 400
-    lineHeight: 1.625
-  writing-thought:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
-    fontSize: "1.5rem (entry view), 19px (list row)"
-    fontWeight: 500
-    lineHeight: 1.375
+    lineHeight: "36px"
   chrome:
-    fontFamily: "Hanken Grotesk, system-ui, sans-serif"
-    fontSize: "0.875rem"
+    fontFamily: "Patrick Hand, Segoe Print, system-ui, sans-serif"
+    fontSize: "1.0625rem (body), 1rem to 1.1875rem"
     fontWeight: 400
-    lineHeight: 1.4
+    lineHeight: 1.2
+  button:
+    fontFamily: "Patrick Hand, Segoe Print, system-ui, sans-serif"
+    fontSize: "1.1875rem"
+    fontWeight: 400
+    lineHeight: 1
 rounded:
-  sm: "2px"
-  xl: "3px"
-  google-button: "4px"
+  page: "2px 6px 6px 2px"
+  button: "4px 10px 5px 9px"
+  slider: "4px 12px 6px 10px"
+  marker: "3px 10px 6px 12px / 8px 4px 10px 5px"
+  field: "4px"
   avatar: "9999px"
+  google-button: "4px"
 spacing:
-  column: "38rem"
-  gutter-mobile: "16px"
-  gutter-sm: "24px"
-  section-gap: "40px"
+  column: "36rem"
+  gutter-mobile: "12px"
+  gutter-sm: "16px"
+  page-padding-left: "58px (mobile), 86px (sm)"
+  page-padding-bottom: "96px"
+  rule-pitch: "36px"
   field-gap: "32px"
   touch-target: "44px"
 components:
-  button-primary:
+  button-signal:
     backgroundColor: "{colors.signal}"
     textColor: "{colors.signal-ink}"
-    rounded: "{rounded.sm}"
-    typography: "{typography.question}"
+    rounded: "{rounded.button}"
+    typography: "{typography.button}"
     height: "44px"
-    padding: "0 16px"
-  button-primary-night:
+    padding: "0 18px"
+  button-signal-night:
     backgroundColor: "{colors.signal-night}"
     textColor: "{colors.signal-ink-night}"
-  button-outline:
+  button-pen:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.button}"
     height: "44px"
-    padding: "0 16px"
-  filter-chip-active:
+    padding: "0 18px"
+  button-pen-pressed:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
-    rounded: "{rounded.sm}"
+  button-desk:
+    backgroundColor: "transparent"
+    textColor: "{colors.chrome}"
+    rounded: "{rounded.button}"
     height: "44px"
-    padding: "0 14px"
+    padding: "0 18px"
+  button-quiet:
+    textColor: "{colors.ink-muted}"
+    rounded: "{rounded.button}"
+    height: "44px"
+    padding: "0 8px"
   ruled-field:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    rounded: "{rounded.sm}"
     typography: "{typography.writing}"
-    padding: "12px 14px"
+    padding: "0"
+    height: "72px minimum, whole 36px lines"
   intensity-slider:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.slider}"
     height: "56px"
     padding: "0 12px"
   google-button:
@@ -136,137 +143,146 @@ components:
 
 ## Overview
 
-**Creative North Star: "Sleeve Zero"**
+**Creative North Star: "The Exercise Book"**
 
-The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (`TR / 0007`). The record's shape is the cover: a feelings plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.
+The record is a handwritten Indonesian exercise book lying on a desk. By day a pale grey leaf on a charcoal desk; by night a dark grey leaf on a near-black desk. Each entry is a leaf you turn, not a card you open. The palette is strictly neutral grey with no hue cast, and one orange signal. Light and dark are both fully designed (`prefers-color-scheme`), neither an inversion of the other.
 
-Two voices share the page. Condensed caps (Barlow Condensed) are the catalogue's printing: wordmark, question labels, catalogue numbers, numerals, short marks. Hanken Grotesk is the user's own writing and the app's quiet chrome. The writing is never set in the printing face when it runs long.
+Two hands share the page. Nanum Pen Script is the user's own hand: the entry text, the dates, the wordmark and every numeral, set large because the face is thin. Patrick Hand is the printed side: prompts, buttons, labels and chrome, a plainer marker hand that stays legible small. Prompts are Indonesian and lower case, spoken like the psychologist.
 
-Orange is the only chroma. It marks primary action, focus, selection, error, and the hot end of intensity. Everything else is bone, black, and warm grey. The dark theme is the primary sleeve (the app is opened late at night); the light theme is the same sleeve inverted, with a deeper orange to hold contrast.
+The book is built from physical cues, all in CSS: a double margin rule down each page, a gutter shadow where the leaf meets the spine, two more leaves showing under the right and bottom edges, ruled lines only inside writing areas, and pen-wobbled corners on every control. Nothing is a card.
 
 **Key Characteristics:**
-- One orange (#c73e08 day, #ff6b2c night) carries action, focus, selection, error and the hot cells of the strip.
-- Condensed caps for short marks and numerals; humanist sans for anything the user wrote.
-- The feelings plot is the signature: one dot per feeling, across is when it happened, up is how strongly it was felt; shape carries the optional valence (filled nggak enak, ring enak, small dot unrated).
-- Intensity is a length (20 cells, one per 5 points) plus a numeral, never colour alone.
-- Hairlines and 2px corners; depth comes from overlap and tone, never shadow.
-- Single 38rem column, mobile first, with the plot allowed to break out edge to edge.
+- One orange (#c73e08 day, #ff6b2c night) carries primary action, focus, selection, caret, errors and the intensity marker. No other hue exists in the app.
+- Intensity is a marker swipe whose length is the value, with the number ringed in pen beside it. Colour only reinforces.
+- The entry detail is a book reader: leaf-by-leaf page turn with a bent leaf, shade, cast shadow and a ghosted back.
+- Writing sits on 36px rules; there are no boxes around inputs.
+- A desk bar (always dark) holds navigation; the leaf holds the record.
+- Single column, `max-w-xl` (36rem), mobile first.
 
 ## Colors
 
-A warm, near-monochrome sleeve with one hot ink. Both themes are fully specified in `app/globals.css` and switch with `prefers-color-scheme`. Frontmatter names the day value plainly and the night value with a `-night` suffix.
+Both themes are specified in `app/globals.css`. Frontmatter gives the day value plainly and the night value with a `-night` suffix.
 
 ### Primary
-- **Factory Orange** (`signal` #c73e08 day, `signal-night` #ff6b2c night): primary button fill, focus ring (2px, 2px offset), text selection, caret, invalid borders and inline error text, destructive confirm outline, and the hot cells and peak tips of intensity. Text on it is `signal-ink` (white day, matte black night).
+- **Signal Orange** (`signal` #c73e08 day, #ff6b2c night): primary button fill, 2px focus outline (2px offset), text selection, input caret, invalid outline and inline error text, the intensity marker (mixed toward the paper at low values), plot dots. Text on it is `signal-ink` (white day, #141414 night).
 
 ### Neutral
-- **Matte Paper** (`paper` #f1efea / `paper-night` #0d0c0b): page ground, and the fill that lets plot lines hide the lines behind them.
-- **Sleeve Surface** (`surface` #faf9f6 / `surface-night` #161513): text fields, slider track, row hover, account panel.
-- **Sleeve Ink** (`ink` #0f0e0d / `ink-night` #ece7dc): primary text, filled values, active filter chip fill.
-- **Muted Ink** (`ink-muted` #5e5a52 / `ink-muted-night` #a39d90): chrome text, dates, captions, placeholders, empty slider numeral.
-- **Hairline** (`rule` #cfcac0 / `rule-night` #2c2a26): one-pixel dividers between rows and in the entry footer, the account panel border, scrollbar thumb. Hairlines only.
-- **Control Edge** (`edge` #857f73 / `edge-night` #6f695e): outlines of controls (empty fields, empty slider, inactive filter chips, secondary link buttons). About 3:1 against the ground.
-- **Cell Off** (`cell-off`) and **Cell Low** (`cell-low`): the unlit strip cell, and the cool end of the lit-cell ramp.
+- **Desk** (`desk` #262626 / #080808): page background behind the book, the sticky desk bar and the composer's sticky submit bar. Also the scrollbar track.
+- **Paper** (`paper` #f1f1ef / #1c1c1c): the leaf. **Paper Back** (`paper-back` #dcdcda / #141414): the reverse of a turning leaf.
+- **Surface** (`surface` #fafaf8 / #262626): shadcn card, popover and muted mappings; the account panel. Not a card surface for entries.
+- **Ink** (`ink` #151515 / #ececec): writing, pressed pen button fill. **Muted Ink** (`ink-muted` #595959 / #a4a4a4): prompts, dates, placeholders, the empty slider.
+- **Rule** (`rule` #c9c9c6 / #343434): the 36px writing rules and row hairlines. **Edge** (`edge` #7a7a77 / #787878): outlines a finger must find (empty slider, plot link rule).
+- **Margin** (`margin` #a2a29f / #565656): the double margin line and scrollbar thumb.
+- **Chrome** (`chrome` #ececea / #e6e6e4) and **Chrome Muted** (`chrome-muted` #b6b6b3 / #a8a8a6): text and outlines set directly on the desk; same chalk in both themes.
+- Derived: `gutter` (black at 16% day, 40% night), `stack-1` and `stack-2` (paper mixed toward black by day, toward white by night) for the leaves under the page edge.
 
 ### Named Rules
-**The One Ink Rule.** Orange is the only chroma in the app. Neutrals stay warm grey; no second accent, no tint for status.
+**The One Orange Rule.** Orange is the only chroma. Everything else is neutral grey; no second accent, no status tint.
 
-**The Edge Versus Rule Rule.** `--rule` is for hairlines (dividers). Anything a finger must find, such as a field, slider, or chip outline, uses `--edge`.
+**The Chalk On The Desk Rule.** Orange does not hold against the charcoal desk by day, so controls on the desk (`.on-desk`) ring their focus in `chrome` instead.
 
-**The Number Beside the Colour Rule.** Colour in the strip and plot peaks only reinforces. The numeral and the length always carry the reading.
+**The Edge Versus Rule Rule.** `--rule` is for ruled lines and hairlines; anything a finger must find uses `--edge`.
 
-**The Bone Ramp Rule.** Lit cells mix from `cell-low` toward `signal` at 8% per cell index, reaching full orange at cell 13. The ramp is the same in the list strip, entry view, slider track, and plot peak tips (peak tip: intensity x 1.1 percent).
+**The Number Beside The Colour Rule.** Marker colour is `signal` mixed with `paper` from 45% to 100% by value. It only reinforces the length and the ringed number, which always carry the reading.
 
 ## Typography
 
-**Printing Font:** Barlow Condensed (weights 500, 600, 700; fallback Arial Narrow)
-**Writing and Chrome Font:** Hanken Grotesk (variable; fallback system-ui)
+**Hand Font (the user's):** Nanum Pen Script, self-hosted Latin subset (`app/fonts/NanumPenScript-latin.woff2`, SIL OFL); fallback Segoe Script, cursive.
+**Print Font (the app's):** Patrick Hand (Google), fallback Segoe Print, system-ui.
 **Third-party Font:** Roboto Medium, loaded only for the Google sign-in button.
 
-**Character:** A railway-timetable condensed against a plain humanist sans. The condensed face is the label on the sleeve; the sans is the person writing on it.
+**Character:** a pen and a marker. The pen is the person; the marker is the book's printed ruling and labels.
 
 ### Hierarchy
-- **Wordmark** (Barlow 700, 4.25rem, 0.9, tracking 0.02em, caps): login title only. In the list header the wordmark is Barlow 600, 1.125rem, tracking 0.12em, caps.
-- **Catalogue number** (Barlow 600, 3rem composer, 3.75rem entry view, tracking 0.06em, tabular): `TR / 0007`, four-digit zero padded, numbered by write order.
-- **Headline** (Barlow 600, 2.25rem, 1.1, tracking 0.01em): the thought on the entry view, only when it is 90 characters or fewer. Longer thoughts fall back to Hanken 500 at 1.5rem.
-- **Numeral** (Barlow 600, tabular): intensity value at 2.25rem in list rows, 3.75rem on the entry view, 3rem beside the slider (muted en dash until touched).
-- **Question** (Barlow 600, 1.25rem, tracking 0.025em): the four prompts above each field and section, and the submit button label.
-- **Label** (Barlow 500, 0.8125rem, tracking 0.1em, caps; the `label-caps` class): dates, plot captions, composer time toggle. Never running prose.
-- **Writing** (Hanken 400, 1.125rem, 1.625, max 65ch): situation, feelings, alternative thought and field input.
-- **Thought, list** (Hanken 400, 19px, snug, clamped to 3 lines): leads every list row.
-- **Chrome** (Hanken 400, 0.875rem): navigation links, helper text, errors.
+- **Writing** (Nanum 28px, 36px line height on rules): situation, thoughts, balanced thought, the field input. Entry view sets the same.
+- **Writing, list** (Nanum 30px feelings line, 28px thought, 32px line height, clamped to 2 and 3 lines).
+- **Date heading** (Nanum 32px): the occurred-at line on the entry leaf.
+- **Wordmark** (Nanum 34px): "Thought Record" on the desk bar.
+- **Numeral** (Nanum, tabular, ringed): 32px in list rows, 40px on the entry view and beside the slider.
+- **Prompt** (Patrick 1.125rem, 36px line height, muted; `.prompt`): the four questions, set on the rule grid.
+- **Label** (Patrick 1rem, `.label-hand`, muted): dates in plot axes, small annotations.
+- **Chrome and buttons** (Patrick 1.0625rem body, 1.1875rem buttons, 1.125rem to 1.375rem for links and the submit label).
 
 ### Named Rules
-**The Short Marks Rule.** The condensed face is for short marks only: labels, numbers, numerals, questions, buttons, and a thought of 90 characters or fewer as headline. Anything longer or running is Hanken, so it reads as the user's own voice.
+**The Own Hand Rule.** Anything the user wrote, and every number, is Nanum Pen Script. Anything the app says is Patrick Hand.
 
-**The Lining Numerals Rule.** Body uses lining numerals; every numeral that changes (intensity, catalogue number) is tabular.
+**The Rule Grid Rule.** Writing and prompts share a 36px line pitch so text always sits on a ruled line.
+
+**The Lining Numerals Rule.** Body uses lining numerals; changing numerals are tabular.
 
 ## Layout
 
-One column, `max-w-[38rem]`, centred, with 16px side padding and 24px from the `sm` breakpoint, 12px top padding (32px at `sm`) and 96px bottom. Vertical rhythm between composer fields is 32px; between entry-view sections 40px. Controls meet a 44px minimum touch height (the slider track is 56px, the composer submit 48px).
+One column, `max-w-xl`, centred, 12px side padding (16px from `sm`), 32px bottom. The leaf (`.page-sheet`) pads 24px top, 96px bottom, and on the left clears the double margin line: 58px mobile, 86px from 640px (the margin rule sits at 40px and 68px). Vertical rhythm between composer fields is 32px; between entry-view sections 28px. Controls meet 44px minimum touch height; the slider track is 56px; the composer submit 48px.
 
-The list is: header (wordmark left, account and orange `tulis` button right), feelings plot edge to edge, an optional filter row (only when drafts exist), then hairline-separated rows. A row is the thought at 19px, then feeling text with date label on the left and the strip plus numeral on the right. Row hover is a `surface` tint that bleeds past the column padding. There is no empty-state screen and no card.
+The list is: desk bar (wordmark left; account, `bagikan` and orange `tulis` right), then one leaf holding the feelings plot, an optional draft filter (only when drafts exist), and ruled rows five to a page with `baru` / `lama` paging. A row leads with the date, then the feelings in the user's hand, the marker swipe with ringed number, then the thought. Rows are hairline-separated; hover is a 5% ink tint. There is no empty-state screen and no card.
 
-The feelings plot breaks out of the column (`w-screen`, capped at `max-w-5xl`), 220px tall on mobile and 280px from `sm`. Dots are positioned in HTML so they stay round at any width.
+The entry detail fills the viewport (`h-dvh`): desk bar with `semua catatan` and `ubah`, one leaf stage that scrolls inside itself (with a `terus ↓` fade when it runs past the fold), and a pager (`lebih baru`, position, `lebih lama`) on the desk. Arrow keys and horizontal touch swipe also turn the leaf.
+
+The composer's submit bar is sticky on the desk at the bottom.
 
 ## Elevation & Depth
 
-Flat. No box-shadow exists in the build. Depth is tone only. The account menu panel is the only floating element and is a `surface` fill with a one-pixel hairline, no shadow.
+Depth is physical and belongs to the book only. The leaf carries one soft drop shadow (`0 18px 28px -14px` at 55% black) and two stacked leaves peek out 4px and 8px under its right and bottom edges. A gutter gradient darkens the leaf at the spine. During a page turn, per-strip shade and a cast shadow on the page below carry the bend. Nothing else casts a shadow: controls, rows and the desk are flat.
 
 ### Named Rules
-**The No Shadow Rule.** Nothing casts a shadow. Separation is a hairline, a tone step to `surface`, or occlusion.
+**The Book Casts, Nothing Else Rule.** Shadow belongs to the leaf and the turning leaf. Controls, fields and rows stay flat.
 
 ## Shapes
 
-Square-set. All corners are 2px (`--radius-sm/md/lg`), 3px for the largest shadcn tier. Controls are outlined 1px rectangles. The only exceptions are Google's required 4px button radius and the circular account avatar (the user's own profile image, or an initial in a hairline circle). Strip cells are hard rectangles 5px wide, 14px tall, 2px apart (8px by 20px in the large entry-view strip).
+Everything hand-drawn has corners that never quite match. Leaf `2px 6px 6px 2px` (square at the spine, softer at the fore-edge); buttons `4px 10px 5px 9px`; slider `4px 12px 6px 10px`; marker `3px 10px 6px 12px / 8px 4px 10px 5px`, skewed -8deg. The circled number is an irregular ellipse (`55% 45% 52% 48% / 50% 56% 44% 50%`) with a 2px ink border. Borders on controls are 2px. Exceptions: Google's required 4px button, and the round account avatar (2px chrome-muted ring, on the desk). Plot dots are round for bad, a ring for good, a rotated diamond for unrated.
 
 ## Components
 
 ### Buttons
-- **Primary (tulis, lanjutkan sekarang, simpan):** orange fill, `signal-ink` text, 2px corners, Barlow 600 at 1.125 to 1.25rem. 44px tall in the header and entry view, 48px full-width submit in the composer. Hover is `brightness-110`. Focus is the global 2px orange outline with 2px offset.
-- **Outline link button (ubah, ke semua catatan):** 1px `edge` (or `rule` on the not-found link) border, `ink` text, border turns `ink` on hover.
-- **Text link (semua catatan, batal, masuk, hapus catatan):** muted ink, 44px minimum height, hover to `ink` (hapus hover turns orange).
-- **Destructive confirm (ya, hapus):** 1px orange outline and orange text, fills orange on hover. Delete is isolated at the page foot and quiet until chosen.
-- **Filter chip:** `edge` outline, muted text; active is `ink` fill with `paper` text, `aria-pressed`.
+All four share 44px minimum height, Patrick 1.1875rem, and the hand-drawn corner.
+- **Signal (`.btn-signal`):** orange fill, `signal-ink` text, 2px orange border; hover `brightness(1.08)`; disabled 55% opacity. `tulis`, `simpan`, `lanjutkan sekarang`.
+- **Pen (`.btn-pen`):** 2px ink outline, ink text; hover and `aria-pressed` fill with ink and set text in paper. Filter, valence and pager buttons on the leaf.
+- **Desk (`.btn-desk`):** 2px `chrome-muted` outline, `chrome` text, border to `chrome` on hover. For controls set on the desk (`ubah`, `bagikan`, pager).
+- **Quiet (`.btn-quiet`):** no outline, muted ink, ink on hover. `hapus perasaan ini`, `ada perasaan lain`.
+- Disabled pen and desk buttons drop to 40% opacity with a not-allowed cursor.
 
 ### Google sign-in button
-Google's own light button in both themes: white fill, 1px #747775 border, #1f1f1f text in Roboto Medium 14px (tracking 0.25px), 4px radius, 44px tall, 260px wide from `sm`, full width on mobile, four-colour mark unmodified. Hover #f0f0f0, focus #e8e8e8. It is exempt from the palette and shape rules on purpose.
+Google's own light button in both themes: white fill, 1px #747775 border, #1f1f1f text in Roboto Medium 14px (tracking 0.25px), 4px radius, 44px tall, 260px wide from `sm`. Exempt from palette and shape rules on purpose.
 
-### Inputs / Fields (Ruled field)
-A question in condensed caps above, the answer in a visible `surface` block beneath. 1px border: `edge` when empty, `ink` when filled, orange when invalid; focus adds a 1px orange ring. 2px corners, Hanken 1.125rem (never below 16px), grows with the writing instead of scrolling, minimum height 72px. Errors are small orange text below the field. Time input uses the same border treatment at 16px.
+### Ruled field
+A prompt in Patrick above, the answer in Nanum directly on 36px rules (`.ruled`). No box, transparent background, no padding. It grows in whole lines (minimum 72px, never scrolls) so rules stay under the text. Focus is the global orange outline offset 4px; invalid keeps the orange outline and a small orange message beneath.
 
-### Intensity slider and code strip
-A 56px track in a 1px outlined `surface` box containing 20 cells, with the large numeral to the right. It starts empty with an en dash and an `edge` border; touched, the border goes `ink`. Snaps by 5 (arrows, PageUp and PageDown by 20, Home and End). The same 20-cell strip is read back in lists (5x14px cells) and the entry view (8x20px). Cells light by `round(value / 5)`.
+### Intensity marker and slider
+The slider starts empty: a dashed `edge` outline reading `geser di sini →` and an en dash in a muted ringed circle. Touched, the outline goes solid ink and a marker swipe fills from the left to the value; the number is ringed in ink. Snaps by 5; arrows 5, PageUp/PageDown 20, Home and End. The same marker swipe (20px tall in lists, 28px on the entry view) with the ringed number reads the value back. Re-rated values draw the marker hatched (`.marker-after`: pencil hatching in a 2px outline) so they read apart from the first rating.
 
 ### Feelings plot (signature)
-One dot per feeling for the 30 most recent entries. Across is real `occurred_at` time, up is intensity (0, 50 and 100 gridlines). An entry's feelings stack in one column with a hairline between the lowest and highest; entries are never joined. Shape carries the optional valence: filled dot is nggak enak, ring is enak, small dot is unrated. Dot tone follows the strip's intensity ramp. Each dot links to its entry and carries an aria-label with name, intensity, valence and date.
+On the list leaf: one dot per feeling for the 30 most recent entries. Across is real `occurred_at` time, up is intensity (grid at 0, 50, 100). An entry's feelings stack in one column, joined by a hairline in `edge`; entries are never joined. Shape carries the optional valence: filled dot is nggak enak, ring is enak, diamond is unrated. Dot tone follows the marker tone. Once any feeling is re-rated, a `sebelum` / `sesudah` switch plots the after values. Each dot links to its entry, with an aria-label of name, mode, intensity, valence and date.
 
 ### Navigation and status
-No tab bar. The list header carries wordmark and actions; sub-pages carry a plain muted back link and an outlined `ubah`. Loading and error are a single muted line (`StatusLine`), never a spinner or alert box. Toasts (Sonner) use an orange action button.
+No tab bar. The desk bar holds actions; sub-pages carry a chalk back link and an outlined `ubah`. Loading and error are a single muted line. Toasts use Sonner.
+
+### The page turn
+The detail reader (`components/book-reader.tsx`) turns one leaf at a time. The leaf is a chain of 24 to 48 vertical strips (about one per 11px of stage width), each rotated a little relative to its parent so the sheet bends while it turns, with a total bend of 46 degrees. Each strip holds a clone of the page. Over 1000ms with cubic ease-in-out, the leaf lifts 28px toward the viewer, per-strip shade darkens with the angle, a 120px cast shadow follows the leaf edge, and the back shows `paper-back` with a mirrored ghost of the page at 7% opacity. Older entries turn forward, newer back; the position lives in the URL through `replaceState`. Under `prefers-reduced-motion: reduce` the leaf swaps without animation.
 
 ### Motion
-One moment: when a draft's alternative thought is filled later, that section settles in (600ms, translateY 8px to 0 with fade, `cubic-bezier(0.16, 1, 0.3, 1)`), only under `prefers-reduced-motion: no-preference`. Colour and border changes on hover are instant. Nothing else moves.
+Two moments. The page turn above, and a draft's balanced thought settling into place when filled later (600ms, translateY 8px to 0 with fade, `cubic-bezier(0.16, 1, 0.3, 1)`, only under `prefers-reduced-motion: no-preference`). Hover and border changes are instant.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep orange to action, focus, selection, error, and the hot end of intensity, one orange per theme.
-- **Do** set the thought as the condensed headline only at 90 characters or fewer; use Hanken for anything longer.
-- **Do** show the intensity numeral next to every strip or plot; the length and number carry the reading.
-- **Do** draw the feelings plot only from real entry data, with a dot's height equal to its intensity and its shape equal to the valence the user gave, never one inferred.
-- **Do** use `--edge` for control outlines and `--rule` for hairlines only.
-- **Do** give every clickable element a pointer cursor (a global base rule restores it after Tailwind's reset) and a not-allowed cursor when disabled.
+- **Do** keep orange to action, focus, selection, caret, error, and the intensity marker, one orange per theme.
+- **Do** set the user's words and every number in Nanum Pen Script, and the app's words in Patrick Hand.
+- **Do** write on 36px rules with no box around the field.
+- **Do** show the ringed number beside every marker swipe; length and number carry the reading.
+- **Do** ring focus in `chrome` on the desk and in orange on the leaf.
 - **Do** keep touch targets at 44px or more and field text at 16px or more.
+- **Do** draw the plot only from real entry data, with shape equal to the valence the user gave.
 - **Do** keep the Google sign-in button as Google specifies it in both themes.
 
 ### Don't:
-- **Don't** use shadows, rounded cards, or pill chips; separate entries with hairlines.
-- **Don't** introduce a second chroma or colour-code status.
-- **Don't** set running prose, or thoughts over 90 characters, in the condensed face.
+- **Don't** use cards, pills or uniformly rounded boxes; corners are always a little uneven.
+- **Don't** introduce a second hue or colour-code status; neutral greys carry the rest.
+- **Don't** put a shadow on anything but the book and the turning leaf.
 - **Don't** pre-fill the intensity slider.
-- **Don't** invent plot data for empty or demo states; with no entries the plot renders nothing.
-- **Don't** theme or restyle the Google button to match the palette.
+- **Don't** invent plot data for empty states; with no entries the plot renders nothing.
+- **Don't** set the user's writing in the print face.
+- **Don't** theme or restyle the Google button.
 
 ## Not canonized
 
-Drift carried by the build and not part of the system: `components/ui/button.tsx` still carries stock shadcn variants (ring-3 focus, `rounded-lg`, opacity states) of which only the default variant is used (composer submit); a few secondary controls (account sign-out, not-found link, account panel) outline with `--rule` where the edge rule says `--edge`; `components/ui/button.tsx` imports `cn` from `'cn'`, unlike the rest of the app's `@/lib/utils`.
+Drift carried by the build, not part of the system: `components/ui/button.tsx` still carries stock shadcn variants (ring, `rounded-lg`, tinted destructive) that the hand-drawn `.btn-*` classes replaced, and it imports `cn` from `'cn'` like the rest of the components; the `terus ↓` hint carries a text glyph arrow (and the slider hint a `→`) where the floor prefers drawn marks; the Google button's hex values and `transition-colors` live inline in `app/(auth)/login/page.tsx` rather than as tokens. The skill's `reference/document.md` was absent from the repo, so the format followed the previous DESIGN.md.

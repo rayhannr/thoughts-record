@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
+import { Paper } from '@/components/book-page'
 import { createClient } from '@/lib/supabase/client'
 
 // Google's own four-colour mark, unmodified.
@@ -50,13 +51,13 @@ function LoginForm() {
   }
 
   return (
-    <div className="pt-16">
-      <h1 className="font-catalog text-[4.25rem] leading-[0.9] font-bold tracking-[0.02em] text-ink uppercase">
+    <Paper className="pt-16">
+      <h1 className="font-write text-[76px] leading-[0.85] text-ink">
         Thought
         <br />
         Record
       </h1>
-      <p className="mt-6 text-base text-ink-muted">catatan pikiran pribadi. masuk supaya catatanmu tersimpan di akunmu.</p>
+      <p className="mt-6 text-lg text-ink-muted">catatan pikiran pribadi. masuk supaya catatanmu tersimpan di akunmu.</p>
 
       {/* Google's light button, kept as Google specifies it in both themes. */}
       <button
@@ -70,7 +71,7 @@ function LoginForm() {
       </button>
 
       {error && (
-        <p role="alert" className="mt-3 text-sm text-signal">
+        <p role="alert" className="mt-3 text-lg text-signal">
           tidak bisa masuk. coba lagi.
         </p>
       )}
@@ -78,12 +79,12 @@ function LoginForm() {
       <div className="mt-8">
         <Link
           href="/"
-          className="-ml-2 inline-flex min-h-11 items-center rounded-sm px-2 text-sm text-ink-muted underline decoration-1 underline-offset-4 hover:text-ink"
+          className="btn-quiet -ml-2 underline decoration-1 underline-offset-4"
         >
           lanjut tanpa akun
         </Link>
       </div>
-    </div>
+    </Paper>
   )
 }
 

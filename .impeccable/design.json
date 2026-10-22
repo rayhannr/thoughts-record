@@ -1,28 +1,34 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T00:00:00Z",
+  "generatedAt": "2026-10-22T00:00:00Z",
   "title": "Design System: Thought Record",
   "extensions": {
     "colorMeta": {
-      "signal": { "role": "primary", "displayName": "Factory Orange (day)", "canonical": "#c73e08", "tonalRamp": ["#3a1202", "#5c1d04", "#8a2c06", "#c73e08", "#df6a3c", "#eb937a", "#f4bda9", "#fae3da"] },
-      "signal-night": { "role": "primary", "displayName": "Factory Orange (night)", "canonical": "#ff6b2c", "tonalRamp": ["#4d1700", "#7a2500", "#a83a0a", "#d9511a", "#ff6b2c", "#ff9266", "#ffb899", "#ffdccc"] },
-      "paper": { "role": "neutral", "displayName": "Matte White Sleeve", "canonical": "#f1efea", "tonalRamp": ["#0f0e0d", "#3a3833", "#5e5a52", "#857f73", "#aaa598", "#cfcac0", "#e4e0d8", "#f1efea"] },
-      "paper-night": { "role": "neutral", "displayName": "Matte Black Sleeve", "canonical": "#0d0c0b", "tonalRamp": ["#0d0c0b", "#161513", "#201e1b", "#2c2a26", "#4a463f", "#6f695e", "#a39d90", "#ece7dc"] },
-      "edge": { "role": "neutral", "displayName": "Control Edge", "canonical": "#857f73", "tonalRamp": ["#2a2823", "#46433c", "#625e55", "#857f73", "#a39d90", "#bfbaaf", "#d8d4cb", "#ece9e3"] }
+      "signal": { "role": "primary", "displayName": "Signal Orange (day)", "canonical": "#c73e08", "tonalRamp": ["#3a1202", "#5c1d04", "#8a2c06", "#c73e08", "#df6a3c", "#eb937a", "#f4bda9", "#fae3da"] },
+      "signal-night": { "role": "primary", "displayName": "Signal Orange (night)", "canonical": "#ff6b2c", "tonalRamp": ["#4d1700", "#7a2500", "#a83a0a", "#d9511a", "#ff6b2c", "#ff9266", "#ffb899", "#ffdccc"] },
+      "desk": { "role": "neutral", "displayName": "Charcoal Desk", "canonical": "#262626", "tonalRamp": ["#080808", "#141414", "#1c1c1c", "#262626", "#343434", "#565656", "#a2a29f", "#ececea"] },
+      "paper": { "role": "neutral", "displayName": "Pale Grey Leaf", "canonical": "#f1f1ef", "tonalRamp": ["#151515", "#595959", "#7a7a77", "#a2a29f", "#c9c9c6", "#dcdcda", "#f1f1ef", "#fafaf8"] },
+      "paper-night": { "role": "neutral", "displayName": "Dark Grey Leaf", "canonical": "#1c1c1c", "tonalRamp": ["#080808", "#141414", "#1c1c1c", "#262626", "#343434", "#565656", "#a4a4a4", "#ececec"] },
+      "edge": { "role": "neutral", "displayName": "Control Edge", "canonical": "#7a7a77", "tonalRamp": ["#262626", "#434342", "#5e5e5c", "#7a7a77", "#a2a29f", "#c9c9c6", "#dcdcda", "#ececea"] }
     },
     "typographyMeta": {
-      "wordmark": { "displayName": "Wordmark", "purpose": "Login title (4.25rem) and list header mark (1.125rem, tracked)." },
-      "catalogue-number": { "displayName": "Catalogue Number", "purpose": "TR / 000N, numbered by write order." },
-      "headline": { "displayName": "Thought Headline", "purpose": "The thought on the entry view, only when 90 characters or fewer." },
-      "numeral": { "displayName": "Intensity Numeral", "purpose": "Tabular condensed numerals beside every strip." },
-      "question": { "displayName": "Question", "purpose": "The four prompts and the submit label." },
-      "label": { "displayName": "Label Caps", "purpose": "Dates and plot captions; never running prose." },
-      "writing": { "displayName": "Writing", "purpose": "The user's own text, Hanken at 18px, max 65ch." },
-      "chrome": { "displayName": "Chrome", "purpose": "Links, helper text and errors at 14px." }
+      "wordmark": { "displayName": "Wordmark", "purpose": "Thought Record on the desk bar, in the user's pen hand." },
+      "writing": { "displayName": "Writing", "purpose": "The user's own text on 36px rules, Nanum Pen Script 28px." },
+      "writing-list": { "displayName": "List Writing", "purpose": "Feelings and thought in list rows, clamped." },
+      "date-heading": { "displayName": "Date Heading", "purpose": "Occurred-at line at the top of an entry leaf." },
+      "numeral": { "displayName": "Ringed Numeral", "purpose": "Every number, tabular, circled in pen beside the marker." },
+      "prompt": { "displayName": "Prompt", "purpose": "The four questions, Patrick Hand on the rule grid." },
+      "chrome": { "displayName": "Chrome", "purpose": "Links, labels, helper text and errors." },
+      "button": { "displayName": "Button", "purpose": "Hand-drawn button labels at 1.1875rem." }
     },
-    "shadows": [],
+    "shadows": [
+      { "name": "page-stack", "value": "0 18px 28px -14px rgb(0 0 0 / 0.55)", "purpose": "The leaf lying on the desk; two more leaves show under its right and bottom edges." },
+      { "name": "gutter", "value": "linear-gradient(to right, rgba(0,0,0,0.16), transparent 28px)", "purpose": "Shadow where the leaf meets the spine; 0.4 black at night." },
+      { "name": "turn-cast", "value": "linear-gradient(to right, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.16) 40%, transparent), 120px wide", "purpose": "Cast shadow on the page beneath a turning leaf." }
+    ],
     "motion": [
-      { "name": "settle-in", "value": "600ms cubic-bezier(0.16, 1, 0.3, 1), translateY(8px) to 0 with fade", "purpose": "The only motion: a draft's evidence section arriving later. Gated by prefers-reduced-motion: no-preference." }
+      { "name": "page-turn", "value": "1000ms cubic ease-in-out; chain of 24-48 strips, 46deg total bend, 28px lift, per-strip shade, cast shadow, ghosted back at 7% opacity", "purpose": "Turning from one entry to the next on the detail page. Swapped for an instant change under prefers-reduced-motion: reduce." },
+      { "name": "settle-in", "value": "600ms cubic-bezier(0.16, 1, 0.3, 1), translateY(8px) to 0 with fade", "purpose": "A draft's balanced thought arriving later. Gated by prefers-reduced-motion: no-preference." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" }
@@ -30,60 +36,68 @@
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Signal Button",
       "kind": "button",
-      "refersTo": "button-primary",
+      "refersTo": "button-signal",
       "description": "Orange action: tulis, simpan, lanjutkan sekarang.",
-      "html": "<button class=\"ds-btn-primary\">tulis</button>",
-      "css": ".ds-btn-primary { height: 44px; padding: 0 16px; border: 0; border-radius: 2px; background: #c73e08; color: #fff; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 1.125rem; letter-spacing: 0.025em; cursor: pointer; } .ds-btn-primary:hover { filter: brightness(1.1); } .ds-btn-primary:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; }"
+      "html": "<button class=\"ds-signal\">tulis</button>",
+      "css": ".ds-signal { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; background: #c73e08; color: #fff; border: 2px solid #c73e08; border-radius: 4px 10px 5px 9px; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1.1875rem; line-height: 1; cursor: pointer; } .ds-signal:hover { filter: brightness(1.08); } .ds-signal:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; }"
     },
     {
-      "name": "Outline Link Button",
+      "name": "Pen Button",
       "kind": "button",
-      "refersTo": "button-outline",
-      "description": "Secondary action with a control-edge outline: ubah.",
-      "html": "<a class=\"ds-btn-outline\" href=\"#\">ubah</a>",
-      "css": ".ds-btn-outline { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid #857f73; border-radius: 2px; color: #0f0e0d; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 0.875rem; text-decoration: none; } .ds-btn-outline:hover { border-color: #0f0e0d; } .ds-btn-outline:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; }"
+      "refersTo": "button-pen",
+      "description": "Ink outline on the leaf; pressed fills with ink.",
+      "html": "<button class=\"ds-pen\" aria-pressed=\"false\">semua (12)</button> <button class=\"ds-pen\" aria-pressed=\"true\">belum diuji (2)</button>",
+      "css": ".ds-pen { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 2px solid #151515; border-radius: 4px 10px 5px 9px; background: transparent; color: #151515; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1.1875rem; line-height: 1; cursor: pointer; } .ds-pen:hover, .ds-pen[aria-pressed='true'] { background: #151515; color: #f1f1ef; } .ds-pen:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; }"
     },
     {
-      "name": "Filter Chip",
-      "kind": "chip",
-      "refersTo": "filter-chip-active",
-      "description": "Draft filter; active is an ink fill.",
-      "html": "<button class=\"ds-chip\" aria-pressed=\"false\">semua (12)</button> <button class=\"ds-chip ds-chip-on\" aria-pressed=\"true\">belum diuji (2)</button>",
-      "css": ".ds-chip { min-height: 44px; padding: 0 14px; border: 1px solid #857f73; border-radius: 2px; background: transparent; color: #5e5a52; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 0.875rem; cursor: pointer; } .ds-chip:hover { border-color: #0f0e0d; color: #0f0e0d; } .ds-chip-on { background: #0f0e0d; border-color: #0f0e0d; color: #f1efea; } .ds-chip:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; }"
+      "name": "Desk Button",
+      "kind": "button",
+      "refersTo": "button-desk",
+      "description": "Chalk outline for controls set on the charcoal desk.",
+      "html": "<div style=\"background:#262626;padding:12px\"><a class=\"ds-desk\" href=\"#\">ubah</a></div>",
+      "css": ".ds-desk { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border: 2px solid #b6b6b3; border-radius: 4px 10px 5px 9px; color: #ececea; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1.1875rem; line-height: 1; text-decoration: none; } .ds-desk:hover { border-color: #ececea; } .ds-desk:focus-visible { outline: 2px solid #ececea; outline-offset: 2px; }"
     },
     {
       "name": "Ruled Field",
       "kind": "input",
       "refersTo": "ruled-field",
-      "description": "Condensed question above a visible surface block; border reads empty, filled, or invalid.",
-      "html": "<div class=\"ds-field\"><label for=\"ds-t\">apa yang muncul di pikiran?</label><textarea id=\"ds-t\" rows=\"2\"></textarea></div>",
-      "css": ".ds-field label { display: block; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.025em; color: #0f0e0d; } .ds-field textarea { display: block; width: 100%; min-height: 72px; margin-top: 8px; padding: 12px 14px; box-sizing: border-box; border: 1px solid #857f73; border-radius: 2px; background: #faf9f6; color: #0f0e0d; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 1.125rem; line-height: 1.625; resize: none; outline: none; caret-color: #c73e08; } .ds-field textarea:focus { border-color: #c73e08; box-shadow: 0 0 0 1px #c73e08; }"
+      "description": "A prompt above, the answer written directly on 36px rules with no box.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-t\">apa yang muncul di pikiran?</label><textarea id=\"ds-t\" rows=\"2\">Gue pasti dianggap nggak becus</textarea></div>",
+      "css": ".ds-field { background: #f1f1ef; padding: 12px; } .ds-field label { display: block; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1.125rem; line-height: 36px; color: #595959; } .ds-field textarea { display: block; width: 100%; min-height: 72px; padding: 0; box-sizing: border-box; border: 0; background-color: transparent; background-image: repeating-linear-gradient(to bottom, transparent 0 35px, #c9c9c6 35px 36px); color: #151515; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 28px; line-height: 36px; resize: none; outline: none; caret-color: #c73e08; } .ds-field textarea:focus-visible { outline: 2px solid #c73e08; outline-offset: 4px; }"
+    },
+    {
+      "name": "Intensity Marker with Ringed Number",
+      "kind": "custom",
+      "refersTo": "intensity-slider",
+      "description": "A marker swipe whose length is the value, number ringed in pen beside it.",
+      "html": "<div class=\"ds-int\"><span class=\"ds-track\"><span class=\"ds-marker\"></span></span><span class=\"ds-ring\">70</span></div>",
+      "css": ".ds-int { display: flex; align-items: center; gap: 12px; background: #f1f1ef; padding: 12px; } .ds-track { position: relative; display: block; flex: 1; height: 20px; } .ds-marker { position: absolute; inset: 0 auto 0 0; width: 70%; background: color-mix(in oklab, #c73e08 84%, #f1f1ef); border-radius: 3px 10px 6px 12px / 8px 4px 10px 5px; transform: skewX(-8deg); transform-origin: left; } .ds-ring { display: inline-block; min-width: 56px; padding: 6px 8px 4px; text-align: center; border: 2px solid #151515; border-radius: 55% 45% 52% 48% / 50% 56% 44% 50%; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; color: #151515; }"
     },
     {
       "name": "Intensity Slider (empty)",
       "kind": "custom",
       "refersTo": "intensity-slider",
-      "description": "20-cell track with a muted dash until touched; snaps by 5.",
-      "html": "<div class=\"ds-slider\"><div class=\"ds-track\" role=\"slider\" tabindex=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><output>–</output></div>",
-      "css": ".ds-slider { display: flex; align-items: center; gap: 16px; } .ds-track { flex: 1; height: 56px; padding: 0 12px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; border: 1px solid #857f73; border-radius: 2px; background: #faf9f6; cursor: pointer; } .ds-track i { display: block; width: 3.5%; min-width: 4px; height: 28px; background: #ddd8cd; } .ds-track:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; } .ds-slider output { width: 56px; text-align: right; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 3rem; color: #5e5a52; font-variant-numeric: tabular-nums; }"
+      "description": "Dashed edge outline and a dash in a muted ring until touched; snaps by 5.",
+      "html": "<div class=\"ds-slider\"><div class=\"ds-box\" role=\"slider\" tabindex=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\">geser di sini →</div><output class=\"ds-dash\">–</output></div>",
+      "css": ".ds-slider { display: flex; align-items: center; gap: 12px; background: #f1f1ef; padding: 12px; } .ds-box { display: flex; flex: 1; height: 56px; align-items: center; padding: 0 12px; box-sizing: border-box; border: 2px dashed #7a7a77; border-radius: 4px 12px 6px 10px; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1.25rem; color: #595959; cursor: pointer; } .ds-box:focus-visible { outline: 2px solid #c73e08; outline-offset: 2px; } .ds-dash { display: inline-block; min-width: 64px; padding: 6px 8px 4px; text-align: center; border: 2px solid #7a7a77; border-radius: 55% 45% 52% 48% / 50% 56% 44% 50%; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 40px; line-height: 1; color: #595959; }"
     },
     {
-      "name": "Entry Row with Code Strip",
+      "name": "Entry Row",
       "kind": "card",
-      "refersTo": "intensity-slider",
-      "description": "List row: thought first, feeling and date left, 20-cell strip and numeral right, hairline below. Not a card.",
-      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-thought\">Gue pasti dianggap nggak becus</span><span class=\"ds-meta\"><span><span class=\"ds-feel\">malu, kesel sama diri sendiri</span><span class=\"ds-date\">30 SEP</span></span><span class=\"ds-bar\"><span class=\"ds-strip\"><i style=\"background:#6d675c\"></i><i style=\"background:#8f5a3c\"></i><i style=\"background:#b1492a\"></i><i style=\"background:#c73e08\"></i><i style=\"background:#c73e08\"></i><i></i><i></i><i></i><i></i><i></i></span><b>70</b></span></span></a>",
-      "css": ".ds-row { display: block; padding: 20px 16px; border-bottom: 1px solid #cfcac0; color: #0f0e0d; text-decoration: none; font-family: 'Hanken Grotesk', system-ui, sans-serif; } .ds-row:hover { background: #faf9f6; } .ds-thought { display: block; font-size: 19px; line-height: 1.375; } .ds-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px; } .ds-feel { display: block; font-size: 1rem; } .ds-date { display: block; margin-top: 6px; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.1em; color: #5e5a52; } .ds-bar { display: flex; align-items: center; gap: 12px; } .ds-strip { display: flex; gap: 2px; } .ds-strip i { display: block; width: 5px; height: 14px; background: #ddd8cd; } .ds-bar b { min-width: 36px; text-align: right; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 2.25rem; font-variant-numeric: tabular-nums; }"
+      "refersTo": "button-quiet",
+      "description": "List row on the leaf: date, feelings in the user's hand, marker with ringed number, then the thought. Hairline below. Not a card.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-date\">30 Sep</span><span class=\"ds-feel\">malu, kesel sama diri sendiri</span><span class=\"ds-int2\"><span class=\"ds-bar\"><span class=\"ds-mk\"></span></span><span class=\"ds-n\">70</span></span><span class=\"ds-thought\">Gue pasti dianggap nggak becus</span></a>",
+      "css": ".ds-row { display: block; padding: 16px 12px; border-bottom: 1px solid #c9c9c6; background: #f1f1ef; color: #151515; text-decoration: none; } .ds-row:hover { background: rgb(21 21 21 / 0.05); } .ds-date { display: block; font-family: 'Patrick Hand', 'Segoe Print', sans-serif; font-size: 1rem; color: #595959; } .ds-feel { display: block; margin-top: 4px; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 30px; line-height: 32px; } .ds-int2 { display: flex; align-items: center; gap: 12px; margin-top: 4px; } .ds-bar { position: relative; flex: 1; height: 20px; } .ds-mk { position: absolute; inset: 0 auto 0 0; width: 70%; background: color-mix(in oklab, #c73e08 84%, #f1f1ef); border-radius: 3px 10px 6px 12px / 8px 4px 10px 5px; transform: skewX(-8deg); transform-origin: left; } .ds-n { min-width: 56px; padding: 6px 8px 4px; text-align: center; border: 2px solid #151515; border-radius: 55% 45% 52% 48% / 50% 56% 44% 50%; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 32px; line-height: 1; } .ds-thought { display: block; margin-top: 8px; font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 28px; line-height: 32px; }"
     },
     {
-      "name": "Catalogue Number and Headline",
+      "name": "Leaf with Stacked Edges",
       "kind": "custom",
-      "refersTo": "catalogue-number",
-      "description": "Entry view masthead: TR / 000N, date label, thought as condensed headline.",
-      "html": "<div class=\"ds-mast\"><span class=\"ds-no\">TR / 0007</span><p class=\"ds-when\">SENIN, 30 SEP, 21.40</p><h2 class=\"ds-q\">apa yang muncul di pikiran?</h2><p class=\"ds-head\">Gue pasti dianggap nggak becus</p></div>",
-      "css": ".ds-mast { font-family: 'Hanken Grotesk', system-ui, sans-serif; color: #0f0e0d; } .ds-no { display: block; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 3.75rem; line-height: 1; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; } .ds-when { margin: 12px 0 0; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.1em; color: #5e5a52; } .ds-q { margin: 32px 0 0; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.025em; color: #5e5a52; } .ds-head { margin: 8px 0 0; max-width: 65ch; font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-weight: 600; font-size: 2.25rem; line-height: 1.1; letter-spacing: 0.01em; }"
+      "refersTo": "button-pen",
+      "description": "The page: pale paper, spine shadow, double margin rule, two leaves peeking under the right and bottom edges.",
+      "html": "<div class=\"ds-desktop\"><div class=\"ds-stack\"><div class=\"ds-sheet\">gue pasti dianggap nggak becus</div></div></div>",
+      "css": ".ds-desktop { background: #262626; padding: 24px 28px 28px 16px; } .ds-stack { position: relative; isolation: isolate; border-radius: 2px 6px 6px 2px; box-shadow: 0 18px 28px -14px rgb(0 0 0 / 0.55); } .ds-stack::before, .ds-stack::after { content: ''; position: absolute; z-index: -1; border-radius: 2px 7px 7px 2px; } .ds-stack::before { inset: 3px -4px -4px 2px; background: color-mix(in oklab, #f1f1ef 86%, black); } .ds-stack::after { inset: 6px -8px -8px 4px; background: color-mix(in oklab, #f1f1ef 72%, black); } .ds-sheet { min-height: 120px; padding: 24px 16px 24px 58px; border-radius: 2px 6px 6px 2px; background-color: #f1f1ef; background-image: linear-gradient(to right, rgba(0,0,0,0.16), transparent 28px), linear-gradient(to right, transparent 40px, #a2a29f 40px 41px, transparent 41px 44px, #a2a29f 44px 45px, transparent 45px); font-family: 'Nanum Pen Script', 'Segoe Script', cursive; font-size: 28px; line-height: 36px; color: #151515; }"
     },
     {
       "name": "Google Sign-in Button",
@@ -95,42 +109,43 @@
     }
   ],
   "narrative": {
-    "northStar": "Sleeve Zero",
-    "overview": "The app is a catalogue sleeve for one person's thinking. Matte black at night, matte white by day, a single factory orange, hairlines at one pixel, 2px corners, no shadows, no cards. Every entry is a catalogue item numbered in the order it was written (TR / 0007). The record's shape is the cover: a feelings plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip.\n\nTwo voices share the page. Condensed caps (Barlow Condensed) are the catalogue's printing: wordmark, question labels, catalogue numbers, numerals, short marks. Hanken Grotesk is the user's own writing and the app's quiet chrome. The writing is never set in the printing face when it runs long.\n\nOrange is the only chroma. It marks primary action, focus, selection, error, and the hot end of intensity. Everything else is bone, black, and warm grey. The dark theme is the primary sleeve; the light theme is the same sleeve inverted, with a deeper orange to hold contrast.",
+    "northStar": "The Exercise Book",
+    "overview": "The record is a handwritten Indonesian exercise book lying on a desk: a pale grey leaf on a charcoal desk by day, a dark grey leaf on a near-black desk by night. Each entry is a leaf you turn, not a card you open. The palette is strictly neutral grey with one orange signal; light and dark are both fully designed.\n\nTwo hands share the page. Nanum Pen Script is the user's own hand: entry text, dates, wordmark and every numeral. Patrick Hand is the printed side: prompts, buttons, labels and chrome.\n\nThe book is built from physical cues in CSS: a double margin rule, a spine shadow, stacked leaves under the right and bottom edges, rules only inside writing areas, and pen-wobbled corners on every control. Nothing is a card.",
     "keyCharacteristics": [
-      "One orange (#c73e08 day, #ff6b2c night) carries action, focus, selection, error and the hot cells of the strip.",
-      "Condensed caps for short marks and numerals; humanist sans for anything the user wrote.",
-      "The feelings plot is the signature: one dot per feeling, height equals intensity, shape carries the optional valence.",
-      "Intensity is a length (20 cells, one per 5 points) plus a numeral, never colour alone.",
-      "Hairlines and 2px corners; depth comes from overlap and tone, never shadow.",
-      "Single 38rem column, mobile first, with the plot allowed to break out edge to edge."
+      "One orange (#c73e08 day, #ff6b2c night) carries action, focus, selection, caret, errors and the intensity marker.",
+      "Intensity is a marker swipe whose length is the value, with the number ringed in pen beside it.",
+      "The entry detail is a book reader with a bent-leaf page turn, shade, cast shadow and ghosted back; reduced motion swaps instantly.",
+      "Writing sits on 36px rules with no box around inputs.",
+      "A desk bar, always dark, holds navigation; the leaf holds the record.",
+      "Single 36rem column, mobile first."
     ],
     "rules": [
-      { "name": "The One Ink Rule", "body": "Orange is the only chroma in the app. Neutrals stay warm grey; no second accent, no tint for status.", "section": "colors" },
-      { "name": "The Edge Versus Rule Rule", "body": "--rule is for hairlines (dividers). Anything a finger must find, such as a field, slider, or chip outline, uses --edge.", "section": "colors" },
-      { "name": "The Number Beside the Colour Rule", "body": "Colour in the strip and plot peaks only reinforces. The numeral and the length always carry the reading.", "section": "colors" },
-      { "name": "The Bone Ramp Rule", "body": "Lit cells mix from cell-low toward signal at 8% per cell index, reaching full orange at cell 13. The ramp is the same in the list strip, entry view, slider track, and plot peak tips.", "section": "colors" },
-      { "name": "The Short Marks Rule", "body": "The condensed face is for short marks only: labels, numbers, numerals, questions, buttons, and a thought of 90 characters or fewer as headline. Anything longer or running is Hanken, so it reads as the user's own voice.", "section": "typography" },
-      { "name": "The Lining Numerals Rule", "body": "Body uses lining numerals; every numeral that changes (intensity, catalogue number) is tabular.", "section": "typography" },
-      { "name": "The No Shadow Rule", "body": "Nothing casts a shadow. Separation is a hairline, a tone step to surface, or occlusion.", "section": "elevation" }
+      { "name": "The One Orange Rule", "body": "Orange is the only chroma. Everything else is neutral grey; no second accent, no status tint.", "section": "colors" },
+      { "name": "The Chalk On The Desk Rule", "body": "Orange does not hold against the charcoal desk by day, so controls on the desk ring their focus in chrome.", "section": "colors" },
+      { "name": "The Edge Versus Rule Rule", "body": "--rule is for ruled lines and hairlines; anything a finger must find uses --edge.", "section": "colors" },
+      { "name": "The Number Beside The Colour Rule", "body": "Marker colour only reinforces the length and the ringed number, which always carry the reading.", "section": "colors" },
+      { "name": "The Own Hand Rule", "body": "Anything the user wrote, and every number, is Nanum Pen Script. Anything the app says is Patrick Hand.", "section": "typography" },
+      { "name": "The Rule Grid Rule", "body": "Writing and prompts share a 36px line pitch so text always sits on a ruled line.", "section": "typography" },
+      { "name": "The Book Casts, Nothing Else Rule", "body": "Shadow belongs to the leaf and the turning leaf. Controls, fields and rows stay flat.", "section": "elevation" }
     ],
     "dos": [
-      "Do keep orange to action, focus, selection, error, and the hot end of intensity, one orange per theme.",
-      "Do set the thought as the condensed headline only at 90 characters or fewer; use Hanken for anything longer.",
-      "Do show the intensity numeral next to every strip or plot; the length and number carry the reading.",
-      "Do draw the feelings plot only from real entry data, with a dot's height equal to its intensity.",
-      "Do use --edge for control outlines and --rule for hairlines only.",
-      "Do give every clickable element a pointer cursor (a global base rule restores it after Tailwind's reset) and a not-allowed cursor when disabled.",
+      "Do keep orange to action, focus, selection, caret, error, and the intensity marker, one orange per theme.",
+      "Do set the user's words and every number in Nanum Pen Script, and the app's words in Patrick Hand.",
+      "Do write on 36px rules with no box around the field.",
+      "Do show the ringed number beside every marker swipe.",
+      "Do ring focus in chrome on the desk and in orange on the leaf.",
       "Do keep touch targets at 44px or more and field text at 16px or more.",
+      "Do draw the plot only from real entry data, with shape equal to the valence the user gave.",
       "Do keep the Google sign-in button as Google specifies it in both themes."
     ],
     "donts": [
-      "Don't use shadows, rounded cards, or pill chips; separate entries with hairlines.",
-      "Don't introduce a second chroma or colour-code status.",
-      "Don't set running prose, or thoughts over 90 characters, in the condensed face.",
+      "Don't use cards, pills or uniformly rounded boxes; corners are always a little uneven.",
+      "Don't introduce a second hue or colour-code status.",
+      "Don't put a shadow on anything but the book and the turning leaf.",
       "Don't pre-fill the intensity slider.",
-      "Don't invent plot data for empty or demo states; with no entries the plot renders nothing.",
-      "Don't theme or restyle the Google button to match the palette."
+      "Don't invent plot data for empty states.",
+      "Don't set the user's writing in the print face.",
+      "Don't theme or restyle the Google button."
     ]
   }
 }

@@ -1,27 +1,23 @@
 import { cn } from 'cn'
 
-const CELLS = 20
-
-/**
- * Twenty cells, one per five points. Intensity is never colour alone: the strip
- * is a length, and the number always sits beside it.
- */
-export function CodeStrip({ value, className, cell = 'h-3.5 w-[5px]' }: { value: number; className?: string; cell?: string }) {
-  const filled = Math.round(value / 5)
-  return (
-    <span aria-hidden className={cn('flex shrink-0 gap-[2px]', className)}>
-      {Array.from({ length: CELLS }, (_, i) => (
-        <span key={i} className={cn('strip-cell', cell)} data-on={i < filled} style={{ '--i': i + 1 } as React.CSSProperties} />
-      ))}
-    </span>
-  )
+/** Lighter near the page when the feeling is faint, full orange when it is strong. Only reinforces the length and the number. */
+export function toneFor(value: number) {
+  return `color-mix(in oklab, var(--signal) ${Math.round(45 + 0.55 * value)}%, var(--paper))`
 }
 
-export function IntensityBar({ value, className, large }: { value: number; className?: string; large?: boolean }) {
+/**
+ * A marker swipe whose length is the value, with the number ringed in pen beside it.
+ * Intensity is never colour alone: the swipe is a length and the number is always present.
+ * `hatched` draws the re-rated value as pencil hatching so it reads apart from the first one.
+ */
+export function IntensityBar({ value, className, large, hatched }: { value: number; className?: string; large?: boolean; hatched?: boolean }) {
+  const tone = toneFor(value)
   return (
-    <span className={cn('flex shrink-0 items-center gap-3', className)}>
-      <CodeStrip value={value} cell={large ? 'h-5 w-2' : 'h-3.5 w-[5px]'} />
-      <span className={cn('text-right font-catalog font-semibold tabular-nums text-ink', large ? 'min-w-12 text-6xl' : 'min-w-9 text-4xl')}>
+    <span className={cn('flex items-center gap-3', className)} style={{ '--tone': tone } as React.CSSProperties}>
+      <span aria-hidden className={cn('relative block flex-1', large ? 'h-7' : 'h-5')}>
+        <span className={cn('marker absolute inset-y-0 left-0', hatched && 'marker-after')} style={{ width: `${value}%`, background: tone }} />
+      </span>
+      <span className={cn('circled shrink-0 px-2 pt-1.5 pb-1', large ? 'min-w-16 text-[40px]' : 'min-w-14 text-[32px]')}>
         <span className="sr-only">intensitas </span>
         {value}
       </span>

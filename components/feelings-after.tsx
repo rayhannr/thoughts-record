@@ -9,13 +9,13 @@ export function FeelingsAfter({ feelings }: { feelings: Feeling[] }) {
   if (rated.length === 0) return null
 
   return (
-    <Section question={PROMPTS.after}>
-      <ul className="flex flex-col gap-6">
+    <Section question={PROMPTS.after} plain>
+      <ul className="flex flex-col gap-4">
         {rated.map((f, i) => (
           <li key={i}>
             {f.name}
-            <span className="ml-2 font-sans text-sm text-ink-muted">· tadinya {f.intensity}</span>
-            <IntensityBar value={f.intensity_after!} large className="mt-3" />
+            <span className="label-hand ml-2 font-sans text-base">· tadinya {f.intensity}</span>
+            <IntensityBar value={f.intensity_after!} hatched large className="mt-1" />
           </li>
         ))}
       </ul>

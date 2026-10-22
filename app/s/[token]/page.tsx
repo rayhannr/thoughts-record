@@ -21,8 +21,8 @@ export default async function SharedPage({ params }: PageProps<'/s/[token]'>) {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[38rem] px-5 pt-6 pb-24 sm:px-6 sm:pt-10">
-      {view ? <SharedEntries view={view} /> : <p className="py-10 text-sm text-ink-muted">tautan ini sudah tidak berlaku.</p>}
+    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-3 py-6 sm:px-4 sm:py-10">
+      {view ? <SharedEntries view={view} /> : <p className="py-10 text-lg text-chrome-muted">tautan ini sudah tidak berlaku.</p>}
     </main>
   )
 }

@@ -50,6 +50,7 @@ Column 4 was first assigned as "is the thought consistent with reality", a merge
 ### 2.2 Review (v1)
 
 - Chronological list of entries, newest first.
+- Open an entry as a leaf of a book and turn to the newer or older one.
 - Edit and delete any entry.
 - Finish a draft: reopen it and fill in what was left blank.
 
@@ -221,109 +222,68 @@ app/(auth)/        login, register, password reset
 
 ## 9. UI & Design Guidelines
 
-### 9.1 The Governing Rule
+### 9.1 The World
 
-**The only colour in the app is how strongly the user felt.**
+The app is a handwritten exercise book (*buku tulis*) lying on a desk. Each entry is a leaf, written in the user's own hand and read back the same way. The whole interface is neutral grey with **one orange**; the book is the identity, so nothing else competes with the writing.
 
-Everything else — text, background, rules, buttons, navigation — is achromatic. Colour appears solely on the intensity value and its accompanying bar. This makes colour carry information rather than decoration: scrolling back through months of entries, the first thing the eye reads is the rise and fall of intensity, not chrome. It also makes the writing surface calm as a consequence of the rule rather than as a stated goal.
-
-Nothing from the sibling `places-to-go` project's visual language carries over. Its glassmorphism and neon palette suit an app for picking somewhere to eat. This app is opened when the user feels bad, often late at night, and a bright energetic surface reads as tone-deaf in that moment.
+- **The desk** is the dark strip above and below a page: back links, the date, save, the pager. Its text is always light.
+- **The page** is pale grey paper (dark grey at night) with a double margin rule down the left, a shadow where it meets the spine, and two more leaves showing at the right and bottom edge.
+- **Ruled lines exist only where something is written.** Answers sit on a 36px rule; the page itself is plain paper with the margin lines. Entries are separated by hairlines, never cards.
+- **Orange** is the only colour: primary action, focus, selection, errors, and the intensity marker.
 
 ### 9.2 Palette
 
-The reference is the photocopied worksheet a psychologist hands over — cool grey paper, blue-black ink. Warm cream is deliberately avoided; it is the default every journalling app lands on.
+Neutral greys with no hue cast. Tokens live in `app/globals.css`; both themes are specified and neither is an inversion of the other.
 
 | Token | Light | Dark |
 |---|---|---|
-| `paper` | `#EEF0F3` | `#14181F` |
-| `surface` | `#F7F8FA` | `#1B212A` |
-| `ink` | `#1B2028` | `#E6E9EE` |
-| `ink-muted` | `#707A88` | `#8A94A3` |
-| `rule` | `#D6DAE1` | `#2A313C` |
-| `intensity` ramp | `#EADFC2` → `#8F5D14` | `#4A3F24` → `#E8B04A` |
+| `desk` | `#262626` | `#080808` |
+| `paper` (page) | `#F1F1EF` | `#1C1C1C` |
+| `surface` (popovers, inputs) | `#FAFAF8` | `#262626` |
+| `ink` | `#151515` | `#ECECEC` |
+| `ink-muted` | `#595959` | `#A4A4A4` |
+| `rule` | `#C9C9C6` | `#343434` |
+| `edge` (control outlines, about 3:1) | `#7A7A77` | `#787878` |
+| `margin` | `#A2A29F` | `#565656` |
+| `chrome` / `chrome-muted` (text on the desk) | `#ECECEA` / `#B6B6B3` | `#E6E6E4` / `#A8A8A6` |
+| `signal` (orange) | `#C73E08` | `#FF6B2C` |
 
-The intensity ramp is a single hue — amber to bronze — varying in saturation and value, never shifting hue. A green-to-red ramp is rejected: it declares low intensity good and high intensity dangerous, judging the feeling before the user has examined it. Amber is pushed toward gold rather than clay; warm cream paired with terracotta clay is a widely recognisable generated-design signature.
-
-The ramp direction inverts between themes: in light mode higher intensity is darker, in dark mode it is brighter. The rule is constant — higher intensity stands further off the paper.
-
-One warm point on an otherwise cold page is also what keeps the interface from reading clinical. If it ever does read clinical, the fix is warming `surface`, not introducing colour elsewhere.
+Intensity is a marker swipe whose length is the value, tinted from pale to full orange as it gets stronger. The tint only reinforces the length and the circled number.
 
 ### 9.3 Typography
 
-Two families, with the conventional roles inverted: **the user's writing is the display type and the app's own text recedes.**
+Two hands, both handwriting.
 
-- **Entry body** — a screen serif (Literata or Newsreader), 18–19px on mobile, generous line-height, measure under 70 characters. This is 95% of what appears on screen and should read as a person's voice, not as database content.
-- **App chrome** — prompts, labels, dates, navigation: Geist (a neutral sans) at 13–14px in `ink-muted`.
+- **Nanum Pen Script** (self-hosted Latin subset in `app/fonts/`): everything the user writes, the date, the circled numerals and the wordmark. It is thin, so it is always set large (26–40px) on a 36px line.
+- **Patrick Hand**: prompts, buttons, labels and chrome, 16–19px. A plainer marker hand that stays legible small.
 
-Opening an old entry should fill the screen with the user's own voice, not with interface.
+### 9.4 Layout and Components
 
-### 9.4 Layout
+Single column, mobile-first, `max-w-xl`.
 
-Single column, mobile-first.
+- **Detail page is a book.** One leaf at a time, with older and newer entries one page away. Buttons, the left and right arrow keys and a horizontal swipe all turn the page. The position is kept in the URL with `replaceState`, so Back returns to the list rather than stepping through each page.
+- **The page turn** (`components/book-reader.tsx`): the leaf is a chain of 30 vertical strips, each rotated a little relative to its parent, so the sheet bends as it lifts. Strips darken with the angle they face, a shadow follows the free edge across the page beneath, and the back of the leaf is bare paper with the page's ghost showing through. With `prefers-reduced-motion` there is no animation: the page simply changes.
+- **No bordered textareas.** Each answer is a question in the marker hand with the writing directly beneath on ruled lines; the rules are the field, and it grows in whole lines. Focus shows an orange outline.
+- **Buttons are hand-drawn**: corners that never quite match. Primary is filled orange; secondary is a pen outline; quiet actions are plain text.
+- **The intensity slider starts empty**, shows a dash until touched, and snaps in steps of 5. It draws the same marker swipe the record reads back.
+- **Drafts** are marked with muted text (`belum diuji`), never a badge. **No empty state screen**: with no entries the app opens into the composer.
+- **List rows lead with date and feelings, then intensity, then the thought.**
 
-**No cards.** Identical rounded cards turn each entry into a discrete object, when the thing being looked for on re-reading is the thread running between them. Entries are separated by hairline rules instead.
+### 9.5 Voice
 
-**No bordered textareas.** Each column is a question in the sans with the answer written directly beneath it, over a single thin baseline rule — writing on ruled paper rather than completing a form. The rule doubles as the field affordance and is the only surviving reference to the paper worksheet.
+UI copy is Indonesian, lower case, conversational, no exclamation marks. The prompts sound like the psychologist (`apa yang terjadi?`). Nothing congratulates the user or remarks on how long it has been.
 
-```
-COMPOSER                          LIST
-┌────────────────────────┐        ┌────────────────────────┐
-│ Kemarin, 21.40      ⌄ │        │ Thought Record      + │
-│                        │        ├────────────────────────┤
-│ apa yang terjadi?      │        │ 30 Sep                 │
-│ ───────────────────────│        │ Gue pasti dianggap     │
-│ Dikoreksi di meeting   │        │ nggak becus            │
-│ depan orang banyak     │        │ malu    ▓▓▓▓▓▓▓░░░ 70  │
-│ ───────────────────────│        ├────────────────────────┤
-│                        │        │ 28 Sep                 │
-│ apa yang muncul di     │        │ Nggak ada yang bakal   │
-│ pikiran?               │        │ nganggep ini penting   │
-│ ───────────────────────│        │ cemas   ▓▓▓▓▓░░░░░ 50  │
-│ Gue pasti dianggap     │        │ belum diuji            │
-│ nggak becus            │        ├────────────────────────┤
-│ ───────────────────────│        │ 26 Sep                 │
-│                        │        │ Harusnya gue bisa      │
-│ rasanya gimana?        │        │ lebih baik dari ini    │
-│ ───────────────────────│        │ kecewa  ▓▓▓░░░░░░░ 30  │
-│ malu, kesel sama diri  │        └────────────────────────┘
-│ sendiri                │
-│                        │
-│  ──────●─────────  70  │
-│                        │
-│ apa buktinya?          │
-│ ───────────────────────│
-│ (kosong — draft)       │
-│                        │
-│         [ Simpan ]     │
-└────────────────────────┘
-```
+### 9.6 Motion
 
-### 9.5 Component Rules
+The page turn is the one authored moment, plus a small settle when a draft's alternative thought is filled in later. Everything else is still. `prefers-reduced-motion` is respected.
 
-- **List rows lead with the feelings and intensity, then the thought, not the situation.** How strongly the user felt is what the eye should read first; the thought follows, and the situation is the wrapper that differs every time.
-- **The intensity slider starts empty.** No default value — a pre-filled number anchors the answer before the user has considered it. It shows a dash until touched, and snaps in steps of 5; single-unit precision on a felt sense is false precision.
-- **Drafts are marked with muted sans text** (`belum diuji`), never a coloured badge or a warning icon. A draft is the normal path through the app, not an error state.
-- **There is no empty state screen.** With no entries, the app opens directly into the composer. A blank page ready to be written on invites more than an illustration with a button under it.
+### 9.7 Quality Floor
 
-### 9.6 Voice
-
-**UI copy is in Indonesian**, while this document and the code are in English. The user writes entries in Indonesian, and the four prompts should sound like their psychologist speaking rather than like product labels — `apa yang terjadi?`, not `Situasi`.
-
-Lower case, conversational, no exclamation marks. Nothing congratulates the user for writing an entry and nothing remarks on how long it has been since the last one.
-
-### 9.7 Motion
-
-One moment only: when a draft's fourth column is filled in later, that section settles into place. Everything else is still — no per-section fade-and-slide on load, no hover transitions on list rows. `prefers-reduced-motion` is respected.
-
-### 9.8 Quality Floor
-
-- **Intensity is never encoded by colour alone.** The number is always present beside the bar, and the bar is also a length. This matters more than usual here, since colour appears nowhere else to establish a reading.
-- Contrast meets WCAG AA in both themes, including the pale end of the intensity ramp against `paper`.
+- Intensity is never colour alone: the swipe is a length and the number is always present.
+- Contrast meets WCAG AA in both themes. The orange against the charcoal desk does not hold by day, so desk controls take a chalk focus ring and the filled save button carries white text.
 - Visible keyboard focus on every interactive element.
-- Entry text inputs are at least 16px on mobile so iOS does not zoom on focus.
-- Both themes are fully specified; neither is an afterthought inverted from the other.
-
-<!-- BEGIN:nextjs-agent-rules -->
+- Entry text is 26px or larger, well above the 16px iOS zoom threshold.
+- Both themes are fully specified.
 
 # This is NOT the Next.js you know
 

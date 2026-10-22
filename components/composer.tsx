@@ -1,18 +1,16 @@
 'use client'
 
-import { cn } from 'cn'
 import { ChevronDown, Plus, X } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useId, useState } from 'react'
 import { toast } from 'sonner'
 import { AccountMenu } from '@/components/account-menu'
-import { CatalogNumber } from '@/components/catalog-number'
+import { DeskBar, Paper, deskLink } from '@/components/book-page'
 import { DateTimePicker } from '@/components/date-time-picker'
 import { IntensitySlider } from '@/components/intensity-slider'
 import { PROMPTS, VALENCE_LABEL } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
-import { Button } from '@/components/ui/button'
 import { markJustCompleted, useCreateEntry, useUpdateEntry } from '@/lib/entries/client'
 import { CreateEntry, MAX_FEELINGS, type Entry, type Valence } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
@@ -191,21 +189,21 @@ export function Composer({ entry, cancelHref, focusBalanced }: { entry?: Entry; 
   const timeId = `${ids}-occurred_at`
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
-      <div className="sticky top-0 py-2 z-10 -mx-5 flex min-h-12 items-center justify-between gap-4 bg-paper px-5 sm:-mx-6 sm:px-6">
+    <form onSubmit={onSubmit} noValidate className="flex flex-1 flex-col">
+      <DeskBar>
         <button
           type="button"
           aria-expanded={editingTime}
           aria-controls={timeId}
           onClick={() => setEditingTime(v => !v)}
-          className="label-caps -ml-2 flex min-h-11 items-center gap-1.5 rounded-sm px-2 text-ink"
+          className={`${deskLink} -ml-2 gap-1.5`}
         >
           <span className="sr-only">kapan terjadinya: </span>
           {formatDayTime(draft.occurred_at)}
-          <ChevronDown aria-hidden className={editingTime ? 'size-4 rotate-180 text-ink-muted' : 'size-4 text-ink-muted'} />
+          <ChevronDown aria-hidden className={editingTime ? 'size-5 rotate-180 text-chrome-muted' : 'size-5 text-chrome-muted'} />
         </button>
         {cancelHref ? (
-          <Link href={cancelHref} className="-mr-2 flex min-h-11 items-center rounded-sm px-2 text-sm text-ink-muted hover:text-ink">
+          <Link href={cancelHref} className={deskLink}>
             batal
           </Link>
         ) : (
@@ -213,151 +211,140 @@ export function Composer({ entry, cancelHref, focusBalanced }: { entry?: Entry; 
             <AccountMenu />
           </div>
         )}
-      </div>
+      </DeskBar>
 
-      {editingTime && (
-        <div className="-mt-6">
-          <p className="mb-2 text-sm text-ink-muted">kapan terjadinya?</p>
-          <DateTimePicker id={timeId} value={draft.occurred_at} onChange={v => set('occurred_at', v)} />
-        </div>
-      )}
+      <Paper className="flex flex-col gap-8">
+        {editingTime && (
+          <div>
+            <p className="prompt">kapan terjadinya?</p>
+            <DateTimePicker id={timeId} value={draft.occurred_at} onChange={v => set('occurred_at', v)} />
+          </div>
+        )}
 
-      <CatalogNumber id={entry?.id} className="-mb-2 text-5xl" />
+        <RuledField
+          id={`${ids}-situation`}
+          question={PROMPTS.situation}
+          value={draft.situation}
+          onChange={v => set('situation', v)}
+          error={errors.situation}
+          autoFocus={isNew && !draft.situation}
+        />
 
-      <RuledField
-        id={`${ids}-situation`}
-        question={PROMPTS.situation}
-        value={draft.situation}
-        onChange={v => set('situation', v)}
-        error={errors.situation}
-        autoFocus={isNew && !draft.situation}
-      />
+        <RuledField
+          id={`${ids}-thoughts`}
+          question={PROMPTS.thoughts}
+          value={draft.thoughts}
+          onChange={v => set('thoughts', v)}
+          error={errors.thoughts}
+        />
 
-      <RuledField
-        id={`${ids}-thoughts`}
-        question={PROMPTS.thoughts}
-        value={draft.thoughts}
-        onChange={v => set('thoughts', v)}
-        error={errors.thoughts}
-      />
-
-      <div className="flex flex-col gap-8">
-        {draft.feelings.map((feeling, row) => {
-          const base = `${ids}-feelings-${row}`
-          const nameError = errors[`feelings.${row}.name`]
-          const intensityError = errors[`feelings.${row}.intensity`]
-          return (
-            <div key={row} className="flex flex-col gap-5">
-              <RuledField
-                id={`${base}-name`}
-                question={row === 0 ? PROMPTS.feelings : PROMPTS.anotherFeeling}
-                value={feeling.name}
-                onChange={v => setFeeling(row, 'name', v)}
-                error={nameError}
-              />
-              <div>
-                <span id={`${base}-intensity-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
-                  {PROMPTS.intensity}
-                </span>
-                <IntensitySlider
-                  id={`${base}-intensity`}
-                  value={feeling.intensity}
-                  onChange={v => setFeeling(row, 'intensity', v)}
-                  labelledBy={`${base}-intensity-label`}
-                  describedBy={intensityError ? `${base}-intensity-error` : undefined}
-                  invalid={!!intensityError}
+        <div className="flex flex-col gap-8">
+          {draft.feelings.map((feeling, row) => {
+            const base = `${ids}-feelings-${row}`
+            const nameError = errors[`feelings.${row}.name`]
+            const intensityError = errors[`feelings.${row}.intensity`]
+            return (
+              <div key={row} className="flex flex-col gap-4">
+                <RuledField
+                  id={`${base}-name`}
+                  question={row === 0 ? PROMPTS.feelings : PROMPTS.anotherFeeling}
+                  value={feeling.name}
+                  onChange={v => setFeeling(row, 'name', v)}
+                  error={nameError}
                 />
-                {intensityError && (
-                  <p id={`${base}-intensity-error`} className="mt-1.5 text-sm text-signal">
-                    {intensityError}
-                  </p>
+                <div>
+                  <span id={`${base}-intensity-label`} className="prompt mb-1 block">
+                    {PROMPTS.intensity}
+                  </span>
+                  <IntensitySlider
+                    id={`${base}-intensity`}
+                    value={feeling.intensity}
+                    onChange={v => setFeeling(row, 'intensity', v)}
+                    labelledBy={`${base}-intensity-label`}
+                    describedBy={intensityError ? `${base}-intensity-error` : undefined}
+                    invalid={!!intensityError}
+                  />
+                  {intensityError && (
+                    <p id={`${base}-intensity-error`} className="mt-2 text-base text-signal">
+                      {intensityError}
+                    </p>
+                  )}
+                </div>
+                <div role="group" aria-labelledby={`${base}-valence-label`}>
+                  <span id={`${base}-valence-label`} className="prompt mb-1 block">
+                    {PROMPTS.valence}
+                  </span>
+                  <div className="flex gap-2">
+                    {(Object.keys(VALENCE_LABEL) as Valence[]).map(v => (
+                      <button
+                        key={v}
+                        type="button"
+                        aria-pressed={feeling.valence === v}
+                        onClick={() => setFeeling(row, 'valence', feeling.valence === v ? null : v)}
+                        className="btn-pen"
+                      >
+                        {VALENCE_LABEL[v]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {draft.feelings.length > 1 && (
+                  <button type="button" onClick={() => removeFeeling(row)} className="btn-quiet -ml-2 self-start">
+                    <X aria-hidden className="size-4" />
+                    hapus perasaan ini
+                  </button>
                 )}
               </div>
-              <div role="group" aria-labelledby={`${base}-valence-label`}>
-                <span id={`${base}-valence-label`} className="mb-2 block font-catalog text-xl font-semibold tracking-wide text-ink">
-                  {PROMPTS.valence}
-                </span>
-                <div className="flex gap-2">
-                  {(Object.keys(VALENCE_LABEL) as Valence[]).map(v => (
-                    <button
-                      key={v}
-                      type="button"
-                      aria-pressed={feeling.valence === v}
-                      onClick={() => setFeeling(row, 'valence', feeling.valence === v ? null : v)}
-                      className={cn(
-                        'flex min-h-11 items-center rounded-sm border px-4 text-base',
-                        feeling.valence === v ? 'border-ink bg-ink text-paper' : 'border-edge text-ink hover:border-ink'
-                      )}
-                    >
-                      {VALENCE_LABEL[v]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {draft.feelings.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeFeeling(row)}
-                  className="-ml-2 flex min-h-11 items-center gap-1.5 self-start rounded-sm px-2 text-sm text-ink-muted hover:text-ink"
-                >
-                  <X aria-hidden className="size-4" />
-                  hapus perasaan ini
-                </button>
-              )}
-            </div>
-          )
-        })}
-        {draft.feelings.length < MAX_FEELINGS && (
-          <button
-            type="button"
-            onClick={addFeeling}
-            className="-ml-2 flex min-h-11 items-center gap-1.5 self-start rounded-sm px-2 text-sm text-ink hover:text-ink-muted"
-          >
-            <Plus aria-hidden className="size-4" />
-            ada perasaan lain
-          </button>
-        )}
-      </div>
-
-      <RuledField
-        id={`${ids}-balanced_thought`}
-        question={PROMPTS.balanced}
-        value={draft.balanced_thought}
-        onChange={v => set('balanced_thought', v)}
-        placeholder="boleh diisi nanti"
-        autoFocus={focusBalanced}
-      />
-
-      {draft.feelings.some(f => f.name.trim()) && (
-        <div className="flex flex-col gap-6">
-          <span id={`${ids}-after-label`} className="font-catalog text-xl font-semibold tracking-wide text-ink">
-            {PROMPTS.after}
-          </span>
-          {draft.feelings.map((feeling, row) =>
-            feeling.name.trim() ? (
-              <div key={row}>
-                <span id={`${ids}-feelings-${row}-after-label`} className="mb-2 block text-base text-ink-muted">
-                  {feeling.name}
-                  {feeling.intensity != null && ` · tadinya ${feeling.intensity}`}
-                </span>
-                <IntensitySlider
-                  id={`${ids}-feelings-${row}-intensity_after`}
-                  value={feeling.intensity_after}
-                  onChange={v => setFeeling(row, 'intensity_after', v)}
-                  labelledBy={`${ids}-feelings-${row}-after-label`}
-                />
-              </div>
-            ) : null
+            )
+          })}
+          {draft.feelings.length < MAX_FEELINGS && (
+            <button type="button" onClick={addFeeling} className="btn-quiet -ml-2 self-start text-ink">
+              <Plus aria-hidden className="size-4" />
+              ada perasaan lain
+            </button>
           )}
         </div>
-      )}
 
-      <div className="sticky bottom-0 z-10 -mx-5 flex flex-col gap-3 border-t border-rule bg-paper px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6">
-        <Button type="submit" disabled={saving} className="h-12 w-full font-catalog text-xl font-semibold tracking-wide">
+        <RuledField
+          id={`${ids}-balanced_thought`}
+          question={PROMPTS.balanced}
+          value={draft.balanced_thought}
+          onChange={v => set('balanced_thought', v)}
+          placeholder="boleh diisi nanti"
+          autoFocus={focusBalanced}
+        />
+
+        {draft.feelings.some(f => f.name.trim()) && (
+          <div className="flex flex-col gap-5">
+            <span id={`${ids}-after-label`} className="prompt">
+              {PROMPTS.after}
+            </span>
+            {draft.feelings.map((feeling, row) =>
+              feeling.name.trim() ? (
+                <div key={row}>
+                  <span id={`${ids}-feelings-${row}-after-label`} className="mb-1 block text-lg text-ink">
+                    {feeling.name}
+                    {feeling.intensity != null && <span className="label-hand ml-2 text-base">· tadinya {feeling.intensity}</span>}
+                  </span>
+                  <IntensitySlider
+                    id={`${ids}-feelings-${row}-intensity_after`}
+                    value={feeling.intensity_after}
+                    onChange={v => setFeeling(row, 'intensity_after', v)}
+                    labelledBy={`${ids}-feelings-${row}-after-label`}
+                  />
+                </div>
+              ) : null
+            )}
+          </div>
+        )}
+      </Paper>
+
+      <div className="sticky bottom-0 z-20 -mx-3 flex flex-col gap-2 bg-desk px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-4 sm:px-4">
+        <button type="submit" disabled={saving} className="btn-signal on-desk h-12 w-full text-[22px]">
           {saving ? 'menyimpan…' : 'simpan'}
-        </Button>
+        </button>
         {!draft.balanced_thought.trim() && (
-          <p className="text-sm text-ink-muted">tanpa pikiran alternatif, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
+          <p className="text-base text-chrome">tanpa pikiran alternatif, catatan disimpan sebagai belum diuji. bisa dilanjutkan nanti.</p>
         )}
       </div>
     </form>

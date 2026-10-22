@@ -5,19 +5,23 @@
 @custom-variant dark (@media (prefers-color-scheme: dark));
 
 @theme inline {
+  --color-desk: var(--desk);
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-rule: var(--rule);
   --color-edge: var(--edge);
+  --color-margin: var(--margin);
+  --color-chrome: var(--chrome);
+  --color-chrome-muted: var(--chrome-muted);
   --color-signal: var(--signal);
   --color-signal-ink: var(--signal-ink);
 
-  --font-writing: var(--font-hanken), system-ui, sans-serif;
-  --font-sans: var(--font-hanken), system-ui, sans-serif;
-  --font-catalog: var(--font-barlow), 'Arial Narrow', sans-serif;
-  --font-heading: var(--font-catalog);
+  --font-write: var(--font-nanum), 'Segoe Script', cursive;
+  --font-writing: var(--font-write);
+  --font-sans: var(--font-patrick), 'Segoe Print', system-ui, sans-serif;
+  --font-heading: var(--font-write);
 
   /* shadcn components resolve to the same tokens */
   --color-background: var(--paper);
@@ -39,41 +43,55 @@
   --color-input: var(--rule);
   --color-ring: var(--signal);
 
-  --radius-sm: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 3px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
 }
 
-/* Matte white sleeve by day. */
+/* A pale grey exercise book on a charcoal desk by day. Neutral grey throughout: no hue but the one orange. */
 :root {
-  --paper: #f1efea;
-  --surface: #faf9f6;
-  --ink: #0f0e0d;
-  --ink-muted: #5e5a52;
-  --rule: #cfcac0;
-  /* Control outlines: about 3:1 against the ground, unlike the hairline --rule. */
-  --edge: #857f73;
+  --desk: #262626;
+  --paper: #f1f1ef;
+  --paper-back: #dcdcda;
+  --surface: #fafaf8;
+  --ink: #151515;
+  --ink-muted: #595959;
+  --rule: #c9c9c6;
+  /* Control outlines: about 3:1 against the page, unlike the hairline --rule. */
+  --edge: #7a7a77;
+  --margin: #a2a29f;
+  --chrome: #ececea;
+  --chrome-muted: #b6b6b3;
   --signal: #c73e08;
   --signal-ink: #ffffff;
-  --cell-off: #ddd8cd;
-  --cell-low: #6d675c;
-  --radius: 2px;
+  --cell-low: #8a8a87;
+  --gutter: rgba(0, 0, 0, 0.16);
+  --stack-1: color-mix(in oklab, var(--paper) 86%, black);
+  --stack-2: color-mix(in oklab, var(--paper) 72%, black);
+  --radius: 4px;
 }
 
-/* Matte black sleeve by night. */
+/* The same book by night: a dark grey page on a near-black desk. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #0d0c0b;
-    --surface: #161513;
-    --ink: #ece7dc;
-    --ink-muted: #a39d90;
-    --rule: #2c2a26;
-    --edge: #6f695e;
+    --desk: #080808;
+    --paper: #1c1c1c;
+    --paper-back: #141414;
+    --surface: #262626;
+    --ink: #ececec;
+    --ink-muted: #a4a4a4;
+    --rule: #343434;
+    --edge: #787878;
+    --margin: #565656;
+    --chrome: #e6e6e4;
+    --chrome-muted: #a8a8a6;
     --signal: #ff6b2c;
-    --signal-ink: #0d0c0b;
-    --cell-off: #262420;
-    --cell-low: #8f8a7e;
+    --signal-ink: #141414;
+    --cell-low: #8c8c8c;
+    --gutter: rgba(0, 0, 0, 0.4);
+    --stack-1: color-mix(in oklab, var(--paper) 80%, white);
+    --stack-2: color-mix(in oklab, var(--paper) 62%, white);
   }
 }
 
@@ -85,12 +103,13 @@
     color-scheme: light dark;
     @apply font-sans;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: var(--rule) var(--paper);
+    scrollbar-color: var(--margin) var(--desk);
     scrollbar-width: thin;
   }
   body {
     overflow-x: clip;
-    @apply bg-paper text-ink;
+    @apply bg-desk text-ink;
+    font-size: 1.0625rem;
     font-variant-numeric: lining-nums;
   }
 
@@ -126,37 +145,235 @@
     outline: 2px solid var(--signal);
     outline-offset: 2px;
   }
+  /* The orange does not hold against the charcoal desk by day, so desk controls ring in chalk. */
+  .on-desk:focus-visible {
+    outline-color: var(--chrome);
+  }
   ::-webkit-scrollbar {
     width: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--rule);
+    background: var(--margin);
   }
   ::-webkit-scrollbar-track {
-    background: var(--paper);
+    background: var(--desk);
   }
 }
 
-/* Catalog labels: short condensed caps. Never used for running prose. */
-.label-caps {
-  font-family: var(--font-catalog);
-  font-weight: 500;
-  font-size: 0.8125rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+/* ── the book ─────────────────────────────────────────────── */
+
+@layer components {
+/* One leaf lying in the book: two more leaves show under its right and bottom edges. */
+.page-stack {
+  position: relative;
+  isolation: isolate;
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: 0 18px 28px -14px rgb(0 0 0 / 0.55);
+}
+.page-stack::before,
+.page-stack::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  border-radius: 2px 7px 7px 2px;
+}
+.page-stack::before {
+  inset: 3px -4px -4px 2px;
+  background: var(--stack-1);
+}
+.page-stack::after {
+  inset: 6px -8px -8px 4px;
+  background: var(--stack-2);
+}
+
+/* The page itself: pale paper, a shadow where it meets the spine, and a double margin rule. */
+.page-sheet {
+  --gx: 40px;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, var(--gutter), transparent 28px),
+    linear-gradient(
+      to right,
+      transparent var(--gx),
+      var(--margin) var(--gx) calc(var(--gx) + 1px),
+      transparent calc(var(--gx) + 1px) calc(var(--gx) + 4px),
+      var(--margin) calc(var(--gx) + 4px) calc(var(--gx) + 5px),
+      transparent calc(var(--gx) + 5px)
+    );
+  border-radius: 2px 6px 6px 2px;
+  padding: 24px 16px 96px calc(var(--gx) + 18px);
+}
+@media (min-width: 640px) {
+  .page-sheet {
+    --gx: 68px;
+    padding-right: 28px;
+  }
+}
+/* A scrolling leaf shows no scrollbar, so a leaf and its clone wrap text the same. */
+[data-page] {
+  scrollbar-width: none;
+}
+[data-page]::-webkit-scrollbar {
+  display: none;
+}
+
+/* Writing sits on rules, one per 36px line, the way an exercise book is ruled. */
+.ruled {
+  font-family: var(--font-write);
+  font-size: 28px;
+  line-height: 36px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 35px, var(--rule) 35px 36px);
+}
+
+/* Short printed marks: prompts, dates, labels. */
+.prompt {
+  font-size: 1.125rem;
+  line-height: 36px;
+  color: var(--ink-muted);
+}
+.label-hand {
+  font-size: 1rem;
+  line-height: 1.2;
+  color: var(--ink-muted);
+}
+
+/* ── pen and marker ───────────────────────────────────────── */
+
+/* Intensity: a marker swipe whose length is the value. Colour only reinforces it. */
+.marker {
+  display: block;
+  border-radius: 3px 10px 6px 12px / 8px 4px 10px 5px;
+  transform: skewX(-8deg);
+  transform-origin: left;
+}
+.marker-after {
+  border: 2px solid var(--tone);
+  background-image: repeating-linear-gradient(115deg, var(--tone) 0 3px, transparent 3px 7px) !important;
+  background-color: transparent !important;
+}
+
+/* A number ringed in pen. */
+.circled {
+  display: inline-block;
+  text-align: center;
+  font-family: var(--font-write);
+  font-variant-numeric: tabular-nums;
   line-height: 1;
+  border: 2px solid var(--ink);
+  border-radius: 55% 45% 52% 48% / 50% 56% 44% 50%;
 }
 
-/* One cell per 5 points. Colour walks from bone to signal as cells climb, so the
-   number and the length always carry the reading and colour only reinforces it. */
-.strip-cell {
-  background: var(--cell-off);
+/* Hand-drawn buttons: the corners never quite match. */
+.btn-pen,
+.btn-signal,
+.btn-desk,
+.btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  font-size: 1.1875rem;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 4px 10px 5px 9px;
 }
-.strip-cell[data-on='true'] {
-  background: color-mix(in oklab, var(--signal) min(100%, calc(var(--i) * 8%)), var(--cell-low));
+.btn-pen {
+  border: 2px solid var(--ink);
+  color: var(--ink);
+}
+.btn-pen:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-signal {
+  background: var(--signal);
+  color: var(--signal-ink);
+  border: 2px solid var(--signal);
+}
+.btn-signal:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn-signal:disabled {
+  opacity: 0.55;
+}
+.btn-desk {
+  border: 2px solid var(--chrome-muted);
+  color: var(--chrome);
+}
+.btn-desk:hover:not(:disabled) {
+  border-color: var(--chrome);
+}
+.btn-quiet {
+  padding: 0 0.5rem;
+  color: var(--ink-muted);
+}
+.btn-quiet:hover:not(:disabled) {
+  color: var(--ink);
+}
+.btn-pen[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-desk:disabled,
+.btn-pen:disabled {
+  opacity: 0.4;
 }
 
-/* The one moment of motion: a draft's fourth column arriving later. */
+/* ── the page turn ────────────────────────────────────────── */
+
+/* The leaf is a chain of vertical strips; each is rotated a little relative to its parent,
+   so the sheet bends while it turns. Every strip holds a clone of the page. */
+.leaf,
+.strip {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+}
+.leaf {
+  left: 0;
+}
+.strip .face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.strip .face-front {
+  background: var(--paper);
+}
+.strip .face-back {
+  background: var(--paper-back);
+  transform: rotateY(180deg);
+}
+.strip .strip-inner {
+  position: absolute;
+  top: 0;
+  contain: strict;
+}
+.strip .shade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+.turn-cast {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(to right, rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.16) 40%, transparent);
+}
+}
+
+/* The one small moment: a draft's alternative thought arriving later. */
 @media (prefers-reduced-motion: no-preference) {
   .settle-in {
     animation: settle-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both;

@@ -5,12 +5,12 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
 import { useUser } from '@/components/auth-provider'
+import { DeskBar, Paper } from '@/components/book-page'
 import { FeelingsPlot } from '@/components/feelings-plot'
 import { IntensityBar } from '@/components/intensity-bar'
 import { DRAFT_LABEL } from '@/components/prompts'
 import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
-import { cn } from 'cn'
 
 type Filter = 'all' | 'draft'
 
@@ -33,111 +33,76 @@ export function EntryList({ entries }: { entries: Entry[] }) {
 
   return (
     <>
-      <header className="flex min-h-12 flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <h1 className="font-catalog text-lg font-semibold tracking-[0.12em] text-ink uppercase">Thought Record</h1>
+      <DeskBar className="flex-wrap py-1">
+        <h1 className="font-write text-[34px] leading-none text-chrome">Thought Record</h1>
         <div className="-mr-1 flex items-center gap-1">
           <AccountMenu />
           {user && (
-            <Link
-              href="/share"
-              className="flex h-11 items-center gap-1.5 rounded-sm border border-edge px-3.5 text-sm text-ink hover:border-ink"
-            >
+            <Link href="/share" className="btn-desk on-desk">
               <Share2 aria-hidden className="size-4" />
               bagikan
             </Link>
           )}
-          <Link
-            href="/new"
-            className="flex h-11 items-center gap-1.5 rounded-sm bg-signal px-4 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
-          >
+          <Link href="/new" className="btn-signal on-desk">
             <Plus aria-hidden className="size-5" strokeWidth={2.5} />
             tulis
           </Link>
         </div>
-      </header>
+      </DeskBar>
 
-      <FeelingsPlot entries={entries} />
+      <Paper>
+        <FeelingsPlot entries={entries} />
 
-      {drafts.length > 0 && (
-        <div role="group" aria-label="saring catatan" className="mt-6 flex gap-2">
-          <FilterButton active={filter === 'all'} onClick={() => changeFilter('all')}>
-            semua ({entries.length})
-          </FilterButton>
-          <FilterButton active={filter === 'draft'} onClick={() => changeFilter('draft')}>
-            {DRAFT_LABEL} ({drafts.length})
-          </FilterButton>
-        </div>
-      )}
+        {drafts.length > 0 && (
+          <div role="group" aria-label="saring catatan" className="mt-6 flex flex-wrap gap-2">
+            <button type="button" className="btn-pen" aria-pressed={filter === 'all'} onClick={() => changeFilter('all')}>
+              semua ({entries.length})
+            </button>
+            <button type="button" className="btn-pen" aria-pressed={filter === 'draft'} onClick={() => changeFilter('draft')}>
+              {DRAFT_LABEL} ({drafts.length})
+            </button>
+          </div>
+        )}
 
-      <ul className={cn('border-t border-rule', drafts.length > 0 ? 'mt-3' : 'mt-6')}>
-        {visible.map(entry => (
-          <li key={entry.id} className="border-b border-rule">
-            <EntryRow entry={entry} />
-          </li>
-        ))}
-      </ul>
+        <ul className="mt-5 border-t border-rule">
+          {visible.map(entry => (
+            <li key={entry.id} className="border-b border-rule">
+              <EntryRow entry={entry} />
+            </li>
+          ))}
+        </ul>
 
-      {pageCount > 1 && (
-        <nav aria-label="halaman" className="mt-4 flex items-center justify-between gap-3">
-          <PageButton disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
-            <ChevronLeft aria-hidden className="size-4" />
-            baru
-          </PageButton>
-          <span className="text-sm text-ink-muted" aria-live="polite">
-            {currentPage} / {pageCount}
-          </span>
-          <PageButton disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
-            lama
-            <ChevronRight aria-hidden className="size-4" />
-          </PageButton>
-        </nav>
-      )}
+        {pageCount > 1 && (
+          <nav aria-label="halaman" className="mt-5 flex items-center justify-between gap-3">
+            <button type="button" className="btn-pen" disabled={currentPage === 1} onClick={() => setPage(currentPage - 1)}>
+              <ChevronLeft aria-hidden className="size-4" />
+              baru
+            </button>
+            <span className="text-lg text-ink-muted" aria-live="polite">
+              {currentPage} / {pageCount}
+            </span>
+            <button type="button" className="btn-pen" disabled={currentPage === pageCount} onClick={() => setPage(currentPage + 1)}>
+              lama
+              <ChevronRight aria-hidden className="size-4" />
+            </button>
+          </nav>
+        )}
+      </Paper>
     </>
   )
 }
 
-function PageButton({ disabled, onClick, children }: { disabled: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className="flex min-h-11 items-center gap-1.5 rounded-sm border border-edge px-3.5 text-sm text-ink-muted hover:border-ink hover:text-ink disabled:pointer-events-none disabled:opacity-40"
-    >
-      {children}
-    </button>
-  )
-}
-
-function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className={cn(
-        'min-h-11 rounded-sm border px-3.5 text-sm',
-        active ? 'border-ink bg-ink text-paper' : 'border-edge text-ink-muted hover:border-ink hover:text-ink'
-      )}
-    >
-      {children}
-    </button>
-  )
-}
-
-// Leads with how strongly the user felt, then the thought behind it.
+// Leads with the date and how strongly the user felt, then the thought behind it.
 function EntryRow({ entry }: { entry: Entry }) {
   return (
-    <Link href={`/entries/${entry.id}`} className="-mx-4 block px-4 py-5 hover:bg-surface focus-visible:-outline-offset-2 sm:-mx-6 sm:px-6">
-      <span className="label-caps flex items-center gap-2 text-ink-muted">
+    <Link href={`/entries/${entry.id}`} className="-mx-3 block rounded-sm px-3 py-4 hover:bg-ink/5 focus-visible:-outline-offset-2">
+      <span className="flex items-center gap-2 text-base text-ink-muted" suppressHydrationWarning>
         {formatDay(entry.occurred_at)}
-        {entry.status === 'draft' && <span className="font-sans text-sm tracking-normal normal-case">· {DRAFT_LABEL}</span>}
+        {entry.status === 'draft' && <span>· {DRAFT_LABEL}</span>}
       </span>
-      <span className="flex items-center justify-between gap-4">
-        <span className="line-clamp-2 min-w-0 text-base text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
-        <IntensityBar value={peakIntensity(entry.feelings)} />
-      </span>
-      <span className="mt-3.5 line-clamp-3 block text-[19px] leading-snug whitespace-pre-line text-ink">{entry.thoughts}</span>
+      <span className="mt-1 line-clamp-2 block font-write text-[30px] leading-8 text-ink">{entry.feelings.map(f => f.name).join(', ')}</span>
+      <IntensityBar value={peakIntensity(entry.feelings)} className="mt-1" />
+      <span className="mt-2 line-clamp-3 block font-write text-[28px] leading-8 whitespace-pre-line text-ink">{entry.thoughts}</span>
     </Link>
   )
 }

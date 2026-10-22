@@ -1,79 +1,30 @@
 'use client'
 
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { CatalogNumber } from '@/components/catalog-number'
-import { FeelingsAfter } from '@/components/feelings-after'
-import { IntensityBar } from '@/components/intensity-bar'
-import { DRAFT_LABEL, PROMPTS, VALENCE_LABEL } from '@/components/prompts'
-import { Section } from '@/components/section'
-import { useDeleteEntry, useRestoreEntry, wasJustCompleted } from '@/lib/entries/client'
+import { BookReader } from '@/components/book-reader'
+import { EntryBody } from '@/components/entry-body'
+import { useDeleteEntry, useRestoreEntry } from '@/lib/entries/client'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDayTime } from '@/lib/format'
 
-const chrome = 'flex min-h-11 items-center rounded-sm px-2 text-sm'
+/** The entry detail: the whole record as a book, opened at one page. */
+export function EntryView({ entries, initialId }: { entries: Entry[]; initialId: string }) {
+  return <BookReader entries={entries} initialId={initialId} renderPage={entry => <Leaf entry={entry} />} />
+}
 
-export function EntryView({ entry }: { entry: Entry }) {
-  const [settle] = useState(() => wasJustCompleted(entry.id))
-
+function Leaf({ entry }: { entry: Entry }) {
   return (
-    <article>
-      <nav className="sticky top-0 py-2 z-10 -mx-5 flex min-h-12 items-center justify-between bg-paper px-3 sm:-mx-6 sm:px-4">
-        <Link href="/" className={`${chrome} text-ink-muted hover:text-ink`}>
-          semua catatan
-        </Link>
-        <Link href={`/entries/${entry.id}/edit`} className={`${chrome} border border-edge px-4 text-ink hover:border-ink`}>
-          ubah
-        </Link>
-      </nav>
-
-      <CatalogNumber id={entry.id} className="mt-4 block text-6xl leading-none" />
-      <p className="label-caps mt-3 text-ink-muted">{formatDayTime(entry.occurred_at)}</p>
-
-      <div className="mt-8 flex flex-col gap-10">
-        <Section question={PROMPTS.situation}>{entry.situation}</Section>
-        <Section question={PROMPTS.thoughts}>
-          {entry.thoughts}
-        </Section>
-        <Section question={PROMPTS.feelings}>
-          <ul className="flex flex-col gap-6">
-            {entry.feelings.map((f, i) => (
-              <li key={i}>
-                {f.name}
-                {f.valence && <span className="ml-2 font-sans text-sm text-ink-muted">· {VALENCE_LABEL[f.valence]}</span>}
-                <IntensityBar value={f.intensity} large className="mt-3" />
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {entry.balanced_thought ? (
-          <div className={settle ? 'settle-in' : undefined}>
-            <Section question={PROMPTS.balanced}>{entry.balanced_thought}</Section>
-          </div>
-        ) : (
-          <section>
-            <h2 className="font-catalog text-xl font-semibold tracking-wide text-ink-muted">{PROMPTS.balanced}</h2>
-            <p className="mt-2 text-base text-ink-muted">{DRAFT_LABEL}</p>
-            <Link
-              href={`/entries/${entry.id}/edit?isi=alternatif`}
-              className="mt-3 inline-flex h-11 items-center rounded-sm bg-signal px-5 font-catalog text-lg font-semibold tracking-wide text-signal-ink hover:brightness-110"
-            >
-              lanjutkan sekarang
-            </Link>
-          </section>
-        )}
-
-        <FeelingsAfter feelings={entry.feelings} />
-      </div>
-
-      <footer className="mt-20 border-t border-rule pt-4">
-        <p className="text-sm text-ink-muted">ditulis {formatDayTime(entry.created_at).toLowerCase()}</p>
+    <>
+      <EntryBody entry={entry} editable />
+      <footer className="mt-14 border-t border-rule pt-4">
+        <p className="label-hand text-base" suppressHydrationWarning>
+          ditulis {formatDayTime(entry.created_at).toLowerCase()}
+        </p>
         <DeleteControl entry={entry} />
       </footer>
-    </article>
+    </>
   )
 }
 
@@ -100,25 +51,25 @@ function DeleteControl({ entry }: { entry: Entry }) {
   // Delete sits alone, well away from the other controls, and stays quiet until chosen.
   if (!confirming) {
     return (
-      <button type="button" onClick={() => setConfirming(true)} className={`${chrome} -ml-2 mt-6 text-ink-muted hover:text-signal`}>
+      <button type="button" onClick={() => setConfirming(true)} className="btn-quiet -ml-2 mt-4 hover:text-signal">
         hapus catatan
       </button>
     )
   }
 
   return (
-    <div role="group" aria-label="konfirmasi hapus" className="mt-6 flex flex-wrap items-center gap-2">
-      <span className="mr-2 text-sm text-ink">hapus catatan ini?</span>
+    <div role="group" aria-label="konfirmasi hapus" className="mt-4 flex flex-wrap items-center gap-2">
+      <span className="mr-2 text-lg text-ink">hapus catatan ini?</span>
       <button
         type="button"
         autoFocus
         onClick={onDelete}
         disabled={remove.isPending}
-        className="flex min-h-11 items-center rounded-sm border border-signal px-4 text-sm font-semibold text-signal hover:bg-signal hover:text-signal-ink"
+        className="btn-pen border-signal text-signal hover:bg-signal hover:text-signal-ink"
       >
         ya, hapus
       </button>
-      <button type="button" onClick={() => setConfirming(false)} className={`${chrome} text-ink-muted hover:text-ink`}>
+      <button type="button" onClick={() => setConfirming(false)} className="btn-quiet">
         batal
       </button>
     </div>

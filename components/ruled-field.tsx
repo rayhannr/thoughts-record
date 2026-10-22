@@ -4,8 +4,8 @@ import { useLayoutEffect, useRef } from 'react'
 import { cn } from 'cn'
 
 /**
- * A question in small sans with the answer written beneath it. The field is a
- * visible block that grows with the writing, so the whole area reads as tappable.
+ * A question in the marker hand with the answer written beneath it on ruled lines. There is no box:
+ * the rules are the field, and the field grows with the writing.
  */
 export function RuledField({
   id,
@@ -26,17 +26,17 @@ export function RuledField({
 }) {
   const ref = useRef<HTMLTextAreaElement>(null)
 
-  // Grow with the writing instead of scrolling inside a box.
+  // Grow with the writing instead of scrolling inside a box. Whole lines only, so the rules stay under the text.
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
     el.style.height = 'auto'
-    el.style.height = `${el.scrollHeight}px`
+    el.style.height = `${Math.max(72, Math.ceil(el.scrollHeight / 36) * 36)}px`
   }, [value])
 
   return (
     <div>
-      <label htmlFor={id} className="block font-catalog text-xl font-semibold tracking-wide text-ink">
+      <label htmlFor={id} className="prompt block">
         {question}
       </label>
       <textarea
@@ -50,12 +50,13 @@ export function RuledField({
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
         className={cn(
-          'mt-2 block min-h-18 w-full resize-none overflow-hidden rounded-sm border bg-surface px-3.5 py-3 text-lg leading-relaxed text-ink outline-none placeholder:text-ink-muted focus:border-signal focus:ring-1 focus:ring-signal',
-          error ? 'border-signal' : value.trim() ? 'border-ink' : 'border-edge'
+          'ruled block min-h-18 w-full resize-none overflow-hidden rounded-sm bg-transparent p-0 text-ink outline-none placeholder:text-ink-muted',
+          'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal',
+          error && 'outline-2 outline-offset-4 outline-signal'
         )}
       />
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-sm text-signal">
+        <p id={`${id}-error`} className="mt-3 text-base text-signal">
           {error}
         </p>
       )}

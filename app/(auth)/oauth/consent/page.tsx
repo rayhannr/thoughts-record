@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Paper } from '@/components/book-page'
 import { createClient } from '@/lib/supabase/client'
 
 type Request = { authorizationId: string; clientName: string; email: string }
@@ -50,28 +50,28 @@ function Consent() {
 
   if (failed) {
     return (
-      <p role="alert" className="pt-16 text-base text-signal">
+      <Paper className="pt-16"><p role="alert" className="text-lg text-signal">
         permintaan akses ini tidak valid atau sudah kedaluwarsa. coba sambungkan lagi dari Claude.
-      </p>
+      </p></Paper>
     )
   }
   if (!request) return null
 
   return (
-    <div className="pt-16">
-      <h1 className="text-2xl leading-snug text-ink">{request.clientName} ingin membaca dan menulis catatanmu.</h1>
-      <p className="mt-4 text-base text-ink-muted">
+    <Paper className="pt-16">
+      <h1 className="font-write text-[40px] leading-9 text-ink">{request.clientName} ingin membaca dan menulis catatanmu.</h1>
+      <p className="mt-4 text-lg text-ink-muted">
         masuk sebagai {request.email}. izin ini mencakup melihat, menambah, mengubah, dan menghapus catatan. kamu bisa mencabutnya kapan saja.
       </p>
       <div className="mt-10 flex gap-3">
-        <Button size="lg" className="h-11 px-5" disabled={pending} onClick={() => decide(true)}>
+        <button type="button" className="btn-signal" disabled={pending} onClick={() => decide(true)}>
           izinkan
-        </Button>
-        <Button size="lg" variant="outline" className="h-11 px-5" disabled={pending} onClick={() => decide(false)}>
+        </button>
+        <button type="button" className="btn-pen" disabled={pending} onClick={() => decide(false)}>
           tolak
-        </Button>
+        </button>
       </div>
-    </div>
+    </Paper>
   )
 }
 

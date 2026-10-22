@@ -5,24 +5,24 @@ primary_target: "app/layout.tsx"
 related_targets: ["components","app"]
 ---
 
-# Web app (all surfaces): composer, list, entry view/edit, login
+# Web app (all surfaces): composer, list, entry detail/edit, share, login
 
-Mode: Operate. Redesign of the whole web app; behaviour, copy and constraints from PRODUCT.md hold, AGENTS.md section 9 visuals are replaced.
+Mode: Operate. Replacement of the Factory Records sleeve world; behaviour, copy and constraints from PRODUCT.md hold.
 
-Audience and job: one person, late at night on a phone, capturing a thought record, later re-reading for recurring thoughts and intensity. Code-led build, no image generation.
+Audience and job: one person, late at night on a phone, capturing a thought record, later re-reading and finishing drafts. Code-led build, no image generation. Direction pinned by the user (a handwritten book with page-turn pagination on the entry detail), so no roll was run.
 
-Memorable moment: the pulse plot, a stacked hairline plot above the list where each recent entry is one line and its peak height is that entry's intensity.
+Memorable moment: turning from one entry to the next on the detail page; the leaf bends, shades and shows its back.
 
 ## Direction contract
 
-THESIS: The record's shape is the cover. A pulse plot of recent entries owns the top of the list, and every entry carries a 20-cell code strip. Refuses the rounded-card mood feed and the grey screen with one accent.
+THESIS: The record is an Indonesian exercise book. Each entry is a leaf you turn, not a card you open. Refuses the cold sleeve, rounded cards and a generic journal skin.
 
-OWN-WORLD: Warm matte black ground, bone-white ink, hairlines at one pixel, one committed factory orange for primary action, focus, selection and the hot cells of the strip. Light theme is the matte white sleeve with black ink and a deeper orange. Condensed caps for catalog labels and numerals, a plain humanist sans for the user's writing. 2px corners, no shadows, no cards.
+OWN-WORLD: Neutral grey monochrome, no blue cast. Light: charcoal desk, pale grey page. Dark: near-black desk, dark grey page. Double margin line down each page, hairline rules only inside writing areas, stacked page edges at right and bottom. One orange (deep by day, bright by night) for primary action, focus, selection and the intensity marker. Nanum Pen Script for the user's writing and numerals (circled in pen), Patrick Hand for prompts and chrome. Hand-wobbled borders, no cards, no gradients on type.
 
-STORY: See how the weeks ran in one glance, find a recurring thought in the list, open it, finish it, write a new one without friction.
+STORY: Open the book, see how strongly you felt first, read your own hand, turn back through older pages, finish a draft in place.
 
-FIRST VIEWPORT: Header with TR catalog wordmark left, orange tulis button and account right. Below, the pulse plot edge to edge, about 200px tall. Then a draft filter and rows: small date label, the thought at 18px, the feeling word, a 20-cell strip and the intensity numeral at the right, hairline rules between rows.
+FIRST VIEWPORT: Detail: desk bar with back link and edit, one full leaf with date, feelings with marker swipes and circled numbers, then the four answers; pager below with older and newer and the position. List: header on the desk, the plot on a page, rows as ruled entries.
 
-FORM: Sleeve Zero (brand-identity-canon-saville-catalog-sleeve), challenger 3 of the roll, seed 305fb85f.
+FORM: Pinned by the user, no seed (user-chosen world and font: Nanum Pen Script, orange kept).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

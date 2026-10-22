@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import { toneFor } from '@/components/intensity-bar'
 import { cn } from 'cn'
 
 const STEP = 5
@@ -10,9 +11,9 @@ function snap(n: number) {
 }
 
 /**
- * Starts empty on purpose: a pre-filled number anchors the answer before the
- * user has considered it. Shows a dash until touched, snaps in steps of 5. The
- * track is the same twenty-cell strip the list reads back.
+ * Starts empty on purpose: a pre-filled number anchors the answer before the user has
+ * considered it. Shows a dash until touched, snaps in steps of 5. Dragging draws the same
+ * marker swipe the record reads back, and the number is ringed beside it.
  */
 export function IntensitySlider({
   id,
@@ -65,7 +66,7 @@ export function IntensitySlider({
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <div
         id={id}
         role="slider"
@@ -81,22 +82,20 @@ export function IntensitySlider({
         onPointerMove={onPointerMove}
         onKeyDown={onKeyDown}
         className={cn(
-          'flex h-14 flex-1 cursor-pointer touch-none items-center rounded-sm border bg-surface px-3 focus-visible:outline-offset-2',
-          invalid ? 'border-signal' : value == null ? 'border-edge' : 'border-ink'
+          'flex h-14 flex-1 cursor-pointer touch-none items-center rounded-[4px_12px_6px_10px] border-2 px-3',
+          invalid ? 'border-signal' : value == null ? 'border-edge border-dashed' : 'border-ink'
         )}
       >
-        <div ref={trackRef} className="flex w-full justify-between">
-          {Array.from({ length: 20 }, (_, i) => (
-            <span
-              key={i}
-              className="strip-cell h-7 w-[3.5%] min-w-1"
-              data-on={value != null && i < Math.round(value / 5)}
-              style={{ '--i': i + 1 } as React.CSSProperties}
-            />
-          ))}
+        <div ref={trackRef} className="relative h-7 w-full">
+          {value == null && (
+            <span aria-hidden className="absolute inset-0 flex items-center text-xl text-ink-muted">
+              geser di sini →
+            </span>
+          )}
+          {value != null && <span className="marker absolute inset-y-0 left-0" style={{ width: `${value}%`, background: toneFor(value) }} />}
         </div>
       </div>
-      <output aria-hidden className={cn('w-14 text-right font-catalog text-5xl font-semibold tabular-nums', value == null ? 'text-ink-muted' : 'text-ink')}>
+      <output aria-hidden className={cn('circled min-w-16 shrink-0 px-2 pt-1.5 pb-1 text-[40px]', value == null ? 'border-edge text-ink-muted' : 'text-ink')}>
         {value ?? '–'}
       </output>
     </div>

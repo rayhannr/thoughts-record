@@ -4,6 +4,7 @@ import type { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useUser } from '@/components/auth-provider'
+import { deskLink } from '@/components/book-page'
 import { createClient } from '@/lib/supabase/client'
 
 export function AccountMenu() {
@@ -13,7 +14,7 @@ export function AccountMenu() {
 
   if (user === null) {
     return (
-      <Link href="/login" className="flex min-h-11 items-center rounded-sm px-2 text-sm text-ink-muted hover:text-ink">
+      <Link href="/login" className={deskLink}>
         masuk
       </Link>
     )
@@ -63,15 +64,15 @@ function Profile({ user }: { user: User }) {
         aria-controls={panelId}
         aria-label="akun"
         onClick={() => setOpen(v => !v)}
-        className="flex size-11 items-center justify-center rounded-sm"
+        className="on-desk flex size-11 items-center justify-center rounded-sm"
       >
         <Avatar src={avatar} initial={initial} />
       </button>
       {open && (
-        <div id={panelId} className="absolute right-0 top-full z-10 w-64 border border-rule bg-surface p-4">
+        <div id={panelId} className="absolute right-0 top-full z-30 w-64 rounded-[4px_12px_6px_10px] border-2 border-edge bg-surface p-4 text-ink">
           <div className="flex items-center gap-3">
             <Avatar src={avatar} initial={initial} />
-            <div className="min-w-0 text-sm">
+            <div className="min-w-0 text-base">
               {name && <p className="truncate font-semibold text-ink">{name}</p>}
               <p className="truncate text-ink-muted">{user.email}</p>
             </div>
@@ -80,7 +81,7 @@ function Profile({ user }: { user: User }) {
             type="button"
             onClick={signOut}
             disabled={pending}
-            className="mt-3 flex min-h-11 w-full items-center rounded-sm border border-edge px-3 text-sm text-ink hover:border-ink disabled:opacity-60"
+            className="btn-pen mt-3 w-full"
           >
             keluar
           </button>
@@ -101,7 +102,7 @@ function Avatar({ src, initial }: { src?: string; initial: string }) {
         alt=""
         referrerPolicy="no-referrer"
         onError={() => setFailed(true)}
-        className="size-8 shrink-0 rounded-full border border-rule object-cover"
+        className="size-8 shrink-0 rounded-full border-2 border-chrome-muted object-cover"
       />
     )
   }
@@ -109,7 +110,7 @@ function Avatar({ src, initial }: { src?: string; initial: string }) {
   return (
     <span
       aria-hidden
-      className="flex size-8 shrink-0 items-center justify-center rounded-full border border-rule bg-paper text-sm text-ink"
+      className="flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-chrome-muted bg-desk text-base text-chrome"
     >
       {initial}
     </span>

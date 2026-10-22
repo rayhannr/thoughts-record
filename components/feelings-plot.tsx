@@ -1,4 +1,8 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+import { toneFor } from '@/components/intensity-bar'
 import { VALENCE_LABEL } from '@/components/prompts'
 import type { Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
@@ -7,9 +11,13 @@ import { cn } from 'cn'
 const MAX_ENTRIES = 30
 const GRID = [100, 50, 0]
 
+type Mode = 'before' | 'after'
+
+const MODE_LABEL: Record<Mode, string> = { before: 'sebelum', after: 'sesudah' }
+
 function LegendItem({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <li className="flex items-center gap-2 font-sans text-sm tracking-normal normal-case">
+    <li className="flex items-center gap-2 text-base text-ink-muted">
       <span className="flex size-3 items-center justify-center">{children}</span>
       {label}
     </li>
@@ -22,8 +30,13 @@ function LegendItem({ label, children }: { label: string; children: React.ReactN
  * are never joined to the next entry, since mixed feelings are not one series.
  * Shape carries the person's own valence: filled is nggak enak, a ring is enak,
  * a diamond is not rated. Nothing is inferred from the feeling's name.
+ *
+ * Once any feeling has been re-rated, a switch plots the after intensity
+ * instead. Only re-rated feelings appear then, in the same columns, so the
+ * dots can be read as moving between the two views.
  */
 export function FeelingsPlot({ entries }: { entries: Entry[] }) {
+  const [chosen, setChosen] = useState<Mode>('before')
   const recent = [...entries]
     .sort((a, b) => new Date(a.occurred_at).getTime() - new Date(b.occurred_at).getTime())
     .slice(-MAX_ENTRIES)
@@ -47,38 +60,67 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
     }
   }
 
-  const rated = recent.some(e => e.feelings.some(f => f.valence))
-  const count = recent.reduce((n, e) => n + e.feelings.length, 0)
+  const hasAfter = recent.some(e => e.feelings.some(f => f.intensity_after != null))
+  const mode = hasAfter ? chosen : 'before'
+  const intensityOf = (f: Entry['feelings'][number]) => (mode === 'after' ? f.intensity_after : f.intensity)
+
+  const plotted = recent.map(entry => ({
+    entry,
+    points: entry.feelings.flatMap(f => {
+      const value = intensityOf(f)
+      return value == null ? [] : [{ feeling: f, value }]
+    })
+  }))
+
+  const rated = plotted.some(p => p.points.some(pt => pt.feeling.valence))
+  const count = plotted.reduce((n, p) => n + p.points.length, 0)
+  const columns = plotted.filter(p => p.points.length > 0).length
 
   return (
     <figure
       role="group"
-      aria-label={`grafik ${count} perasaan dari ${recent.length} catatan terakhir, dari ${formatDay(first.occurred_at)} sampai ${formatDay(last.occurred_at)}. tinggi titik sama dengan seberapa kuat.`}
-      className="mt-5"
+      aria-label={`grafik ${count} perasaan ${MODE_LABEL[mode]} dari ${columns} catatan, dari ${formatDay(first.occurred_at)} sampai ${formatDay(last.occurred_at)}. tinggi titik sama dengan seberapa kuat.`}
+      className="mt-0"
     >
+      {hasAfter && (
+        <div role="group" aria-label="tampilkan intensitas" className="mb-3 ml-8 flex gap-2">
+          {(Object.keys(MODE_LABEL) as Mode[]).map(m => (
+            <button
+              key={m}
+              type="button"
+              aria-pressed={mode === m}
+              onClick={() => setChosen(m)}
+              className="btn-pen"
+            >
+              {MODE_LABEL[m]}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="relative ml-8 h-[220px] sm:h-[280px]">
         <div aria-hidden className="absolute inset-y-3 inset-x-0">
           {GRID.map(v => (
             <div key={v} className="absolute inset-x-0 border-t border-rule" style={{ bottom: `${v}%` }}>
-              <span className="label-caps absolute -left-8 w-6 -translate-y-1/2 text-right text-ink-muted">{v}</span>
+              <span className="label-hand absolute -left-8 w-6 -translate-y-1/2 text-right">{v}</span>
             </div>
           ))}
         </div>
 
         <div className="absolute inset-y-3 inset-x-0">
-          {recent.map(entry => {
-            const levels = entry.feelings.map(f => f.intensity)
+          {plotted.map(({ entry, points }) => {
+            if (points.length === 0) return null
+            const levels = points.map(pt => pt.value)
             const low = Math.min(...levels)
             const high = Math.max(...levels)
             return (
               <div key={entry.id} className="absolute inset-y-0 w-0" style={{ left: `${xOf(entry.occurred_at)}%` }}>
-                {entry.feelings.length > 1 && (
+                {points.length > 1 && (
                   <span aria-hidden className="absolute -translate-x-1/2 border-l border-edge" style={{ bottom: `${low}%`, height: `${high - low}%` }} />
                 )}
-                {entry.feelings.map((f, i) => {
-                  const tone = `color-mix(in oklab, var(--signal) ${Math.min(100, f.intensity * 1.1)}%, var(--cell-low))`
+                {points.map(({ feeling: f, value }, i) => {
+                  const tone = toneFor(value)
                   const valence = f.valence ? VALENCE_LABEL[f.valence] : null
-                  const label = `${f.name}, ${f.intensity}${valence ? `, ${valence}` : ''}, ${formatDay(entry.occurred_at)}`
+                  const label = `${f.name}, ${MODE_LABEL[mode]} ${value}${valence ? `, ${valence}` : ''}, ${formatDay(entry.occurred_at)}`
                   return (
                     <Link
                       key={i}
@@ -94,7 +136,7 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
                             : 'size-2.5 rotate-45 rounded-[1px]'
                       )}
                       style={{
-                        bottom: `${f.intensity}%`,
+                        bottom: `${value}%`,
                         ...(f.valence === 'good' ? { borderColor: tone } : { backgroundColor: tone })
                       }}
                     />
@@ -106,7 +148,7 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
         </div>
       </div>
 
-      <figcaption className="label-caps ml-8 mt-3 text-ink-muted">
+      <figcaption className="label-hand ml-8 mt-3 text-base">
         <div aria-hidden className="relative h-4 whitespace-nowrap">
           {ticks.map(t => (
             <span
@@ -118,7 +160,7 @@ export function FeelingsPlot({ entries }: { entries: Entry[] }) {
             </span>
           ))}
         </div>
-        <span className="mt-2 block text-center">tinggi titik = seberapa kuat</span>
+        <span className="mt-2 block text-center">tinggi titik = seberapa kuat{mode === 'after' && ' setelahnya'}</span>
         {rated && (
           <ul className="mt-2 flex flex-wrap justify-center gap-x-5 gap-y-1">
             <LegendItem label="nggak enak">

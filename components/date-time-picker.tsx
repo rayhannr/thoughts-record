@@ -81,7 +81,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
   ]
 
   return (
-    <div id={id} className="border border-edge bg-surface p-3 sm:p-4">
+    <div id={id} className="mt-1 rounded-[4px_12px_6px_10px] border-2 border-edge bg-surface p-3 text-ink sm:p-4">
       <div className="flex flex-wrap gap-2" role="group" aria-label="pilihan cepat">
         {quick.map(q => {
           const active = q.label === 'sekarang' ? false : dayKey(q.date) === selectedKey
@@ -91,10 +91,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
               type="button"
               aria-pressed={active}
               onClick={() => (q.label === 'sekarang' ? commit(new Date()) : pickDay(q.date))}
-              className={cn(
-                'min-h-11 border px-3.5 text-sm',
-                active ? 'border-ink bg-ink text-paper' : 'border-edge text-ink hover:border-ink'
-              )}
+              className="btn-pen"
             >
               {q.label}
             </button>
@@ -111,7 +108,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
         >
           <ChevronLeft aria-hidden className="size-5" />
         </button>
-        <p aria-live="polite" className="label-caps text-ink">
+        <p aria-live="polite" className="font-write text-[28px] leading-none text-ink">
           {monthTitle.format(view)}
         </p>
         <button
@@ -127,7 +124,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
 
       <div className="mt-1 grid text-center" style={SEVEN_COLS} aria-hidden>
         {WEEKDAYS.map(w => (
-          <span key={w} className="py-2 text-xs text-ink-muted">
+          <span key={w} className="py-2 text-sm text-ink-muted">
             {w}
           </span>
         ))}
@@ -156,8 +153,8 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
               tabIndex={n === tabStop ? 0 : -1}
               onClick={() => pickDay(date)}
               className={cn(
-                'relative mx-auto flex size-11 items-center justify-center font-catalog text-lg tabular-nums',
-                isSelected ? 'bg-signal font-semibold text-signal-ink' : 'text-ink hover:bg-paper',
+                'relative mx-auto flex size-11 items-center justify-center rounded-[45%_55%_50%_50%/50%_45%_55%_50%] font-write text-2xl tabular-nums',
+                isSelected ? 'bg-signal text-signal-ink' : 'text-ink hover:bg-ink/10',
                 future && 'text-ink-muted opacity-40 hover:bg-transparent'
               )}
             >
@@ -169,7 +166,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-4 border-t border-rule pt-4">
-        <label htmlFor={`${id}-time`} className="text-sm text-ink-muted">
+        <label htmlFor={`${id}-time`} className="text-lg text-ink-muted">
           jam berapa?
         </label>
         <input
@@ -178,7 +175,7 @@ export function DateTimePicker({ id, value, onChange }: { id: string; value: str
           value={timeValue(selected)}
           max={selectedKey === todayKey ? timeValue(now) : undefined}
           onChange={e => pickTime(e.target.value)}
-          className="min-h-11 border border-edge bg-paper px-3 font-catalog text-xl tabular-nums text-ink outline-none focus:border-signal focus:ring-1 focus:ring-signal"
+          className="min-h-11 rounded-[3px_8px_4px_7px] border-2 border-edge bg-paper px-3 font-write text-2xl tabular-nums text-ink outline-none focus:border-signal"
         />
       </div>
     </div>
