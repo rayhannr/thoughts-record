@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, Plus, Share2, Waypoints } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Heart, Plus, Share2, Waypoints } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { AccountMenu } from '@/components/account-menu'
@@ -8,7 +8,7 @@ import { useUser } from '@/components/auth-provider'
 import { DeskBar, Paper } from '@/components/book-page'
 import { FeelingsPlot } from '@/components/feelings-plot'
 import { IntensityBar } from '@/components/intensity-bar'
-import { DRAFT_LABEL, ROOT_CAUSE } from '@/components/prompts'
+import { DRAFT_LABEL, GRATITUDE, ROOT_CAUSE } from '@/components/prompts'
 import { peakIntensity, type Entry } from '@/lib/entries/schema'
 import { formatDay } from '@/lib/format'
 
@@ -40,6 +40,10 @@ export function EntryList({ entries }: { entries: Entry[] }) {
           <Link href="/root-causes" className="btn-desk on-desk">
             <Waypoints aria-hidden className="size-4" />
             {ROOT_CAUSE.title}
+          </Link>
+          <Link href="/gratitudes" className="btn-desk on-desk">
+            <Heart aria-hidden className="size-4" />
+            {GRATITUDE.title}
           </Link>
           {user && (
             <Link href="/share" className="btn-desk on-desk">

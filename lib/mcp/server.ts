@@ -4,6 +4,8 @@ import { z, ZodError } from 'zod'
 import { createEntry, deleteEntry, listEntries, updateEntry } from '@/lib/entries/actions'
 import { CreateEntry, ListEntries, UpdateEntry } from '@/lib/entries/schema'
 import { NotFoundError } from '@/lib/entries/store/supabase'
+import { createGratitude, deleteGratitude, listGratitudes, updateGratitude } from '@/lib/gratitudes/actions'
+import { CreateGratitude, ListGratitudes, UpdateGratitude } from '@/lib/gratitudes/schema'
 import { createRootCause, deleteRootCause, listRootCauses, updateRootCause } from '@/lib/root-causes/actions'
 import { CreateRootCause, UpdateRootCause } from '@/lib/root-causes/schema'
 
@@ -107,6 +109,42 @@ export function createMcpServer(db: SupabaseClient, userId: string) {
     'delete_root_cause',
     { description: 'Permanently delete a root cause record.', inputSchema: { id: z.uuid() } },
     ({ id }) => run(async () => (await deleteRootCause(db, userId, id), { deleted: id }))
+  )
+
+  server.registerTool(
+    'add_gratitude',
+    {
+      description:
+        'Save one thing the user is grateful for. Call it once per item; a day can have any number. ' +
+        'content is in the user\'s own words: ask for it, never suggest or write gratitudes yourself. ' +
+        'occurred_at is the day it is for (ISO 8601), usually today.',
+      inputSchema: CreateGratitude.shape
+    },
+    input => run(() => createGratitude(db, userId, input))
+  )
+
+  server.registerTool(
+    'list_gratitudes',
+    {
+      description: 'List gratitude items, newest first. Optionally filter by an occurred_at range (ISO 8601).',
+      inputSchema: ListGratitudes.shape
+    },
+    filter => run(() => listGratitudes(db, userId, filter))
+  )
+
+  server.registerTool(
+    'update_gratitude',
+    {
+      description: 'Correct the content or day of an existing gratitude item.',
+      inputSchema: { id: z.uuid(), ...UpdateGratitude.shape }
+    },
+    ({ id, ...fields }) => run(() => updateGratitude(db, userId, id, fields))
+  )
+
+  server.registerTool(
+    'delete_gratitude',
+    { description: 'Permanently delete a gratitude item.', inputSchema: { id: z.uuid() } },
+    ({ id }) => run(async () => (await deleteGratitude(db, userId, id), { deleted: id }))
   )
 
   return server

@@ -3,11 +3,13 @@
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { DeskBar, Paper, deskLink } from '@/components/book-page'
+import { ConfirmDelete } from '@/components/confirm-delete'
 import { ROOT_CAUSE } from '@/components/prompts'
 import { RootCauseForm } from '@/components/root-cause-form'
 import { StatusLine, StorageError } from '@/components/status-line'
 import { formatDay } from '@/lib/format'
-import { useRootCauses } from '@/lib/root-causes/client'
+import { useRemoveRootCause, useRootCauses } from '@/lib/root-causes/client'
+import type { RootCause } from '@/lib/root-causes/schema'
 
 export default function RootCausesPage() {
   const items = useRootCauses()
@@ -47,13 +49,24 @@ export default function RootCausesPage() {
                 <p className="prompt">{ROOT_CAUSE.triggers}</p>
                 <p className="font-write text-[28px] leading-9 whitespace-pre-line text-ink">{item.triggers}</p>
               </div>
-              <Link href={`/root-causes/${item.id}/edit`} className="btn-quiet -ml-2 self-start">
-                ubah
-              </Link>
+              <Row item={item} />
             </li>
           ))}
         </ul>
       </Paper>
     </>
+  )
+}
+
+function Row({ item }: { item: RootCause }) {
+  const remove = useRemoveRootCause()
+
+  return (
+    <div className="-ml-2 flex flex-wrap items-center gap-x-2">
+      <Link href={`/root-causes/${item.id}/edit`} className="btn-quiet">
+        ubah
+      </Link>
+      <ConfirmDelete label="hapus" onConfirm={() => void remove(item)} />
+    </div>
   )
 }

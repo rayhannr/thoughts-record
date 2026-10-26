@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { useUser } from '@/components/auth-provider'
 import type { CreateRootCause, RootCause, UpdateRootCause } from './schema'
 import * as api from './store/api'
@@ -49,20 +50,22 @@ export function useUpdateRootCause(id: string) {
   })
 }
 
-export function useDeleteRootCause() {
+/** Deletes a record and offers to put it back. */
+export function useRemoveRootCause() {
   const { store } = useStore()
   const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (id: string) => store.deleteRootCause(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: keys.all })
-  })
-}
+  const invalidate = () => qc.invalidateQueries({ queryKey: keys.all })
 
-export function useRestoreRootCause() {
-  const { store } = useStore()
-  const qc = useQueryClient()
-  return useMutation({
-    mutationFn: (item: RootCause) => store.restoreRootCause(item),
-    onSuccess: () => qc.invalidateQueries({ queryKey: keys.all })
-  })
+  return async (item: RootCause) => {
+    try {
+      await store.deleteRootCause(item.id)
+    } catch {
+      toast.error('belum terhapus. coba lagi.')
+      return
+    }
+    await invalidate()
+    toast('catatan dihapus', {
+      action: { label: 'kembalikan', onClick: () => store.restoreRootCause(item).then(invalidate) }
+    })
+  }
 }

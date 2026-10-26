@@ -2,8 +2,8 @@
 
 import { Paper } from '@/components/book-page'
 import { EntryBody } from '@/components/entry-body'
-import { ROOT_CAUSE } from '@/components/prompts'
-import { formatDay } from '@/lib/format'
+import { GRATITUDE, ROOT_CAUSE } from '@/components/prompts'
+import { formatDay, formatDayTime } from '@/lib/format'
 import type { SharedView } from '@/lib/share/schema'
 
 // A client component only so dates are written in the viewer's own timezone.
@@ -48,6 +48,22 @@ export function SharedEntries({ view }: { view: SharedView }) {
                   <p className="prompt">{ROOT_CAUSE.triggers}</p>
                   <p className="font-write text-[28px] leading-9 whitespace-pre-line text-ink">{item.triggers}</p>
                 </div>
+              </li>
+            ))}
+          </ul>
+        </Paper>
+      )}
+
+      {view.gratitudes.length > 0 && (
+        <Paper className="mt-6">
+          <h2 className="font-write text-[34px] leading-9 text-ink">{GRATITUDE.title}</h2>
+          <ul className="mt-4 border-t border-rule">
+            {view.gratitudes.map(item => (
+              <li key={item.id} className="border-b border-rule py-4">
+                <p className="font-write text-[28px] leading-9 whitespace-pre-line text-ink">{item.content}</p>
+                <p className="label-hand" suppressHydrationWarning>
+                  {formatDayTime(item.occurred_at)}
+                </p>
               </li>
             ))}
           </ul>

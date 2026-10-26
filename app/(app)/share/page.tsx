@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { useUser } from '@/components/auth-provider'
 import { DateTimePicker } from '@/components/date-time-picker'
 import { DeskBar, Paper, deskLink } from '@/components/book-page'
-import { ROOT_CAUSE } from '@/components/prompts'
+import { GRATITUDE, ROOT_CAUSE } from '@/components/prompts'
 import { StatusLine } from '@/components/status-line'
 import { formatDay, formatDayTime } from '@/lib/format'
 import { useCreateShareLink, useRevokeShareLink, useShareLinks } from '@/lib/share/client'
@@ -97,6 +97,7 @@ function CreateForm() {
   const [to, setTo] = useState<string | null>(null)
   const [days, setDays] = useState(7)
   const [withRootCauses, setWithRootCauses] = useState(false)
+  const [withGratitudes, setWithGratitudes] = useState(false)
   const [url, setUrl] = useState<string | null>(null)
 
   // The range runs between the exact moments chosen. Neither end may pass the other,
@@ -117,7 +118,8 @@ function CreateForm() {
         range_from: from,
         range_to: to,
         expires_in_days: days,
-        include_root_causes: withRootCauses
+        include_root_causes: withRootCauses,
+        include_gratitudes: withGratitudes
       })
       setUrl(`${window.location.origin}/s/${token}`)
     } catch {
@@ -208,6 +210,18 @@ function CreateForm() {
           <p className="mt-2 max-w-[65ch] text-base text-ink-muted">
             semua catatan di sana ikut terbaca, tidak terbatas pada rentang waktu di atas.
           </p>
+        </div>
+
+        <div>
+          <button
+            type="button"
+            aria-pressed={withGratitudes}
+            onClick={() => setWithGratitudes(v => !v)}
+            className="btn-pen"
+          >
+            sertakan {GRATITUDE.title}
+          </button>
+          <p className="mt-2 max-w-[65ch] text-base text-ink-muted">yang ikut terbaca hanya yang ada di rentang waktu di atas.</p>
         </div>
 
         <button

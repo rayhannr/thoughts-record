@@ -18,6 +18,12 @@ export const ROOT_CAUSE = {
   triggersHint: 'satu paragraf untuk satu pemicu'
 } as const
 
+export const GRATITUDE = {
+  title: 'bersyukur',
+  prompt: 'apa yang kamu syukuri hari ini?',
+  another: 'ada lagi?'
+} as const
+
 export const DRAFT_LABEL = 'belum diuji'
 
 export const VALENCE_LABEL = { good: 'enak', bad: 'nggak enak' } as const

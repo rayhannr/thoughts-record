@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useId, useState } from 'react'
 import { toast } from 'sonner'
 import { DeskBar, Paper, deskLink } from '@/components/book-page'
+import { ConfirmDelete } from '@/components/confirm-delete'
 import { ROOT_CAUSE } from '@/components/prompts'
 import { RuledField } from '@/components/ruled-field'
-import { useCreateRootCause, useDeleteRootCause, useRestoreRootCause, useUpdateRootCause } from '@/lib/root-causes/client'
+import { useCreateRootCause, useRemoveRootCause, useUpdateRootCause } from '@/lib/root-causes/client'
 import { CreateRootCause, type RootCause } from '@/lib/root-causes/schema'
 
 type Errors = { condition?: string; triggers?: string }
@@ -96,48 +97,13 @@ export function RootCauseForm({ item, cancelHref }: { item?: RootCause; cancelHr
 
 function DeleteControl({ item }: { item: RootCause }) {
   const router = useRouter()
-  const [confirming, setConfirming] = useState(false)
-  const remove = useDeleteRootCause()
-  const restore = useRestoreRootCause()
+  const remove = useRemoveRootCause()
 
-  async function onDelete() {
-    // Leave first, so the edit page never re-renders as "not found".
+  // Leave first, so the edit page never re-renders as "not found".
+  function onDelete() {
     router.push('/root-causes')
-    try {
-      await remove.mutateAsync(item.id)
-    } catch {
-      toast.error('belum terhapus. coba lagi.')
-      return
-    }
-    toast('catatan dihapus', {
-      action: { label: 'kembalikan', onClick: () => restore.mutate(item) }
-    })
+    void remove(item)
   }
 
-  // Delete sits alone and stays quiet until chosen, as on an entry.
-  if (!confirming) {
-    return (
-      <button type="button" onClick={() => setConfirming(true)} className="btn-quiet -ml-2 self-start hover:text-signal">
-        hapus catatan
-      </button>
-    )
-  }
-
-  return (
-    <div role="group" aria-label="konfirmasi hapus" className="flex flex-wrap items-center gap-2">
-      <span className="mr-2 text-lg text-ink">hapus catatan ini?</span>
-      <button
-        type="button"
-        autoFocus
-        onClick={onDelete}
-        disabled={remove.isPending}
-        className="btn-pen border-signal text-signal hover:bg-signal hover:text-signal-ink"
-      >
-        ya, hapus
-      </button>
-      <button type="button" onClick={() => setConfirming(false)} className="btn-quiet">
-        batal
-      </button>
-    </div>
-  )
+  return <ConfirmDelete onConfirm={onDelete} />
 }
