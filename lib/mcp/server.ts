@@ -4,6 +4,8 @@ import { z, ZodError } from 'zod'
 import { createEntry, deleteEntry, listEntries, updateEntry } from '@/lib/entries/actions'
 import { CreateEntry, ListEntries, UpdateEntry } from '@/lib/entries/schema'
 import { NotFoundError } from '@/lib/entries/store/supabase'
+import { createRootCause, deleteRootCause, listRootCauses, updateRootCause } from '@/lib/root-causes/actions'
+import { CreateRootCause, UpdateRootCause } from '@/lib/root-causes/schema'
 
 // MCP tools over the shared action layer. `db` carries the caller's own token,
 // so RLS scopes every call to that user. No model and no prompt live here.
@@ -20,7 +22,7 @@ async function run(fn: () => Promise<unknown>) {
     return json(await fn())
   } catch (e) {
     if (e instanceof ZodError) return failure(`invalid input: ${e.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ')}`)
-    if (e instanceof NotFoundError) return failure('entry not found')
+    if (e instanceof NotFoundError) return failure('not found')
     console.error('mcp tool failed:', e instanceof Error ? e.message : 'unknown')
     return failure('server error')
   }
@@ -72,6 +74,39 @@ export function createMcpServer(db: SupabaseClient, userId: string) {
     'delete_entry',
     { description: 'Permanently delete an entry.', inputSchema: { id: z.uuid() } },
     ({ id }) => run(async () => (await deleteEntry(db, userId, id), { deleted: id }))
+  )
+
+  server.registerTool(
+    'add_root_cause',
+    {
+      description:
+        'Save a root cause analysis record: condition is what the user lives with now, triggers is what in their past likely set it off. ' +
+        'triggers may be several paragraphs, one per suspected trigger. Both come from the user in their own words: ask for them, ' +
+        'never propose or infer a trigger yourself.',
+      inputSchema: CreateRootCause.shape
+    },
+    input => run(() => createRootCause(db, userId, input))
+  )
+
+  server.registerTool(
+    'list_root_causes',
+    { description: 'List root cause analysis records, newest first.' },
+    () => run(() => listRootCauses(db, userId))
+  )
+
+  server.registerTool(
+    'update_root_cause',
+    {
+      description: 'Correct the condition or triggers of an existing root cause record.',
+      inputSchema: { id: z.uuid(), ...UpdateRootCause.shape }
+    },
+    ({ id, ...fields }) => run(() => updateRootCause(db, userId, id, fields))
+  )
+
+  server.registerTool(
+    'delete_root_cause',
+    { description: 'Permanently delete a root cause record.', inputSchema: { id: z.uuid() } },
+    ({ id }) => run(async () => (await deleteRootCause(db, userId, id), { deleted: id }))
   )
 
   return server

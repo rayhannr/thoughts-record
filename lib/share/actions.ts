@@ -30,6 +30,7 @@ export async function createShareLink(
     token_hash: hashToken(token),
     range_from: data.range_from,
     range_to: data.range_to,
+    include_root_causes: data.include_root_causes,
     expires_at: new Date(Date.now() + data.expires_in_days * DAY_MS).toISOString()
   })
   return { link, token }

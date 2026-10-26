@@ -1,10 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { toEntry } from '@/lib/entries/store/supabase'
+import { toRootCause } from '@/lib/root-causes/store/supabase'
 import type { ShareLink, SharedView } from '../schema'
 
 // Server-side and the only module that touches share_links. Every owner query is
 // scoped by user_id on top of RLS; a viewer reaches data only through get_shared_entries.
-const COLUMNS = 'id, range_from, range_to, expires_at, created_at'
+const COLUMNS = 'id, range_from, range_to, expires_at, created_at, include_root_causes'
 
 function fail(error: { message: string }): never {
   throw new Error(`database error: ${error.message}`)
@@ -59,6 +60,7 @@ export async function fetchShared(db: SupabaseClient, tokenHash: string): Promis
     range_from: iso(v.range_from),
     range_to: v.range_to ? iso(v.range_to) : null,
     expires_at: iso(v.expires_at),
-    entries: v.entries.map(toEntry)
+    entries: v.entries.map(toEntry),
+    root_causes: (v.root_causes ?? []).map(toRootCause)
   }
 }

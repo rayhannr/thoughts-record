@@ -2,6 +2,7 @@
 
 import { Paper } from '@/components/book-page'
 import { EntryBody } from '@/components/entry-body'
+import { ROOT_CAUSE } from '@/components/prompts'
 import { formatDay } from '@/lib/format'
 import type { SharedView } from '@/lib/share/schema'
 
@@ -32,6 +33,26 @@ export function SharedEntries({ view }: { view: SharedView }) {
           </ol>
         )}
       </Paper>
+
+      {view.root_causes.length > 0 && (
+        <Paper className="mt-6">
+          <h2 className="font-write text-[34px] leading-9 text-ink">{ROOT_CAUSE.title}</h2>
+          <ul className="mt-4 border-t border-rule">
+            {view.root_causes.map(item => (
+              <li key={item.id} className="flex flex-col gap-4 border-b border-rule py-6 last:border-b-0">
+                <div>
+                  <p className="prompt">{ROOT_CAUSE.condition}</p>
+                  <p className="font-write text-[30px] leading-9 whitespace-pre-line text-ink">{item.condition}</p>
+                </div>
+                <div>
+                  <p className="prompt">{ROOT_CAUSE.triggers}</p>
+                  <p className="font-write text-[28px] leading-9 whitespace-pre-line text-ink">{item.triggers}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Paper>
+      )}
 
       <p className="mt-6 px-1 text-lg text-chrome-muted" suppressHydrationWarning>
         tautan ini berlaku sampai {formatDay(view.expires_at)}.

@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import type { Entry } from '@/lib/entries/schema'
+import type { RootCause } from '@/lib/root-causes/schema'
 
 export const MAX_EXPIRY_DAYS = 90
 
@@ -10,7 +11,8 @@ export const CreateShareLink = z
       .datetime()
       .nullish()
       .transform(v => v ?? null),
-    expires_in_days: z.number().int().min(1).max(MAX_EXPIRY_DAYS)
+    expires_in_days: z.number().int().min(1).max(MAX_EXPIRY_DAYS),
+    include_root_causes: z.boolean().optional().default(false)
   })
   .refine(v => !v.range_to || new Date(v.range_to) >= new Date(v.range_from), {
     message: 'range_to is before range_from',
@@ -25,6 +27,7 @@ export type ShareLink = {
   range_to: string | null
   expires_at: string
   created_at: string
+  include_root_causes: boolean
 }
 
 /** What a viewer of a link sees: the entries in its range. */
@@ -33,4 +36,6 @@ export type SharedView = {
   range_to: string | null
   expires_at: string
   entries: Entry[]
+  /** Empty unless the link's owner opted in. */
+  root_causes: RootCause[]
 }
